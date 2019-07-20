@@ -1,16 +1,16 @@
 import { Test, TestingModule } from "@nestjs/testing"
-import { AddressesService } from "./addresses.service"
+import { AccountsService } from "./accounts.service"
 
-describe("AddressesService", (): void => {
-  let service: AddressesService
+describe("AccountsService", (): void => {
+  let service: AccountsService
 
   beforeEach(
     async (): Promise<void> => {
       const module: TestingModule = await Test.createTestingModule({
-        providers: [AddressesService]
+        providers: [AccountsService]
       }).compile()
 
-      service = module.get<AddressesService>(AddressesService)
+      service = module.get<AccountsService>(AccountsService)
     }
   )
 

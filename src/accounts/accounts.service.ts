@@ -1,16 +1,16 @@
 import { Injectable } from "@nestjs/common"
-import { AddressData } from "./addresses.interfaces"
+import { Account } from "./classes/account.class"
 
 @Injectable()
-export class AddressesService {
-  public getAddresses(): AddressData[] {
+export class AccountsService {
+  public getAccounts(): Account[] {
     // Create 25 addresses
-    let addresses: AddressData[] = []
+    let accounts: Account[] = []
     for (let i = 1; i <= 25; i++) {
       let randomAllowed = Math.floor(Math.random() * Math.floor(10)) * 1073741824
       let randomUsed = Math.floor(Math.random() * Math.floor(randomAllowed))
 
-      let user: AddressData = {
+      let user: Account = {
         id: `59cb948ad80a820b68f0523${i}`,
         name: `John Doe ${i}`,
         address: `john${i}@domain.com`,
@@ -18,8 +18,8 @@ export class AddressesService {
         quotaUsed: randomUsed,
         disabled: false
       }
-      addresses.push(user)
+      accounts.push(user)
     }
-    return addresses
+    return accounts
   }
 }
