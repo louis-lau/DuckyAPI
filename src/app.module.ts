@@ -8,7 +8,11 @@ import { UsersModule } from "./users/users.module"
 import { AuthController } from "./auth/auth.controller"
 
 @Module({
-  imports: [AuthModule, UsersModule, MongooseModule.forRoot("mongodb://mailserver.local/ducky-api")],
+  imports: [
+    AuthModule,
+    UsersModule,
+    MongooseModule.forRoot("mongodb://mailserver.local/ducky-api", { useCreateIndex: true })
+  ],
   controllers: [AppController, AccountsController, AuthController],
   providers: [AccountsService]
 })

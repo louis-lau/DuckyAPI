@@ -12,6 +12,7 @@ async function bootstrap(): Promise<void> {
     .setTitle("DuckyAPI")
     .setDescription("A customer facing api for WildDuck")
     .setVersion("1.0")
+    .addBearerAuth()
     .build()
   const document = SwaggerModule.createDocument(app, options)
   SwaggerModule.setup("", app, document)
