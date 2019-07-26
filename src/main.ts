@@ -4,6 +4,8 @@ import { ValidationPipe } from "@nestjs/common"
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger"
 import * as helmet from "helmet"
 
+declare const module: any
+
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule)
   app.enableCors()
@@ -20,5 +22,10 @@ async function bootstrap(): Promise<void> {
   SwaggerModule.setup("", app, document)
 
   await app.listen(3000)
+
+  if (module.hot) {
+    module.hot.accept()
+    module.hot.dispose((): Promise<void> => app.close())
+  }
 }
 bootstrap()

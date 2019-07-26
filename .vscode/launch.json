@@ -9,7 +9,6 @@
       "type": "node",
       "request": "launch",
       "preLaunchTask": "npm: start:debug",
-      "restart": true,
       "port": 9229
     }
   ]
