@@ -1,19 +1,17 @@
 import { Module } from "@nestjs/common"
 import { MongooseModule } from "@nestjs/mongoose"
 import { AppController } from "./app.controller"
-import { AccountsController } from "./accounts/accounts.controller"
-import { AccountsService } from "./accounts/accounts.service"
 import { AuthModule } from "./auth/auth.module"
 import { UsersModule } from "./users/users.module"
-import { AuthController } from "./auth/auth.controller"
+import { AccountsModule } from "./accounts/accounts.module"
 
 @Module({
   imports: [
+    MongooseModule.forRoot("mongodb://mailserver.local/ducky-api", { useCreateIndex: true }),
     AuthModule,
-    UsersModule,
-    MongooseModule.forRoot("mongodb://mailserver.local/ducky-api", { useCreateIndex: true })
+    AccountsModule,
+    UsersModule
   ],
-  controllers: [AppController, AccountsController, AuthController],
-  providers: [AccountsService]
+  controllers: [AppController]
 })
 export class AppModule {}

@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common"
-import { Account } from "./classes/account.class"
+import { Account } from "./account.class"
 
 @Injectable()
 export class AccountsService {
-  public getAccounts(): Account[] {
+  public async getAccounts(): Promise<Account[]> {
     // Create 25 addresses
     let accounts: Account[] = []
     for (let i = 1; i <= 25; i++) {

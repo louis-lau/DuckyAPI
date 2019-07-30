@@ -1,4 +1,4 @@
 import { Document } from "mongoose"
-import { User } from "../classes/user.class"
+import { User } from "./user.class"
 
 export interface UserDocument extends User, Document {}

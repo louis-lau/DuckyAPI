@@ -1,6 +1,6 @@
 import { Controller, Post, Body, BadRequestException } from "@nestjs/common"
 import { UsersService } from "./users.service"
-import { CreateUserDto } from "./dto/create-user.dto"
+import { CreateUserDto } from "./create-user.dto"
 import { ApiCreatedResponse, ApiBadRequestResponse, ApiUseTags, ApiBearerAuth, ApiOperation } from "@nestjs/swagger"
 
 @Controller("users")
