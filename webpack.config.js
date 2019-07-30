@@ -1,6 +1,7 @@
 const webpack = require("webpack")
 const path = require("path")
 const nodeExternals = require("webpack-node-externals")
+const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin")
 
 module.exports = {
   entry: ["webpack/hot/poll?100", "./src/main.ts"],
@@ -23,7 +24,8 @@ module.exports = {
   mode: "development",
   devtool: "source-map",
   resolve: {
-    extensions: [".tsx", ".ts", ".js"]
+    extensions: [".tsx", ".ts", ".js"],
+    plugins: [new TsconfigPathsPlugin()]
   },
   plugins: [new webpack.HotModuleReplacementPlugin()],
   output: {

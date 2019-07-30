@@ -5,7 +5,7 @@ export class Account {
   public id: string
 
   @ApiModelProperty({ example: "John Doe", description: "The name of the email account" })
-  public name: string
+  public name: string | null
 
   @ApiModelProperty({ example: "john@example.com", description: "The E-Mail address of the email account" })
   public address: string

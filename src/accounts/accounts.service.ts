@@ -1,24 +1,46 @@
-import { Injectable } from "@nestjs/common"
+import { Injectable, HttpService, NotFoundException, BadRequestException, Logger } from "@nestjs/common"
+import { wildDuckApiUrl, wildDuckApiToken } from "src/constants"
 import { Account } from "./account.class"
+import { AxiosResponse } from "axios"
 
 @Injectable()
 export class AccountsService {
-  public async getAccounts(): Promise<Account[]> {
-    // Create 25 addresses
-    let accounts: Account[] = []
-    for (let i = 1; i <= 25; i++) {
-      let randomAllowed = Math.floor(Math.random() * Math.floor(10)) * 1073741824
-      let randomUsed = Math.floor(Math.random() * Math.floor(randomAllowed))
+  private readonly logger = new Logger(AccountsService.name, true)
 
-      let user: Account = {
-        id: `59cb948ad80a820b68f0523${i}`,
-        name: `John Doe ${i}`,
-        address: `john${i}@domain.com`,
-        quotaAllowed: randomAllowed,
-        quotaUsed: randomUsed,
-        disabled: false
-      }
-      accounts.push(user)
+  public constructor(private readonly httpService: HttpService) {}
+
+  public async getAccounts(): Promise<Account[]> {
+    let apiResponse: AxiosResponse<any>
+    try {
+      apiResponse = await this.httpService
+        .get(`${wildDuckApiUrl}/users`, {
+          headers: {
+            "X-Access-Token": wildDuckApiToken
+          },
+          params: {
+            limit: 250
+          }
+        })
+        .toPromise()
+    } catch (error) {
+      this.logger.error(error.message)
+      throw new BadRequestException("Backend service not reachable")
+    }
+
+    if (apiResponse.data.results.length === 0) {
+      throw new NotFoundException("No accounts found")
+    }
+
+    let accounts: Account[] = []
+    for (const result of apiResponse.data.results) {
+      accounts.push({
+        id: result.id,
+        name: result.name,
+        address: result.address,
+        quotaAllowed: result.quota.allowed,
+        quotaUsed: result.quota.used,
+        disabled: result.disabled
+      })
     }
     return accounts
   }
