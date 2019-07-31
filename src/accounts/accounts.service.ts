@@ -1,4 +1,4 @@
-import { Injectable, HttpService, NotFoundException, BadRequestException, Logger } from "@nestjs/common"
+import { Injectable, HttpService, NotFoundException, Logger, InternalServerErrorException } from "@nestjs/common"
 import { wildDuckApiUrl, wildDuckApiToken } from "src/constants"
 import { Account } from "./account.class"
 import { AxiosResponse } from "axios"
@@ -24,7 +24,7 @@ export class AccountsService {
         .toPromise()
     } catch (error) {
       this.logger.error(error.message)
-      throw new BadRequestException("Backend service not reachable")
+      throw new InternalServerErrorException("Backend service not reachable")
     }
 
     if (apiResponse.data.results.length === 0) {

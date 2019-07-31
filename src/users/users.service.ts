@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from "@nestjs/common"
+import { Injectable, InternalServerErrorException } from "@nestjs/common"
 import { Model } from "mongoose"
 import { InjectModel } from "@nestjs/mongoose"
 import { CreateUserDto } from "./create-user.dto"
@@ -28,7 +28,7 @@ export class UsersService {
           message = "Username already exists"
         }
       }
-      throw new BadRequestException(message)
+      throw new InternalServerErrorException(message)
     }
   }
 }
