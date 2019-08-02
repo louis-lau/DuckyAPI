@@ -22,7 +22,7 @@ module.exports = {
     ]
   },
   mode: "development",
-  devtool: "source-map",
+  devtool: "eval-source-map",
   resolve: {
     extensions: [".tsx", ".ts", ".js"],
     plugins: [new TsconfigPathsPlugin()]

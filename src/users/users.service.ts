@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from "@nestjs/common"
+import { Injectable, InternalServerErrorException, BadRequestException } from "@nestjs/common"
 import { Model } from "mongoose"
 import { InjectModel } from "@nestjs/mongoose"
 import { CreateUserDto } from "./create-user.dto"
@@ -22,13 +22,25 @@ export class UsersService {
     try {
       return await createdUser.save()
     } catch (error) {
-      let message = "Unknown Error"
-      if (error.name === "MongoError") {
-        if (error.code === 11000) {
-          message = "Username already exists"
-        }
+      let message: string
+      let userSideError: boolean
+      switch (error.code) {
+        case 11000:
+          message = "This user already exists"
+          userSideError = true
+          break
+
+        default:
+          message = "Unknown error"
+          userSideError = false
+          break
       }
-      throw new InternalServerErrorException(message)
+
+      if (userSideError) {
+        throw new BadRequestException(message)
+      } else {
+        throw new InternalServerErrorException(message)
+      }
     }
   }
 }

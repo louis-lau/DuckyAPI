@@ -30,13 +30,13 @@ export class AccountsController {
   @ApiOkResponse({ description: "An array of accounts", type: Account, isArray: true })
   @ApiNotFoundResponse({ description: "No accounts found" })
   private async getAccounts(): Promise<Account[]> {
-    return this.accountsService.getAccounts()
+    return await this.accountsService.getAccounts()
   }
 
   @Post()
   @ApiOperation({ title: "Create a new E-Mail account" })
   @ApiCreatedResponse({ description: "Account created successfully" })
   private async createAccount(@Body() createAccountDto: CreateAccountDto): Promise<void> {
-    console.log(createAccountDto)
+    await this.accountsService.createAccount(createAccountDto)
   }
 }

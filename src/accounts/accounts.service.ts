@@ -1,7 +1,15 @@
-import { Injectable, HttpService, NotFoundException, Logger, InternalServerErrorException } from "@nestjs/common"
-import { wildDuckApiUrl, wildDuckApiToken } from "src/constants"
+import {
+  Injectable,
+  HttpService,
+  NotFoundException,
+  Logger,
+  InternalServerErrorException,
+  BadRequestException
+} from "@nestjs/common"
+import { wildDuckApiUrl, wildDuckApiToken, allowUnsafePasswords } from "src/constants"
 import { Account } from "./account.class"
 import { AxiosResponse } from "axios"
+import { CreateAccountDto } from "./create-account.dto"
 
 @Injectable()
 export class AccountsService {
@@ -43,5 +51,66 @@ export class AccountsService {
       })
     }
     return accounts
+  }
+
+  public async createAccount(createAccountDto: CreateAccountDto): Promise<void> {
+    let apiResponse: AxiosResponse<any>
+    try {
+      apiResponse = await this.httpService
+        .post(
+          `${wildDuckApiUrl}/users`,
+          {
+            username: createAccountDto.address,
+            name: createAccountDto.name,
+            password: createAccountDto.password,
+            spamLevel: createAccountDto.spamLevel,
+            quota: createAccountDto.quotaAllowed,
+            disabledScopes: createAccountDto.disabledScopes,
+            allowUnsafe: allowUnsafePasswords
+          },
+          {
+            headers: {
+              "X-Access-Token": wildDuckApiToken
+            }
+          }
+        )
+        .toPromise()
+    } catch (error) {
+      this.logger.error(error.message)
+      throw new InternalServerErrorException("Backend service not reachable")
+    }
+
+    if (apiResponse.data.error) {
+      let message: string
+      let userSideError: boolean
+      let log: boolean
+      switch (apiResponse.data.code || !apiResponse.data.success) {
+        case "AddressExistsError":
+          message = "This account already exists"
+          userSideError = true
+          break
+
+        case "InsecurePasswordError":
+          message =
+            "The provided password has previously appeared in a data breach (https://haveibeenpwned.com/Passwords)"
+          userSideError = true
+          break
+
+        default:
+          message = "Unknown error"
+          log = true
+          break
+      }
+
+      if (log) {
+        this.logger.error(apiResponse.data)
+      }
+
+      if (userSideError) {
+        throw new BadRequestException(message)
+      } else {
+        throw new InternalServerErrorException(message)
+      }
+    }
   }
 }

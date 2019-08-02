@@ -64,13 +64,4 @@ export class CreateAccountDto {
     message: "each value in disabledScopes must be either pop3, imap, smtp"
   })
   public disabledScopes: ("pop3" | "imap" | "smtp")[]
-
-  @ApiModelProperty({
-    example: false,
-    description: "If true then the account can not authenticate or receive any new mail",
-    required: false
-  })
-  @IsOptional()
-  @IsBoolean()
-  public disabled?: boolean
 }
