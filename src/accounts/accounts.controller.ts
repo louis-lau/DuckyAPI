@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards, Post, Body } from "@nestjs/common"
+import { Controller, Get, UseGuards, Post, Body, Param } from "@nestjs/common"
 import { AccountsService } from "./accounts.service"
 import {
   ApiUseTags,
@@ -11,9 +11,11 @@ import {
   ApiInternalServerErrorResponse,
   ApiBadRequestResponse
 } from "@nestjs/swagger"
-import { Account } from "./account.class"
+import { Account } from "./class/account.class"
 import { AuthGuard } from "@nestjs/passport"
-import { CreateAccountDto } from "./create-account.dto"
+import { CreateAccountDto } from "./dto/create-account.dto"
+import { AccountDetails } from "./class/account-details.class"
+import { GetAccountDetailsParams } from "./params/get-account-details.params"
 
 @Controller("accounts")
 @ApiUseTags("Accounts")
@@ -31,6 +33,14 @@ export class AccountsController {
   @ApiNotFoundResponse({ description: "No accounts found" })
   private async getAccounts(): Promise<Account[]> {
     return await this.accountsService.getAccounts()
+  }
+
+  @Get(":id")
+  @ApiOperation({ title: "Get account details" })
+  @ApiOkResponse({ description: "Account details", type: AccountDetails })
+  @ApiNotFoundResponse({ description: "No account found with this id" })
+  private async getAccountDetails(@Param() params: GetAccountDetailsParams): Promise<AccountDetails> {
+    return await this.accountsService.getAccountDetails(params.id)
   }
 
   @Post()

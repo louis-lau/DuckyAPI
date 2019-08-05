@@ -10,7 +10,6 @@ import {
   Matches,
   IsArray,
   ArrayUnique,
-  IsBoolean,
   IsNotEmpty
 } from "class-validator"
 

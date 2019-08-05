@@ -22,7 +22,11 @@ async function bootstrap(): Promise<void> {
     .addTag("Users")
     .build()
   const document = SwaggerModule.createDocument(app, options)
-  SwaggerModule.setup("", app, document)
+  SwaggerModule.setup("/swagger", app, document, {
+    swaggerOptions: {
+      defaultModelsExpandDepth: 0
+    }
+  })
 
   await app.listen(3000)
 

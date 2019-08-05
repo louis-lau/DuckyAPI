@@ -7,9 +7,10 @@ import {
   BadRequestException
 } from "@nestjs/common"
 import { wildDuckApiUrl, wildDuckApiToken, allowUnsafePasswords } from "src/constants"
-import { Account } from "./account.class"
+import { Account } from "./class/account.class"
 import { AxiosResponse } from "axios"
-import { CreateAccountDto } from "./create-account.dto"
+import { CreateAccountDto } from "./dto/create-account.dto"
+import { AccountDetails } from "./class/account-details.class"
 
 @Injectable()
 export class AccountsService {
@@ -53,6 +54,46 @@ export class AccountsService {
     return accounts
   }
 
+  public async getAccountDetails(id: string): Promise<AccountDetails> {
+    let apiResponse: AxiosResponse<any>
+    try {
+      apiResponse = await this.httpService
+        .get(`${wildDuckApiUrl}/users/${id}`, {
+          headers: {
+            "X-Access-Token": wildDuckApiToken
+          }
+        })
+        .toPromise()
+    } catch (error) {
+      this.logger.error(error.message)
+      throw new InternalServerErrorException("Backend service not reachable")
+    }
+
+    if (apiResponse.data.error || !apiResponse.data.success) {
+      switch (apiResponse.data.code) {
+        case "UserNotFound":
+          throw new NotFoundException("No account found with this id")
+
+        default:
+          this.logger.error(apiResponse.data)
+          throw new InternalServerErrorException("Unknown error")
+      }
+    }
+
+    let result = apiResponse.data
+    this.logger.log(result)
+    return {
+      id: result.id,
+      name: result.name,
+      address: result.address,
+      quotaAllowed: result.limits.quota.allowed,
+      quotaUsed: result.limits.quota.used,
+      disabled: result.disabled,
+      spamLevel: result.spamLevel,
+      disabledScopes: result.disabledScopes
+    }
+  }
+
   public async createAccount(createAccountDto: CreateAccountDto): Promise<void> {
     let apiResponse: AxiosResponse<any>
     try {
@@ -80,36 +121,19 @@ export class AccountsService {
       throw new InternalServerErrorException("Backend service not reachable")
     }
 
-    if (apiResponse.data.error) {
-      let message: string
-      let userSideError: boolean
-      let log: boolean
-      switch (apiResponse.data.code || !apiResponse.data.success) {
+    if (apiResponse.data.error || !apiResponse.data.success) {
+      switch (apiResponse.data.code) {
         case "AddressExistsError":
-          message = "This account already exists"
-          userSideError = true
-          break
+          throw new BadRequestException("This account already exists")
 
         case "InsecurePasswordError":
-          message =
+          throw new BadRequestException(
             "The provided password has previously appeared in a data breach (https://haveibeenpwned.com/Passwords)"
-          userSideError = true
-          break
+          )
 
         default:
-          message = "Unknown error"
-          log = true
-          break
-      }
-
-      if (log) {
-        this.logger.error(apiResponse.data)
-      }
-
-      if (userSideError) {
-        throw new BadRequestException(message)
-      } else {
-        throw new InternalServerErrorException(message)
+          this.logger.error(apiResponse.data)
+          throw new InternalServerErrorException("Unknown error")
       }
     }
   }
