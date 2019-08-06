@@ -11,6 +11,7 @@ import { Account } from "./class/account.class"
 import { AxiosResponse } from "axios"
 import { CreateAccountDto } from "./dto/create-account.dto"
 import { AccountDetails } from "./class/account-details.class"
+import { UpdateAccountDto } from "./dto/update-account.dto"
 
 @Injectable()
 export class AccountsService {
@@ -126,6 +127,47 @@ export class AccountsService {
         case "AddressExistsError":
           throw new BadRequestException("This account already exists")
 
+        case "InsecurePasswordError":
+          throw new BadRequestException(
+            "The provided password has previously appeared in a data breach (https://haveibeenpwned.com/Passwords)"
+          )
+
+        default:
+          this.logger.error(apiResponse.data)
+          throw new InternalServerErrorException("Unknown error")
+      }
+    }
+  }
+
+  public async updateAccount(id: string, updateAccountDto: UpdateAccountDto): Promise<void> {
+    let apiResponse: AxiosResponse<any>
+    try {
+      apiResponse = await this.httpService
+        .put(
+          `${wildDuckApiUrl}/users/${id}`,
+          {
+            name: updateAccountDto.name,
+            password: updateAccountDto.password,
+            spamLevel: updateAccountDto.spamLevel,
+            quota: updateAccountDto.quotaAllowed,
+            disabledScopes: updateAccountDto.disabledScopes,
+            allowUnsafe: allowUnsafePasswords,
+            disabled: updateAccountDto.disabled
+          },
+          {
+            headers: {
+              "X-Access-Token": wildDuckApiToken
+            }
+          }
+        )
+        .toPromise()
+    } catch (error) {
+      this.logger.error(error.message)
+      throw new InternalServerErrorException("Backend service not reachable")
+    }
+
+    if (apiResponse.data.error || !apiResponse.data.success) {
+      switch (apiResponse.data.code) {
         case "InsecurePasswordError":
           throw new BadRequestException(
             "The provided password has previously appeared in a data breach (https://haveibeenpwned.com/Passwords)"

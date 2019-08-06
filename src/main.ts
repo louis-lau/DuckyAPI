@@ -18,13 +18,14 @@ async function bootstrap(): Promise<void> {
     .setVersion("1.0")
     .addBearerAuth()
     .addTag("Authentication")
-    .addTag("Accounts")
+    .addTag("Email Accounts")
     .addTag("Users")
     .build()
   const document = SwaggerModule.createDocument(app, options)
   SwaggerModule.setup("/swagger", app, document, {
     swaggerOptions: {
-      defaultModelsExpandDepth: 0
+      defaultModelsExpandDepth: 0,
+      operationsSorter: "method"
     }
   })
 

@@ -8,5 +8,6 @@ function HashPassword(password: string): string {
 export const UserSchema = new mongoose.Schema({
   username: { type: String, unique: true },
   password: { type: String, set: HashPassword },
-  minTokenDate: { type: Date, default: Date.now }
+  minTokenDate: { type: Date, default: Date.now },
+  domains: [{ type: String }]
 })

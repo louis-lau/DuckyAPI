@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards, Post, Body, Param } from "@nestjs/common"
+import { Controller, Get, UseGuards, Post, Body, Param, Put } from "@nestjs/common"
 import { AccountsService } from "./accounts.service"
 import {
   ApiUseTags,
@@ -15,10 +15,11 @@ import { Account } from "./class/account.class"
 import { AuthGuard } from "@nestjs/passport"
 import { CreateAccountDto } from "./dto/create-account.dto"
 import { AccountDetails } from "./class/account-details.class"
-import { GetAccountDetailsParams } from "./params/get-account-details.params"
+import { AccountIdParams } from "./params/account-id.params"
+import { UpdateAccountDto } from "./dto/update-account.dto"
 
 @Controller("accounts")
-@ApiUseTags("Accounts")
+@ApiUseTags("Email Accounts")
 // @UseGuards(AuthGuard("jwt"))
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: "Invalid or expired token" })
@@ -39,7 +40,7 @@ export class AccountsController {
   @ApiOperation({ title: "Get account details" })
   @ApiOkResponse({ description: "Account details", type: AccountDetails })
   @ApiNotFoundResponse({ description: "No account found with this id" })
-  private async getAccountDetails(@Param() params: GetAccountDetailsParams): Promise<AccountDetails> {
+  private async getAccountDetails(@Param() params: AccountIdParams): Promise<AccountDetails> {
     return await this.accountsService.getAccountDetails(params.id)
   }
 
@@ -48,5 +49,15 @@ export class AccountsController {
   @ApiCreatedResponse({ description: "Account created successfully" })
   private async createAccount(@Body() createAccountDto: CreateAccountDto): Promise<void> {
     await this.accountsService.createAccount(createAccountDto)
+  }
+
+  @Put(":id")
+  @ApiOperation({ title: "Update E-Mail account" })
+  @ApiOkResponse({ description: "Account updated successfully" })
+  private async updateAccount(
+    @Param() params: AccountIdParams,
+    @Body() updateAccountDto: UpdateAccountDto
+  ): Promise<void> {
+    await this.accountsService.updateAccount(params.id, updateAccountDto)
   }
 }
