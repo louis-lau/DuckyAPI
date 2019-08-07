@@ -1,7 +1,7 @@
 import { ExtractJwt, Strategy } from "passport-jwt"
 import { PassportStrategy } from "@nestjs/passport"
 import { Injectable } from "@nestjs/common"
-import { jwtConstants } from "./constants"
+import { jwtConstants } from "src/constants"
 import { UsersService } from "src/users/users.service"
 
 @Injectable()
@@ -18,7 +18,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     let issuedAt = new Date(payload.iat * 1000)
     let user = await this.usersService.findById(payload.sub)
     if (issuedAt > user.minTokenDate) {
-      return { userId: payload.sub, username: payload.username }
+      delete user.password
+      return user
     } else {
       return null
     }

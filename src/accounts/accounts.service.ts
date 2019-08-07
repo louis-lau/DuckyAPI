@@ -12,6 +12,7 @@ import { AxiosResponse } from "axios"
 import { CreateAccountDto } from "./dto/create-account.dto"
 import { AccountDetails } from "./class/account-details.class"
 import { UpdateAccountDto } from "./dto/update-account.dto"
+import { User } from "src/users/user.class"
 
 @Injectable()
 export class AccountsService {
@@ -19,7 +20,10 @@ export class AccountsService {
 
   public constructor(private readonly httpService: HttpService) {}
 
-  public async getAccounts(): Promise<Account[]> {
+  public async getAccounts(user: User): Promise<Account[]> {
+    // Prefix domains with "domain:" to match the tags
+    let domainTags = user.domains.map((domain): string => `domain:${domain}`)
+
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
@@ -28,6 +32,7 @@ export class AccountsService {
             "X-Access-Token": wildDuckApiToken
           },
           params: {
+            tags: domainTags.join(),
             limit: 250
           }
         })
@@ -55,7 +60,7 @@ export class AccountsService {
     return accounts
   }
 
-  public async getAccountDetails(id: string): Promise<AccountDetails> {
+  public async getAccountDetails(user: User, id: string): Promise<AccountDetails> {
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
@@ -70,10 +75,15 @@ export class AccountsService {
       throw new InternalServerErrorException("Backend service not reachable")
     }
 
+    let domain = apiResponse.data.address.substring(apiResponse.data.address.lastIndexOf("@") + 1)
+    if (!user.domains.includes(domain)) {
+      throw new NotFoundException(`No account found with id: ${id}`)
+    }
+
     if (apiResponse.data.error || !apiResponse.data.success) {
       switch (apiResponse.data.code) {
         case "UserNotFound":
-          throw new NotFoundException("No account found with this id")
+          throw new NotFoundException(`No account found with id: ${id}`)
 
         default:
           this.logger.error(apiResponse.data)
@@ -81,21 +91,24 @@ export class AccountsService {
       }
     }
 
-    let result = apiResponse.data
-    this.logger.log(result)
     return {
-      id: result.id,
-      name: result.name,
-      address: result.address,
-      quotaAllowed: result.limits.quota.allowed,
-      quotaUsed: result.limits.quota.used,
-      disabled: result.disabled,
-      spamLevel: result.spamLevel,
-      disabledScopes: result.disabledScopes
+      id: apiResponse.data.id,
+      name: apiResponse.data.name,
+      address: apiResponse.data.address,
+      quotaAllowed: apiResponse.data.limits.quota.allowed,
+      quotaUsed: apiResponse.data.limits.quota.used,
+      disabled: apiResponse.data.disabled,
+      spamLevel: apiResponse.data.spamLevel,
+      disabledScopes: apiResponse.data.disabledScopes
     }
   }
 
-  public async createAccount(createAccountDto: CreateAccountDto): Promise<void> {
+  public async createAccount(user: User, createAccountDto: CreateAccountDto): Promise<void> {
+    let domain = createAccountDto.address.substring(createAccountDto.address.lastIndexOf("@") + 1)
+    if (!user.domains.includes(domain)) {
+      throw new BadRequestException(`You don't have permission to add accounts for ${domain}. Add the domain first.`)
+    }
+
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
@@ -108,7 +121,8 @@ export class AccountsService {
             spamLevel: createAccountDto.spamLevel,
             quota: createAccountDto.quotaAllowed,
             disabledScopes: createAccountDto.disabledScopes,
-            allowUnsafe: allowUnsafePasswords
+            allowUnsafe: allowUnsafePasswords,
+            tags: [`domain:${domain}`]
           },
           {
             headers: {
@@ -125,7 +139,7 @@ export class AccountsService {
     if (apiResponse.data.error || !apiResponse.data.success) {
       switch (apiResponse.data.code) {
         case "AddressExistsError":
-          throw new BadRequestException("This account already exists")
+          throw new BadRequestException(`Account ${createAccountDto.address} already exists`)
 
         case "InsecurePasswordError":
           throw new BadRequestException(
@@ -139,7 +153,10 @@ export class AccountsService {
     }
   }
 
-  public async updateAccount(id: string, updateAccountDto: UpdateAccountDto): Promise<void> {
+  public async updateAccount(user: User, id: string, updateAccountDto: UpdateAccountDto): Promise<void> {
+    // Run get accountdetails to make sure account exists and user has permission, we don't do anything with it because it will throw an exception
+    await this.getAccountDetails(user, id)
+
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService

@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards, Post, Body, Param, Put } from "@nestjs/common"
+import { Controller, Get, UseGuards, Post, Body, Param, Put, Request } from "@nestjs/common"
 import { AccountsService } from "./accounts.service"
 import {
   ApiUseTags,
@@ -20,7 +20,7 @@ import { UpdateAccountDto } from "./dto/update-account.dto"
 
 @Controller("accounts")
 @ApiUseTags("Email Accounts")
-// @UseGuards(AuthGuard("jwt"))
+@UseGuards(AuthGuard("jwt"))
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: "Invalid or expired token" })
 @ApiBadRequestResponse({ description: "Error that is resolvable user side" })
@@ -32,32 +32,34 @@ export class AccountsController {
   @ApiOperation({ title: "List E-Mail accounts" })
   @ApiOkResponse({ description: "An array of accounts", type: Account, isArray: true })
   @ApiNotFoundResponse({ description: "No accounts found" })
-  private async getAccounts(): Promise<Account[]> {
-    return await this.accountsService.getAccounts()
+  private async getAccounts(@Request() req): Promise<Account[]> {
+    return await this.accountsService.getAccounts(req.user)
   }
 
   @Get(":id")
   @ApiOperation({ title: "Get account details" })
   @ApiOkResponse({ description: "Account details", type: AccountDetails })
   @ApiNotFoundResponse({ description: "No account found with this id" })
-  private async getAccountDetails(@Param() params: AccountIdParams): Promise<AccountDetails> {
-    return await this.accountsService.getAccountDetails(params.id)
+  private async getAccountDetails(@Request() req, @Param() params: AccountIdParams): Promise<AccountDetails> {
+    return await this.accountsService.getAccountDetails(req.user, params.id)
   }
 
   @Post()
   @ApiOperation({ title: "Create a new E-Mail account" })
   @ApiCreatedResponse({ description: "Account created successfully" })
-  private async createAccount(@Body() createAccountDto: CreateAccountDto): Promise<void> {
-    await this.accountsService.createAccount(createAccountDto)
+  private async createAccount(@Request() req, @Body() createAccountDto: CreateAccountDto): Promise<void> {
+    await this.accountsService.createAccount(req.user, createAccountDto)
   }
 
   @Put(":id")
   @ApiOperation({ title: "Update E-Mail account" })
   @ApiOkResponse({ description: "Account updated successfully" })
+  @ApiNotFoundResponse({ description: "No account found with this id" })
   private async updateAccount(
+    @Request() req,
     @Param() params: AccountIdParams,
     @Body() updateAccountDto: UpdateAccountDto
   ): Promise<void> {
-    await this.accountsService.updateAccount(params.id, updateAccountDto)
+    await this.accountsService.updateAccount(req.user, params.id, updateAccountDto)
   }
 }

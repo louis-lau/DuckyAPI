@@ -1,4 +1,4 @@
-import { Controller, Request, UseGuards, Post, Body } from "@nestjs/common"
+import { Controller, Request, UseGuards, Post } from "@nestjs/common"
 import { AuthGuard } from "@nestjs/passport"
 import { AuthService } from "./auth.service"
 import {
@@ -6,10 +6,11 @@ import {
   ApiUnauthorizedResponse,
   ApiCreatedResponse,
   ApiBadRequestResponse,
-  ApiInternalServerErrorResponse
+  ApiInternalServerErrorResponse,
+  ApiImplicitBody
 } from "@nestjs/swagger"
 import { LoginDto } from "./login.dto"
-import { AccessToken } from "./access-token.class"
+import { AccessToken } from "./class/access-token.class"
 
 @Controller("auth")
 @ApiUseTags("Authentication")
@@ -18,11 +19,12 @@ import { AccessToken } from "./access-token.class"
 export class AuthController {
   public constructor(private readonly authService: AuthService) {}
 
-  @UseGuards(AuthGuard("local"))
   @Post("login")
+  @ApiImplicitBody({ name: "Password authentication", type: LoginDto })
+  @UseGuards(AuthGuard("local"))
   @ApiCreatedResponse({ description: "Login successful", type: AccessToken })
   @ApiUnauthorizedResponse({ description: "Invalid username or password" })
-  public async login(@Request() req, @Body() body: LoginDto): Promise<object> {
+  public async login(@Request() req): Promise<object> {
     return this.authService.login(req.user)
   }
 }

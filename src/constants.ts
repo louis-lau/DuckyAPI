@@ -3,3 +3,7 @@ export const wildDuckApiToken = "yesverysecret"
 
 // If false checks all new passwords against https://haveibeenpwned.com/Passwords
 export const allowUnsafePasswords = false
+
+export const jwtConstants = {
+  secret: "secretKey"
+}

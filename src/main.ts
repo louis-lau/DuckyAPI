@@ -25,7 +25,8 @@ async function bootstrap(): Promise<void> {
   SwaggerModule.setup("/swagger", app, document, {
     swaggerOptions: {
       defaultModelsExpandDepth: 0,
-      operationsSorter: "method"
+      operationsSorter: "method",
+      displayRequestDuration: true
     }
   })
 
