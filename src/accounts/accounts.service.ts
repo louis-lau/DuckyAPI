@@ -196,4 +196,34 @@ export class AccountsService {
       }
     }
   }
+
+  public async deleteAccount(user: User, id: string): Promise<void> {
+    // Run get accountdetails to make sure account exists and user has permission, we don't do anything with it because it will throw an exception
+    await this.getAccountDetails(user, id)
+
+    let apiResponse: AxiosResponse<any>
+    try {
+      apiResponse = await this.httpService
+        .delete(`${wildDuckApiUrl}/users/${id}`, {
+          headers: {
+            "X-Access-Token": wildDuckApiToken
+          }
+        })
+        .toPromise()
+    } catch (error) {
+      this.logger.error(error.message)
+      throw new InternalServerErrorException("Backend service not reachable")
+    }
+
+    if (apiResponse.data.error || !apiResponse.data.success) {
+      switch (apiResponse.data.code) {
+        case "UserNotFound":
+          throw new NotFoundException(`No account found with id: ${id}`)
+
+        default:
+          this.logger.error(apiResponse.data)
+          throw new InternalServerErrorException("Unknown error")
+      }
+    }
+  }
 }

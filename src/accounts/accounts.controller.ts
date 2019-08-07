@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards, Post, Body, Param, Put, Request } from "@nestjs/common"
+import { Controller, Get, UseGuards, Post, Body, Param, Put, Request, Delete } from "@nestjs/common"
 import { AccountsService } from "./accounts.service"
 import {
   ApiUseTags,
@@ -28,6 +28,14 @@ import { UpdateAccountDto } from "./dto/update-account.dto"
 export class AccountsController {
   public constructor(private readonly accountsService: AccountsService) {}
 
+  @Delete(":id")
+  @ApiOperation({ title: "Delete email account" })
+  @ApiOkResponse({ description: "Account deleted successfully" })
+  @ApiNotFoundResponse({ description: "No account found with this id" })
+  private async deleteAccount(@Request() req, @Param() params: AccountIdParams): Promise<void> {
+    return await this.accountsService.deleteAccount(req.user, params.id)
+  }
+
   @Get()
   @ApiOperation({ title: "List E-Mail accounts" })
   @ApiOkResponse({ description: "An array of accounts", type: Account, isArray: true })
@@ -37,7 +45,7 @@ export class AccountsController {
   }
 
   @Get(":id")
-  @ApiOperation({ title: "Get account details" })
+  @ApiOperation({ title: "Get email account details" })
   @ApiOkResponse({ description: "Account details", type: AccountDetails })
   @ApiNotFoundResponse({ description: "No account found with this id" })
   private async getAccountDetails(@Request() req, @Param() params: AccountIdParams): Promise<AccountDetails> {
@@ -45,14 +53,14 @@ export class AccountsController {
   }
 
   @Post()
-  @ApiOperation({ title: "Create a new E-Mail account" })
+  @ApiOperation({ title: "Create a new email account" })
   @ApiCreatedResponse({ description: "Account created successfully" })
   private async createAccount(@Request() req, @Body() createAccountDto: CreateAccountDto): Promise<void> {
     await this.accountsService.createAccount(req.user, createAccountDto)
   }
 
   @Put(":id")
-  @ApiOperation({ title: "Update E-Mail account" })
+  @ApiOperation({ title: "Update email account" })
   @ApiOkResponse({ description: "Account updated successfully" })
   @ApiNotFoundResponse({ description: "No account found with this id" })
   private async updateAccount(
