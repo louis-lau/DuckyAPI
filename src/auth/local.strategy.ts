@@ -1,9 +1,11 @@
-import { Strategy } from "passport-local"
+import { BadRequestException, Injectable, UnauthorizedException } from "@nestjs/common"
 import { PassportStrategy } from "@nestjs/passport"
-import { Injectable, UnauthorizedException, BadRequestException } from "@nestjs/common"
+import { validateOrReject } from "class-validator"
+import { Strategy } from "passport-local"
+import { User } from "src/users/user.class"
+
 import { AuthService } from "./auth.service"
 import { LoginDto } from "./login.dto"
-import { validateOrReject } from "class-validator"
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
@@ -11,7 +13,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     super()
   }
 
-  public async validate(username: string, password: string): Promise<any> {
+  public async validate(username: string, password: string): Promise<User> {
     // Use class-validator to validate type, Nestjs doesn't do this automatically here because this is an authguard
     let loginDto = new LoginDto()
     loginDto.username = username

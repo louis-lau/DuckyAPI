@@ -1,14 +1,15 @@
-import { Controller, Post, Body } from "@nestjs/common"
-import { UsersService } from "./users.service"
-import { CreateUserDto } from "./create-user.dto"
+import { Body, Controller, Post } from "@nestjs/common"
 import {
-  ApiCreatedResponse,
-  ApiUseTags,
+  ApiBadRequestResponse,
   ApiBearerAuth,
-  ApiOperation,
+  ApiCreatedResponse,
   ApiInternalServerErrorResponse,
-  ApiBadRequestResponse
+  ApiOperation,
+  ApiUseTags
 } from "@nestjs/swagger"
+
+import { CreateUserDto } from "./create-user.dto"
+import { UsersService } from "./users.service"
 
 @Controller("users")
 @ApiUseTags("Users")

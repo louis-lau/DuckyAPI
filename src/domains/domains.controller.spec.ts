@@ -1,4 +1,5 @@
 import { Test, TestingModule } from "@nestjs/testing"
+
 import { DomainsController } from "./domains.controller"
 
 describe("Domains Controller", (): void => {

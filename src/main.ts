@@ -1,9 +1,12 @@
-import { NestFactory } from "@nestjs/core"
-import { AppModule } from "./app.module"
 import { ValidationPipe } from "@nestjs/common"
-import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger"
+import { NestFactory } from "@nestjs/core"
+import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger"
 import * as helmet from "helmet"
 
+import { AppModule } from "./app.module"
+
+// No type for this
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare const module: any
 
 async function bootstrap(): Promise<void> {

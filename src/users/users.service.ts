@@ -1,6 +1,7 @@
-import { Injectable, InternalServerErrorException, BadRequestException } from "@nestjs/common"
-import { Model } from "mongoose"
+import { BadRequestException, Injectable, InternalServerErrorException } from "@nestjs/common"
 import { InjectModel } from "@nestjs/mongoose"
+import { Model } from "mongoose"
+
 import { CreateUserDto } from "./create-user.dto"
 import { UserDocument } from "./user-document.interface"
 import { User } from "./user.class"

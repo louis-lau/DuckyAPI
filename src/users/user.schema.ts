@@ -1,5 +1,5 @@
-import * as mongoose from "mongoose"
 import * as bcrypt from "bcrypt"
+import * as mongoose from "mongoose"
 import * as mongooseLeanId from "mongoose-lean-id"
 
 function HashPassword(password: string): string {

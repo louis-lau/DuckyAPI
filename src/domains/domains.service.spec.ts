@@ -1,4 +1,5 @@
 import { Test, TestingModule } from "@nestjs/testing"
+
 import { DomainsService } from "./domains.service"
 
 describe("DomainsService", (): void => {

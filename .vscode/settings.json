@@ -1,7 +1,11 @@
 {
-  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    { "language": "typescript", "autoFix": true },
+    { "language": "typescriptreact", "autoFix": true }
+  ],
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "prettier.eslintIntegration": true,
   "editor.tabSize": 2,
   "workbench.colorCustomizations": {
     "titleBar.activeBackground": "#1857a4",
@@ -9,5 +13,5 @@
     "titleBar.activeForeground": "#e7e7e7",
     "titleBar.inactiveForeground": "#e7e7e799"
   },
-  "peacock.color": "#1857a4"
+  "prettier.eslintIntegration": true
 }

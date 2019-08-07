@@ -1,6 +1,6 @@
 module.exports = {
   parser: "@typescript-eslint/parser",
-  plugins: ["@typescript-eslint"],
+  plugins: ["@typescript-eslint", "simple-import-sort"],
   extends: [
     "plugin:@typescript-eslint/recommended", // Uses the recommended rules from the @typescript-eslint/eslint-plugin
     "prettier/@typescript-eslint", // Uses eslint-config-prettier to disable ESLint rules from @typescript-eslint/eslint-plugin that would conflict with prettier
@@ -11,6 +11,8 @@ module.exports = {
     sourceType: "module" // Allows for the use of imports
   },
   rules: {
+    "prettier/prettier": "warn",
+    "simple-import-sort/sort": "warn",
     "@typescript-eslint/indent": ["error", 2],
     "@typescript-eslint/no-parameter-properties": "off"
   },

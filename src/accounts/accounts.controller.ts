@@ -1,22 +1,23 @@
-import { Controller, Get, UseGuards, Post, Body, Param, Put, Request, Delete } from "@nestjs/common"
-import { AccountsService } from "./accounts.service"
+import { Body, Controller, Delete, Get, Param, Post, Put, Request, UseGuards } from "@nestjs/common"
+import { AuthGuard } from "@nestjs/passport"
 import {
-  ApiUseTags,
-  ApiOkResponse,
-  ApiOperation,
+  ApiBadRequestResponse,
   ApiBearerAuth,
-  ApiUnauthorizedResponse,
-  ApiNotFoundResponse,
   ApiCreatedResponse,
   ApiInternalServerErrorResponse,
-  ApiBadRequestResponse
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiUnauthorizedResponse,
+  ApiUseTags
 } from "@nestjs/swagger"
-import { Account } from "./class/account.class"
-import { AuthGuard } from "@nestjs/passport"
-import { CreateAccountDto } from "./dto/create-account.dto"
+
+import { AccountsService } from "./accounts.service"
 import { AccountDetails } from "./class/account-details.class"
-import { AccountIdParams } from "./params/account-id.params"
+import { Account } from "./class/account.class"
+import { CreateAccountDto } from "./dto/create-account.dto"
 import { UpdateAccountDto } from "./dto/update-account.dto"
+import { AccountIdParams } from "./params/account-id.params"
 
 @Controller("accounts")
 @ApiUseTags("Email Accounts")

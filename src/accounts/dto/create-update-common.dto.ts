@@ -1,15 +1,15 @@
 import { ApiModelProperty } from "@nestjs/swagger"
 import {
-  IsOptional,
-  IsString,
-  IsNumber,
-  Min,
-  Max,
-  IsPositive,
-  Matches,
-  IsArray,
   ArrayUnique,
-  IsNotEmpty
+  IsArray,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsPositive,
+  IsString,
+  Matches,
+  Max,
+  Min
 } from "class-validator"
 
 export class CreateUpdateCommonDto {

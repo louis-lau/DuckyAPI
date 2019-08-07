@@ -1,10 +1,11 @@
 import { Module } from "@nestjs/common"
 import { MongooseModule } from "@nestjs/mongoose"
+
+import { AccountsModule } from "./accounts/accounts.module"
 import { AppController } from "./app.controller"
 import { AuthModule } from "./auth/auth.module"
+import { DomainsModule } from "./domains/domains.module"
 import { UsersModule } from "./users/users.module"
-import { AccountsModule } from "./accounts/accounts.module"
-import { DomainsModule } from './domains/domains.module';
 
 @Module({
   imports: [

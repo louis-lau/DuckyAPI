@@ -1,4 +1,5 @@
 import { Controller } from "@nestjs/common"
+
 import { DomainsService } from "./domains.service"
 
 @Controller("domains")

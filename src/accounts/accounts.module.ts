@@ -1,4 +1,5 @@
-import { Module, HttpModule } from "@nestjs/common"
+import { HttpModule, Module } from "@nestjs/common"
+
 import { AccountsController } from "./accounts.controller"
 import { AccountsService } from "./accounts.service"
 

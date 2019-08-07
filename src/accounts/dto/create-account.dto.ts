@@ -1,5 +1,6 @@
 import { ApiModelProperty } from "@nestjs/swagger"
 import { IsEmail, IsNotEmpty, IsString } from "class-validator"
+
 import { CreateUpdateCommonDto } from "./create-update-common.dto"
 
 export class CreateAccountDto extends CreateUpdateCommonDto {

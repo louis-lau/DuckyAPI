@@ -1,18 +1,19 @@
 import {
-  Injectable,
+  BadRequestException,
   HttpService,
-  NotFoundException,
-  Logger,
+  Injectable,
   InternalServerErrorException,
-  BadRequestException
+  Logger,
+  NotFoundException
 } from "@nestjs/common"
-import { wildDuckApiUrl, wildDuckApiToken, allowUnsafePasswords } from "src/constants"
-import { Account } from "./class/account.class"
 import { AxiosResponse } from "axios"
-import { CreateAccountDto } from "./dto/create-account.dto"
-import { AccountDetails } from "./class/account-details.class"
-import { UpdateAccountDto } from "./dto/update-account.dto"
+import { allowUnsafePasswords, wildDuckApiToken, wildDuckApiUrl } from "src/constants"
 import { User } from "src/users/user.class"
+
+import { AccountDetails } from "./class/account-details.class"
+import { Account } from "./class/account.class"
+import { CreateAccountDto } from "./dto/create-account.dto"
+import { UpdateAccountDto } from "./dto/update-account.dto"
 
 @Injectable()
 export class AccountsService {
@@ -24,6 +25,8 @@ export class AccountsService {
     // Prefix domains with "domain:" to match the tags
     let domainTags = user.domains.map((domain): string => `domain:${domain}`)
 
+    // Response can be anything, ignore eslint rule
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
@@ -61,6 +64,8 @@ export class AccountsService {
   }
 
   public async getAccountDetails(user: User, id: string): Promise<AccountDetails> {
+    // Response can be anything, ignore eslint rule
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
@@ -109,6 +114,8 @@ export class AccountsService {
       throw new BadRequestException(`You don't have permission to add accounts for ${domain}. Add the domain first.`)
     }
 
+    // Response can be anything, ignore eslint rule
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
@@ -157,6 +164,8 @@ export class AccountsService {
     // Run get accountdetails to make sure account exists and user has permission, we don't do anything with it because it will throw an exception
     await this.getAccountDetails(user, id)
 
+    // Response can be anything, ignore eslint rule
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
@@ -201,6 +210,8 @@ export class AccountsService {
     // Run get accountdetails to make sure account exists and user has permission, we don't do anything with it because it will throw an exception
     await this.getAccountDetails(user, id)
 
+    // Response can be anything, ignore eslint rule
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
