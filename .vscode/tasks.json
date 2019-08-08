@@ -3,7 +3,7 @@
   "tasks": [
     {
       "type": "npm",
-      "script": "start:dev",
+      "script": "buildstart:dev",
       "isBackground": true,
       "presentation": {
         "focus": true,
@@ -32,7 +32,7 @@
     },
     {
       "type": "npm",
-      "script": "start:debug",
+      "script": "buildstart:debug",
       "isBackground": true,
       "presentation": {
         "focus": true,

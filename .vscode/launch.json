@@ -8,7 +8,7 @@
       "name": "Launch Debug Session",
       "type": "node",
       "request": "launch",
-      "preLaunchTask": "npm: start:debug",
+      "preLaunchTask": "npm: buildstart:debug",
       "port": 9229
     }
   ]
