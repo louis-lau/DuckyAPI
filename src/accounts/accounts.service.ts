@@ -21,9 +21,21 @@ export class AccountsService {
 
   public constructor(private readonly httpService: HttpService) {}
 
-  public async getAccounts(user: User): Promise<Account[]> {
-    // Prefix domains with "domain:" to match the tags
-    let domainTags = user.domains.map((domain): string => `domain:${domain}`)
+  public async getAccounts(user: User, domain?: string): Promise<Account[]> {
+    if (user.domains.length === 0) {
+      throw new NotFoundException(`No accounts found for user: ${user.username}`)
+    }
+
+    let domainTags: string
+    if (domain) {
+      if (!user.domains.some((userDomain): boolean => userDomain.domain === domain)) {
+        throw new BadRequestException(`Domain: ${domain} doesn't exist on user: ${user.username}`)
+      }
+      domainTags = `domain:${domain}`
+    } else {
+      domainTags = user.domains.map((domain): string => `domain:${domain.domain}`).join()
+    }
+    // Comma delimited list of domains with "domain:" prefix to match the tags added to accounts
 
     // Response can be anything, ignore eslint rule
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -35,7 +47,7 @@ export class AccountsService {
             "X-Access-Token": wildDuckApiToken
           },
           params: {
-            tags: domainTags.join(),
+            tags: domainTags,
             limit: 250
           }
         })
@@ -46,7 +58,7 @@ export class AccountsService {
     }
 
     if (apiResponse.data.results.length === 0) {
-      throw new NotFoundException("No accounts found")
+      throw new NotFoundException(`No accounts found for user: ${user.username}`)
     }
 
     let accounts: Account[] = []
@@ -80,11 +92,6 @@ export class AccountsService {
       throw new InternalServerErrorException("Backend service not reachable")
     }
 
-    let domain = apiResponse.data.address.substring(apiResponse.data.address.lastIndexOf("@") + 1)
-    if (!user.domains.includes(domain)) {
-      throw new NotFoundException(`No account found with id: ${id}`)
-    }
-
     if (apiResponse.data.error || !apiResponse.data.success) {
       switch (apiResponse.data.code) {
         case "UserNotFound":
@@ -94,6 +101,12 @@ export class AccountsService {
           this.logger.error(apiResponse.data)
           throw new InternalServerErrorException("Unknown error")
       }
+    }
+
+    let addressDomain: string = apiResponse.data.address.substring(apiResponse.data.address.lastIndexOf("@") + 1)
+    if (!user.domains.some((domain): boolean => domain.domain === addressDomain)) {
+      // if address domain doesn't belong to user
+      throw new NotFoundException(`No account found with id: ${id}`)
     }
 
     return {
@@ -109,9 +122,12 @@ export class AccountsService {
   }
 
   public async createAccount(user: User, createAccountDto: CreateAccountDto): Promise<void> {
-    let domain = createAccountDto.address.substring(createAccountDto.address.lastIndexOf("@") + 1)
-    if (!user.domains.includes(domain)) {
-      throw new BadRequestException(`You don't have permission to add accounts for ${domain}. Add the domain first.`)
+    let addressDomain = createAccountDto.address.substring(createAccountDto.address.lastIndexOf("@") + 1)
+    if (!user.domains.some((domain): boolean => domain.domain === addressDomain)) {
+      // if address domain doesn't belong to user
+      throw new BadRequestException(
+        `You don't have permission to add accounts on ${addressDomain}. Add the domain first.`
+      )
     }
 
     // Response can be anything, ignore eslint rule
@@ -129,7 +145,7 @@ export class AccountsService {
             quota: createAccountDto.quotaAllowed,
             disabledScopes: createAccountDto.disabledScopes,
             allowUnsafe: allowUnsafePasswords,
-            tags: [`domain:${domain}`]
+            tags: [`domain:${addressDomain}`]
           },
           {
             headers: {
@@ -146,7 +162,7 @@ export class AccountsService {
     if (apiResponse.data.error || !apiResponse.data.success) {
       switch (apiResponse.data.code) {
         case "AddressExistsError":
-          throw new BadRequestException(`Account ${createAccountDto.address} already exists`)
+          throw new BadRequestException(`Email account: ${createAccountDto.address} already exists`)
 
         case "InsecurePasswordError":
           throw new BadRequestException(
@@ -161,7 +177,7 @@ export class AccountsService {
   }
 
   public async updateAccount(user: User, id: string, updateAccountDto: UpdateAccountDto): Promise<void> {
-    // Run get accountdetails to make sure account exists and user has permission, we don't do anything with it because it will throw an exception
+    // Run get accountdetails to make sure account exists and user has permission, we don't do anything with it because it will throw an exception if needed
     await this.getAccountDetails(user, id)
 
     // Response can be anything, ignore eslint rule
@@ -207,7 +223,7 @@ export class AccountsService {
   }
 
   public async deleteAccount(user: User, id: string): Promise<void> {
-    // Run get accountdetails to make sure account exists and user has permission, we don't do anything with it because it will throw an exception
+    // Run get accountdetails to make sure account exists and user has permission, we don't do anything with it because it will throw an exception if needed
     await this.getAccountDetails(user, id)
 
     // Response can be anything, ignore eslint rule

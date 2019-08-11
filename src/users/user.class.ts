@@ -1,4 +1,5 @@
 import { ApiModelProperty } from "@nestjs/swagger"
+import { Domain } from "src/domains/domain.class"
 
 export class User {
   @ApiModelProperty({ example: "5d49e11f600a423ffc0b1297", description: "Unique id for this user" })
@@ -19,5 +20,5 @@ export class User {
   public minTokenDate: Date
 
   @ApiModelProperty({ example: ["example.com", "domain.com"], description: "Domains this user can manage" })
-  public domains: string[]
+  public domains: Domain[]
 }

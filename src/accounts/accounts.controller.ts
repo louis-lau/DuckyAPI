@@ -39,7 +39,7 @@ export class AccountsController {
 
   @Get()
   @ApiOperation({ title: "List E-Mail accounts" })
-  @ApiOkResponse({ description: "An array of accounts", type: Account, isArray: true })
+  @ApiOkResponse({ description: "A list of accounts", type: Account, isArray: true })
   @ApiNotFoundResponse({ description: "No accounts found" })
   private async getAccounts(@Request() req): Promise<Account[]> {
     return await this.accountsService.getAccounts(req.user)

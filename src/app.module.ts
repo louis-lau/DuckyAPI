@@ -9,7 +9,11 @@ import { UsersModule } from "./users/users.module"
 
 @Module({
   imports: [
-    MongooseModule.forRoot("mongodb://mailserver.local/ducky-api", { useCreateIndex: true, useNewUrlParser: true }),
+    MongooseModule.forRoot("mongodb://mailserver.local/ducky-api", {
+      useCreateIndex: true,
+      useNewUrlParser: true,
+      useFindAndModify: false
+    }),
     AuthModule,
     AccountsModule,
     UsersModule,

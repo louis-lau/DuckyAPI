@@ -22,6 +22,7 @@ async function bootstrap(): Promise<void> {
     .addBearerAuth()
     .addTag("Authentication")
     .addTag("Email Accounts")
+    .addTag("Domains")
     .addTag("Users")
     .build()
   const document = SwaggerModule.createDocument(app, options)
