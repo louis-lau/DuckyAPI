@@ -5,6 +5,7 @@ import { AccountsModule } from "./accounts/accounts.module"
 import { AppController } from "./app.controller"
 import { AuthModule } from "./auth/auth.module"
 import { DomainsModule } from "./domains/domains.module"
+import { FiltersModule } from "./filters/filters.module"
 import { UsersModule } from "./users/users.module"
 
 @Module({
@@ -17,7 +18,8 @@ import { UsersModule } from "./users/users.module"
     AuthModule,
     AccountsModule,
     UsersModule,
-    DomainsModule
+    DomainsModule,
+    FiltersModule
   ],
   controllers: [AppController]
 })

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Request, UseGuards } from "@nestjs/common"
+import { Controller, Delete, Get, Param, Post, Request, UseGuards } from "@nestjs/common"
 import { AuthGuard } from "@nestjs/passport"
 import {
   ApiBadRequestResponse,
@@ -31,8 +31,8 @@ export class DomainsController {
     description: "WARNING: This will also remove any email accounts associated with this domain"
   })
   @ApiOkResponse({ description: "Domain successfully removed" })
-  private async removeDomain(@Request() req, @Param() domainParams: DomainParams): Promise<void> {
-    await this.domainsService.removeDomain(req.user, domainParams.domain)
+  private async deleteDomain(@Request() req, @Param() domainParams: DomainParams): Promise<void> {
+    await this.domainsService.deleteDomain(req.user, domainParams.domain)
   }
 
   @Get()

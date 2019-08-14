@@ -33,7 +33,7 @@ export class DomainsService {
     }
   }
 
-  public async removeDomain(user: User, domain: string): Promise<void> {
+  public async deleteDomain(user: User, domain: string): Promise<void> {
     if (!user.domains.some((userDomain): boolean => userDomain.domain === domain)) {
       throw new BadRequestException(`Domain: ${domain} doesn't exist on user: ${user.username}`)
     }

@@ -29,28 +29,28 @@ import { AccountIdParams } from "./params/account-id.params"
 export class AccountsController {
   public constructor(private readonly accountsService: AccountsService) {}
 
-  @Delete(":id")
+  @Delete(":accountId")
   @ApiOperation({ title: "Delete email account" })
   @ApiOkResponse({ description: "Account deleted successfully" })
   @ApiNotFoundResponse({ description: "No account found with this id" })
-  private async deleteAccount(@Request() req, @Param() params: AccountIdParams): Promise<void> {
-    return await this.accountsService.deleteAccount(req.user, params.id)
+  private async deleteAccount(@Request() req, @Param() accountIdParams: AccountIdParams): Promise<void> {
+    return await this.accountsService.deleteAccount(req.user, accountIdParams.accountId)
   }
 
   @Get()
-  @ApiOperation({ title: "List E-Mail accounts" })
+  @ApiOperation({ title: "List email accounts" })
   @ApiOkResponse({ description: "A list of accounts", type: Account, isArray: true })
   @ApiNotFoundResponse({ description: "No accounts found" })
   private async getAccounts(@Request() req): Promise<Account[]> {
     return await this.accountsService.getAccounts(req.user)
   }
 
-  @Get(":id")
+  @Get(":accountId")
   @ApiOperation({ title: "Get email account details" })
   @ApiOkResponse({ description: "Account details", type: AccountDetails })
   @ApiNotFoundResponse({ description: "No account found with this id" })
-  private async getAccountDetails(@Request() req, @Param() params: AccountIdParams): Promise<AccountDetails> {
-    return await this.accountsService.getAccountDetails(req.user, params.id)
+  private async getAccountDetails(@Request() req, @Param() accountIdParams: AccountIdParams): Promise<AccountDetails> {
+    return await this.accountsService.getAccountDetails(req.user, accountIdParams.accountId)
   }
 
   @Post()
@@ -60,15 +60,15 @@ export class AccountsController {
     await this.accountsService.createAccount(req.user, createAccountDto)
   }
 
-  @Put(":id")
-  @ApiOperation({ title: "Update email account" })
+  @Put(":accountId")
+  @ApiOperation({ title: "Update existing email account" })
   @ApiOkResponse({ description: "Account updated successfully" })
   @ApiNotFoundResponse({ description: "No account found with this id" })
   private async updateAccount(
     @Request() req,
-    @Param() params: AccountIdParams,
+    @Param() accountIdParams: AccountIdParams,
     @Body() updateAccountDto: UpdateAccountDto
   ): Promise<void> {
-    await this.accountsService.updateAccount(req.user, params.id, updateAccountDto)
+    await this.accountsService.updateAccount(req.user, accountIdParams.accountId, updateAccountDto)
   }
 }
