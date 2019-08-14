@@ -15,8 +15,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   public async validate(payload: any): Promise<object | false> {
-    let issuedAt = new Date(payload.iat * 1000)
-    let user = await this.usersService.findById(payload.sub)
+    const issuedAt = new Date(payload.iat * 1000)
+    const user = await this.usersService.findById(payload.sub)
     if (user && issuedAt > user.minTokenDate) {
       delete user.password
       return user

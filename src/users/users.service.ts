@@ -36,7 +36,7 @@ export class UsersService {
   }
 
   public async pushDomain(userId: string, domain: Domain): Promise<UserDocument | undefined> {
-    let user = await this.userModel.findById(userId).exec()
+    const user = await this.userModel.findById(userId).exec()
     user.domains.push(domain)
     try {
       return await user.save()
@@ -49,7 +49,7 @@ export class UsersService {
   }
 
   public async pullDomain(userId: string, domain: string): Promise<UserDocument | undefined> {
-    let user = await this.userModel.findByIdAndUpdate(userId, {
+    const user = await this.userModel.findByIdAndUpdate(userId, {
       $pull: {
         domains: {
           domain: domain

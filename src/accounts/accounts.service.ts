@@ -61,7 +61,7 @@ export class AccountsService {
       throw new NotFoundException(`No accounts found for user: ${user.username}`)
     }
 
-    let accounts: Account[] = []
+    const accounts: Account[] = []
     for (const result of apiResponse.data.results) {
       accounts.push({
         id: result.id,
@@ -103,7 +103,7 @@ export class AccountsService {
       }
     }
 
-    let addressDomain: string = apiResponse.data.address.substring(apiResponse.data.address.lastIndexOf("@") + 1)
+    const addressDomain: string = apiResponse.data.address.substring(apiResponse.data.address.lastIndexOf("@") + 1)
     if (!user.domains.some((domain): boolean => domain.domain === addressDomain)) {
       // if address domain doesn't belong to user
       throw new NotFoundException(`No account found with id: ${id}`)
@@ -122,7 +122,7 @@ export class AccountsService {
   }
 
   public async createAccount(user: User, createAccountDto: CreateAccountDto): Promise<void> {
-    let addressDomain = createAccountDto.address.substring(createAccountDto.address.lastIndexOf("@") + 1)
+    const addressDomain = createAccountDto.address.substring(createAccountDto.address.lastIndexOf("@") + 1)
     if (!user.domains.some((domain): boolean => domain.domain === addressDomain)) {
       // if address domain doesn't belong to user
       throw new BadRequestException(

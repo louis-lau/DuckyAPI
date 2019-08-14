@@ -15,7 +15,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
 
   public async validate(username: string, password: string): Promise<User> {
     // Use class-validator to validate type, Nestjs doesn't do this automatically here because this is an authguard
-    let loginDto = new LoginDto()
+    const loginDto = new LoginDto()
     loginDto.username = username
     loginDto.password = password
     try {

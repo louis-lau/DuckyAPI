@@ -14,7 +14,9 @@ module.exports = {
     "prettier/prettier": "warn",
     "simple-import-sort/sort": "warn",
     "@typescript-eslint/indent": ["error", 2],
-    "@typescript-eslint/no-parameter-properties": "off"
+    "@typescript-eslint/no-parameter-properties": "off",
+    "no-var": "error",
+    "prefer-const": "warn"
   },
   overrides: [
     {

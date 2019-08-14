@@ -1,11 +1,9 @@
 import { ApiModelProperty } from "@nestjs/swagger"
 import { Type } from "class-transformer"
 import {
-  ArrayContains,
   ArrayUnique,
   IsArray,
   IsBoolean,
-  IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
