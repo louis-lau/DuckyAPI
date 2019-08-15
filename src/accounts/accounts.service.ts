@@ -75,13 +75,13 @@ export class AccountsService {
     return accounts
   }
 
-  public async getAccountDetails(user: User, id: string): Promise<AccountDetails> {
+  public async getAccountDetails(user: User, accountId: string): Promise<AccountDetails> {
     // Response can be anything, ignore eslint rule
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
-        .get(`${wildDuckApiUrl}/users/${id}`, {
+        .get(`${wildDuckApiUrl}/users/${accountId}`, {
           headers: {
             "X-Access-Token": wildDuckApiToken
           }
@@ -95,7 +95,7 @@ export class AccountsService {
     if (apiResponse.data.error || !apiResponse.data.success) {
       switch (apiResponse.data.code) {
         case "UserNotFound":
-          throw new NotFoundException(`No account found with id: ${id}`)
+          throw new NotFoundException(`No account found with id: ${accountId}`)
 
         default:
           this.logger.error(apiResponse.data)
@@ -106,7 +106,7 @@ export class AccountsService {
     const addressDomain: string = apiResponse.data.address.substring(apiResponse.data.address.lastIndexOf("@") + 1)
     if (!user.domains.some((domain): boolean => domain.domain === addressDomain)) {
       // if address domain doesn't belong to user
-      throw new NotFoundException(`No account found with id: ${id}`)
+      throw new NotFoundException(`No account found with id: ${accountId}`)
     }
 
     return {
@@ -176,9 +176,9 @@ export class AccountsService {
     }
   }
 
-  public async updateAccount(user: User, id: string, updateAccountDto: UpdateAccountDto): Promise<void> {
+  public async updateAccount(user: User, accountId: string, updateAccountDto: UpdateAccountDto): Promise<void> {
     // Run get accountdetails to make sure account exists and user has permission, we don't do anything with it because it will throw an exception if needed
-    await this.getAccountDetails(user, id)
+    await this.getAccountDetails(user, accountId)
 
     // Response can be anything, ignore eslint rule
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -186,7 +186,7 @@ export class AccountsService {
     try {
       apiResponse = await this.httpService
         .put(
-          `${wildDuckApiUrl}/users/${id}`,
+          `${wildDuckApiUrl}/users/${accountId}`,
           {
             name: updateAccountDto.name,
             password: updateAccountDto.password,
@@ -222,16 +222,16 @@ export class AccountsService {
     }
   }
 
-  public async deleteAccount(user: User, id: string): Promise<void> {
+  public async deleteAccount(user: User, accountId: string): Promise<void> {
     // Run get accountdetails to make sure account exists and user has permission, we don't do anything with it because it will throw an exception if needed
-    await this.getAccountDetails(user, id)
+    await this.getAccountDetails(user, accountId)
 
     // Response can be anything, ignore eslint rule
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
-        .delete(`${wildDuckApiUrl}/users/${id}`, {
+        .delete(`${wildDuckApiUrl}/users/${accountId}`, {
           headers: {
             "X-Access-Token": wildDuckApiToken
           }
@@ -245,7 +245,7 @@ export class AccountsService {
     if (apiResponse.data.error || !apiResponse.data.success) {
       switch (apiResponse.data.code) {
         case "UserNotFound":
-          throw new NotFoundException(`No account found with id: ${id}`)
+          throw new NotFoundException(`No account found with id: ${accountId}`)
 
         default:
           this.logger.error(apiResponse.data)

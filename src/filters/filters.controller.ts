@@ -16,6 +16,7 @@ import { AccountIdParams } from "src/accounts/params/account-id.params"
 import { FilterDetails } from "./class/filter-details.class"
 import { FilterListItem } from "./class/filter-list-item.class"
 import { CreateUpdateFilterDto } from "./dto/create-update-filter.dto"
+import { FiltersService } from "./filters.service";
 import { FilterIdParams } from "./params/filter-id.params"
 
 @Controller("accounts/:accountId/filters")
@@ -26,6 +27,8 @@ import { FilterIdParams } from "./params/filter-id.params"
 @ApiBadRequestResponse({ description: "Error that is resolvable user side" })
 @ApiInternalServerErrorResponse({ description: "Server error that is not resolvable user side" })
 export class FiltersController {
+  public constructor(private readonly filtersService: FiltersService) {}
+
   @Delete(":filterId")
   @ApiOperation({ title: "Delete filter" })
   @ApiOkResponse({ description: "Filter deleted successfully" })
@@ -36,7 +39,9 @@ export class FiltersController {
   @ApiOperation({ title: "List filters" })
   @ApiOkResponse({ description: "A list of filters", type: FilterListItem, isArray: true })
   @ApiNotFoundResponse({ description: "No account found with this id or no filters found on this account" })
-  public async getFilters(@Request() req, @Param() accountIdParams: AccountIdParams): Promise<void> {}
+  public async getFilters(@Request() req, @Param() accountIdParams: AccountIdParams): Promise<FilterListItem[]> {
+    return await this.filtersService.getFilters(req.user, accountIdParams.accountId)
+  }
 
   @Get(":filterId")
   @ApiOperation({ title: "Get filter details" })

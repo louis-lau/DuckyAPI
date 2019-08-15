@@ -4,12 +4,15 @@ import {
   ArrayUnique,
   IsArray,
   IsBoolean,
+  IsMongoId,
   IsNumber,
   IsOptional,
   IsString,
+  Validate,
   ValidateIf,
   ValidateNested
 } from "class-validator"
+import { EachIsEmailOrHttpOrSmtp } from "src/common/is-email-or-url.validator"
 
 import { Filter } from "../class/filter.class"
 
@@ -129,12 +132,12 @@ class Action {
   public spam?: boolean | ""
 
   @ApiModelProperty({
-    example: "INBOX",
+    example: "5a1c0ee490a34c67e266932c",
     description: "Mailbox ID to store matching messages to",
     required: false
   })
   @IsOptional()
-  @IsString()
+  @IsMongoId()
   public mailbox?: string
 
   @ApiModelProperty({
@@ -149,6 +152,7 @@ class Action {
   @IsArray()
   @IsString({ each: true })
   @ArrayUnique()
+  @Validate(EachIsEmailOrHttpOrSmtp)
   public targets?: string[] | ""
 }
 

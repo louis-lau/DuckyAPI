@@ -11,4 +11,10 @@ export class FilterListItem extends Filter {
 
   @ApiModelProperty({ example: ["mark as read"], description: "A list of action descriptions" })
   public action: string[]
+
+  @ApiModelProperty({
+    example: "2019-08-14T15:14:25.176Z",
+    description: "Datestring of the time the filter was created"
+  })
+  public created: string
 }
