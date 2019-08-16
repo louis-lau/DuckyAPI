@@ -4,6 +4,8 @@ import * as bcrypt from "bcrypt"
 import { User } from "src/users/user.class"
 import { UsersService } from "src/users/users.service"
 
+import { AccessToken } from "./class/access-token.class"
+
 @Injectable()
 export class AuthService {
   public constructor(private readonly usersService: UsersService, private readonly jwtService: JwtService) {}
@@ -18,10 +20,14 @@ export class AuthService {
     }
   }
 
-  public async login(user: User): Promise<object> {
+  public async getAccessToken(user: User): Promise<AccessToken> {
     const payload = { sub: user._id }
     return {
       accessToken: this.jwtService.sign(payload)
     }
+  }
+
+  public async expireTokens(user: User): Promise<void> {
+    this.usersService.updateMinTokenDate(user._id)
   }
 }

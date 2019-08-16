@@ -48,6 +48,17 @@ export class UsersService {
     }
   }
 
+  public async updateMinTokenDate(userId: string, date = new Date()): Promise<UserDocument | undefined> {
+    const user = await this.userModel.findById(userId).exec()
+    user.minTokenDate = date
+    try {
+      return await user.save()
+    } catch (error) {
+      this.logger.error(error.message)
+      throw new InternalServerErrorException("Unknown error")
+    }
+  }
+
   public async pullDomain(userId: string, domain: string): Promise<UserDocument | undefined> {
     const user = await this.userModel.findByIdAndUpdate(userId, {
       $pull: {
