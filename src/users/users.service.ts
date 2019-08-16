@@ -73,7 +73,7 @@ export class UsersService {
     } catch (error) {
       switch (error.code) {
         case 11000:
-          throw new BadRequestException("This user already exists")
+          throw new BadRequestException("This user already exists", "UserExistsError")
 
         default:
           throw new InternalServerErrorException("Unknown error")

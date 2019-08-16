@@ -4,6 +4,7 @@ import {
   ArrayUnique,
   IsArray,
   IsBoolean,
+  IsDefined,
   IsMongoId,
   IsNumber,
   IsOptional,
@@ -51,7 +52,7 @@ class Query {
   })
   @IsOptional()
   @IsString()
-  public listid?: string
+  public listId?: string
 
   @ApiModelProperty({
     example: "Dedicated servers",
@@ -159,11 +160,13 @@ class Action {
 export class CreateUpdateFilterDto extends Filter {
   @ApiModelProperty({ description: "Rules that a message must match" })
   @ValidateNested()
+  @IsDefined({ message: "query should not be null or undefined. However, it can be empty" })
   @Type((): typeof Query => Query)
   public query: Query
 
   @ApiModelProperty({ description: "Rules that a message must match" })
   @ValidateNested()
+  @IsDefined({ message: "action should not be null or undefined. However, it can be empty" })
   @Type((): typeof Action => Action)
   public action: Action
 }

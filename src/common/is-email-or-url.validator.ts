@@ -16,14 +16,15 @@ export class EachIsEmailOrHttpOrSmtp implements ValidatorConstraintInterface {
           })
         )
       ) {
+        // Item is not an email or an url with a valid protocol
         return false
       }
     }
+    // None of the items returned false, all items are valid
     return true
   }
 
   public defaultMessage(args: ValidationArguments): string {
-    // here you can provide default error message if validation failed
     return `Each item in ${args.property} must be either an email, http(s) url, smtp(s) url`
   }
 }

@@ -1,4 +1,4 @@
-import { ValidationPipe } from "@nestjs/common"
+import { BadRequestException, ValidationError, ValidationPipe } from "@nestjs/common"
 import { NestFactory } from "@nestjs/core"
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger"
 import * as helmet from "helmet"
@@ -12,7 +12,15 @@ declare const module: any
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule)
   app.enableCors()
-  app.useGlobalPipes(new ValidationPipe())
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      validationError: { target: false, value: false },
+      exceptionFactory: (errors: ValidationError[]): BadRequestException =>
+        new BadRequestException(errors, "ValidationError")
+    })
+  )
   app.use(helmet())
 
   const options = new DocumentBuilder()

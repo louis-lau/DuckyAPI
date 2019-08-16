@@ -23,13 +23,16 @@ export class AccountsService {
 
   public async getAccounts(user: User, domain?: string): Promise<Account[]> {
     if (user.domains.length === 0) {
-      throw new NotFoundException(`No accounts found for user: ${user.username}`)
+      throw new NotFoundException(`No accounts found for user: ${user.username}`, "AccountNotFoundError")
     }
 
     let domainTags: string
     if (domain) {
       if (!user.domains.some((userDomain): boolean => userDomain.domain === domain)) {
-        throw new BadRequestException(`Domain: ${domain} doesn't exist on user: ${user.username}`)
+        throw new BadRequestException(
+          `Domain: ${domain} doesn't exist on user: ${user.username}`,
+          "DomainNotFoundError"
+        )
       }
       domainTags = `domain:${domain}`
     } else {
@@ -54,11 +57,11 @@ export class AccountsService {
         .toPromise()
     } catch (error) {
       this.logger.error(error.message)
-      throw new InternalServerErrorException("Backend service not reachable")
+      throw new InternalServerErrorException("Backend service not reachable", "WildduckApiError")
     }
 
     if (apiResponse.data.results.length === 0) {
-      throw new NotFoundException(`No accounts found for user: ${user.username}`)
+      throw new NotFoundException(`No accounts found for user: ${user.username}`, "AccountNotFoundError")
     }
 
     const accounts: Account[] = []
@@ -89,13 +92,13 @@ export class AccountsService {
         .toPromise()
     } catch (error) {
       this.logger.error(error.message)
-      throw new InternalServerErrorException("Backend service not reachable")
+      throw new InternalServerErrorException("Backend service not reachable", "WildduckApiError")
     }
 
     if (apiResponse.data.error || !apiResponse.data.success) {
       switch (apiResponse.data.code) {
         case "UserNotFound":
-          throw new NotFoundException(`No account found with id: ${accountId}`)
+          throw new NotFoundException(`No account found with id: ${accountId}`, "AccountNotFoundError")
 
         default:
           this.logger.error(apiResponse.data)
@@ -106,7 +109,7 @@ export class AccountsService {
     const addressDomain: string = apiResponse.data.address.substring(apiResponse.data.address.lastIndexOf("@") + 1)
     if (!user.domains.some((domain): boolean => domain.domain === addressDomain)) {
       // if address domain doesn't belong to user
-      throw new NotFoundException(`No account found with id: ${accountId}`)
+      throw new NotFoundException(`No account found with id: ${accountId}`, "AccountNotFoundError")
     }
 
     return {
@@ -126,7 +129,8 @@ export class AccountsService {
     if (!user.domains.some((domain): boolean => domain.domain === addressDomain)) {
       // if address domain doesn't belong to user
       throw new BadRequestException(
-        `You don't have permission to add accounts on ${addressDomain}. Add the domain first.`
+        `You don't have permission to add accounts on ${addressDomain}. Add the domain first.`,
+        "DomainNotFoundError"
       )
     }
 
@@ -156,17 +160,21 @@ export class AccountsService {
         .toPromise()
     } catch (error) {
       this.logger.error(error.message)
-      throw new InternalServerErrorException("Backend service not reachable")
+      throw new InternalServerErrorException("Backend service not reachable", "WildduckApiError")
     }
 
     if (apiResponse.data.error || !apiResponse.data.success) {
       switch (apiResponse.data.code) {
         case "AddressExistsError":
-          throw new BadRequestException(`Email account: ${createAccountDto.address} already exists`)
+          throw new BadRequestException(
+            `Email account: ${createAccountDto.address} already exists`,
+            "AddressExistsError"
+          )
 
         case "InsecurePasswordError":
           throw new BadRequestException(
-            "The provided password has previously appeared in a data breach (https://haveibeenpwned.com/Passwords)"
+            "The provided password has previously appeared in a data breach (https://haveibeenpwned.com/Passwords)",
+            "InsecurePasswordError"
           )
 
         default:
@@ -205,14 +213,15 @@ export class AccountsService {
         .toPromise()
     } catch (error) {
       this.logger.error(error.message)
-      throw new InternalServerErrorException("Backend service not reachable")
+      throw new InternalServerErrorException("Backend service not reachable", "WildduckApiError")
     }
 
     if (apiResponse.data.error || !apiResponse.data.success) {
       switch (apiResponse.data.code) {
         case "InsecurePasswordError":
           throw new BadRequestException(
-            "The provided password has previously appeared in a data breach (https://haveibeenpwned.com/Passwords)"
+            "The provided password has previously appeared in a data breach (https://haveibeenpwned.com/Passwords)",
+            "InsecurePasswordError"
           )
 
         default:
@@ -239,13 +248,13 @@ export class AccountsService {
         .toPromise()
     } catch (error) {
       this.logger.error(error.message)
-      throw new InternalServerErrorException("Backend service not reachable")
+      throw new InternalServerErrorException("Backend service not reachable", "WildduckApiError")
     }
 
     if (apiResponse.data.error || !apiResponse.data.success) {
       switch (apiResponse.data.code) {
         case "UserNotFound":
-          throw new NotFoundException(`No account found with id: ${accountId}`)
+          throw new NotFoundException(`No account found with id: ${accountId}`, "AccountNotFoundError")
 
         default:
           this.logger.error(apiResponse.data)

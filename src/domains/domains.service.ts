@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common"
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common"
 import { AccountsService } from "src/accounts/accounts.service"
 import { Account } from "src/accounts/class/account.class"
 import { User } from "src/users/user.class"
@@ -12,7 +12,7 @@ export class DomainsService {
 
   public async getDomains(user: User): Promise<Domain[]> {
     if (user.domains.length === 0) {
-      throw new NotFoundException(`No domains found for user: ${user.username}`)
+      throw new NotFoundException(`No domains found for user: ${user.username}`, "DomainNotFoundError")
     }
 
     return user.domains
@@ -20,22 +20,19 @@ export class DomainsService {
 
   public async addDomain(user: User, domain: string): Promise<void> {
     if (user.domains.some((userdomain): boolean => userdomain.domain === domain)) {
-      throw new BadRequestException(`Domain: ${domain} already added for user: ${user.username}`)
+      throw new BadRequestException(`Domain: ${domain} already added for user: ${user.username}`, "DomainExistsError")
     }
     const usersWithDomain = await this.usersService.findByDomain(domain)
     if (usersWithDomain.length > 0) {
-      throw new BadRequestException(`Domain: ${domain} already claimed by another user`)
+      throw new BadRequestException(`Domain: ${domain} already claimed by another user`, "DomainClaimedError")
     }
 
-    const updatedUser = await this.usersService.pushDomain(user._id, { domain: domain, admin: true })
-    if (!updatedUser) {
-      throw new InternalServerErrorException(`Failed to add domain`)
-    }
+    await this.usersService.pushDomain(user._id, { domain: domain, admin: true })
   }
 
   public async deleteDomain(user: User, domain: string): Promise<void> {
     if (!user.domains.some((userDomain): boolean => userDomain.domain === domain)) {
-      throw new BadRequestException(`Domain: ${domain} doesn't exist on user: ${user.username}`)
+      throw new BadRequestException(`Domain: ${domain} doesn't exist on user: ${user.username}`, "DomainNotFoundError")
     }
 
     let accounts: Account[] = []

@@ -20,8 +20,8 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     loginDto.password = password
     try {
       await validateOrReject(loginDto)
-    } catch (error) {
-      throw new BadRequestException(error)
+    } catch (errors) {
+      throw new BadRequestException(errors, "ValidationError")
     }
 
     const user = await this.authService.validateUser(loginDto.username, loginDto.password)
