@@ -16,7 +16,8 @@ module.exports = {
     "@typescript-eslint/indent": ["error", 2],
     "@typescript-eslint/no-parameter-properties": "off",
     "no-var": "error",
-    "prefer-const": "warn"
+    "prefer-const": "warn",
+    "no-await-in-loop": "warn"
   },
   overrides: [
     {

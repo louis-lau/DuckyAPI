@@ -51,9 +51,11 @@ export class DomainsService {
     }
 
     if (accounts.length > 0) {
+      const promises = []
       for (const account of accounts) {
-        await this.accountsService.deleteAccount(user, account.id)
+        promises.push(this.accountsService.deleteAccount(user, account.id))
       }
+      await Promise.all(promises)
     }
     this.dkimService.deleteDkim(user, domain)
     this.usersService.pullDomain(user._id, domain)
