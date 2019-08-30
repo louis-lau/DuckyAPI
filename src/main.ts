@@ -30,6 +30,7 @@ async function bootstrap(): Promise<void> {
     .addBearerAuth()
     .addTag("Authentication")
     .addTag("Domains")
+    .addTag("DKIM")
     .addTag("Email Accounts")
     .addTag("Filters")
     .addTag("Users")

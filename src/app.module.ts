@@ -4,6 +4,7 @@ import { MongooseModule } from "@nestjs/mongoose"
 import { AccountsModule } from "./accounts/accounts.module"
 import { AppController } from "./app.controller"
 import { AuthModule } from "./auth/auth.module"
+import { DkimModule } from "./dkim/dkim.module"
 import { DomainsModule } from "./domains/domains.module"
 import { FiltersModule } from "./filters/filters.module"
 import { UsersModule } from "./users/users.module"
@@ -19,7 +20,8 @@ import { UsersModule } from "./users/users.module"
     AccountsModule,
     UsersModule,
     DomainsModule,
-    FiltersModule
+    FiltersModule,
+    DkimModule
   ],
   controllers: [AppController]
 })

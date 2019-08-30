@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common"
 import { AccountsService } from "src/accounts/accounts.service"
 import { Account } from "src/accounts/class/account.class"
+import { DkimService } from "src/dkim/dkim.service"
 import { User } from "src/users/user.class"
 import { UsersService } from "src/users/users.service"
 
@@ -8,7 +9,11 @@ import { Domain } from "./domain.class"
 
 @Injectable()
 export class DomainsService {
-  public constructor(private readonly usersService: UsersService, private readonly accountsService: AccountsService) {}
+  public constructor(
+    private readonly usersService: UsersService,
+    private readonly accountsService: AccountsService,
+    private readonly dkimService: DkimService
+  ) {}
 
   public async getDomains(user: User): Promise<Domain[]> {
     if (user.domains.length === 0) {
@@ -32,7 +37,7 @@ export class DomainsService {
 
   public async deleteDomain(user: User, domain: string): Promise<void> {
     if (!user.domains.some((userDomain): boolean => userDomain.domain === domain)) {
-      throw new BadRequestException(`Domain: ${domain} doesn't exist on user: ${user.username}`, "DomainNotFoundError")
+      throw new NotFoundException(`Domain: ${domain} doesn't exist on user: ${user.username}`, "DomainNotFoundError")
     }
 
     let accounts: Account[] = []
@@ -50,7 +55,7 @@ export class DomainsService {
         await this.accountsService.deleteAccount(user, account.id)
       }
     }
-
-    // this.usersService.pullDomain(user._id, domain)
+    this.dkimService.deleteDkim(user, domain)
+    this.usersService.pullDomain(user._id, domain)
   }
 }

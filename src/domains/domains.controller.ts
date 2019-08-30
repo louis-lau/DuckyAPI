@@ -31,6 +31,7 @@ export class DomainsController {
     description: "WARNING: This will also remove any email accounts associated with this domain"
   })
   @ApiOkResponse({ description: "Domain successfully removed" })
+  @ApiNotFoundResponse({ description: "Domain not found on account" })
   private async deleteDomain(@Request() req, @Param() domainParams: DomainParams): Promise<void> {
     await this.domainsService.deleteDomain(req.user, domainParams.domain)
   }
