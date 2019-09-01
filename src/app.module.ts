@@ -1,6 +1,5 @@
 import { Module } from "@nestjs/common"
 import { MongooseModule } from "@nestjs/mongoose"
-
 import { AccountsModule } from "./accounts/accounts.module"
 import { AppController } from "./app.controller"
 import { AuthModule } from "./auth/auth.module"
@@ -8,6 +7,8 @@ import { DkimModule } from "./dkim/dkim.module"
 import { DomainsModule } from "./domains/domains.module"
 import { FiltersModule } from "./filters/filters.module"
 import { UsersModule } from "./users/users.module"
+import { ForwardersModule } from './forwarders/forwarders.module';
+
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { UsersModule } from "./users/users.module"
     UsersModule,
     DomainsModule,
     FiltersModule,
-    DkimModule
+    DkimModule,
+    ForwardersModule
   ],
   controllers: [AppController]
 })

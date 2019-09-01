@@ -32,6 +32,7 @@ async function bootstrap(): Promise<void> {
     .addTag("Domains")
     .addTag("DKIM")
     .addTag("Email Accounts")
+    .addTag("Forwarders")
     .addTag("Filters")
     .addTag("Users")
     .build()
