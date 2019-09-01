@@ -1,4 +1,4 @@
-import { Body,Controller, Delete, Post, Request, UseGuards } from "@nestjs/common"
+import { Body, Controller, Delete, Post, Request, UseGuards } from "@nestjs/common"
 import { AuthGuard } from "@nestjs/passport"
 import {
   ApiBadRequestResponse,
@@ -30,7 +30,7 @@ export class AuthController {
   @ApiOkResponse({ description: "Successfully expired previous tokens" })
   @ApiUnauthorizedResponse({ description: "Invalid or expired token" })
   public async logoutAll(@Request() req): Promise<void> {
-    await this.authService.expireTokens(req.user)
+    return this.authService.expireTokens(req.user)
   }
 
   @Post()

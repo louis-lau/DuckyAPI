@@ -15,21 +15,21 @@ export class UsersService {
   public constructor(@InjectModel("User") private readonly userModel: Model<UserDocument>) {}
 
   public async findOne(username: string): Promise<User | undefined> {
-    return await this.userModel
+    return this.userModel
       .findOne({ username: username })
       .lean()
       .exec()
   }
 
   public async findById(id: string): Promise<User | undefined> {
-    return await this.userModel
+    return this.userModel
       .findById(id)
       .lean()
       .exec()
   }
 
   public async findByDomain(domain: string): Promise<User[] | undefined> {
-    return await this.userModel
+    return this.userModel
       .find({ "domains.domain": domain })
       .lean()
       .exec()

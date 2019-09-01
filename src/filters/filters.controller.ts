@@ -34,7 +34,7 @@ export class FiltersController {
   @ApiOkResponse({ description: "Filter deleted successfully" })
   @ApiNotFoundResponse({ description: "No account or filter found with this id" })
   public async deleteFilter(@Request() req, @Param() filterIdParams: FilterIdParams): Promise<void> {
-    await this.filtersService.deleteFilter(req.user, filterIdParams.accountId, filterIdParams.filterId)
+    return this.filtersService.deleteFilter(req.user, filterIdParams.accountId, filterIdParams.filterId)
   }
 
   @Get()
@@ -42,7 +42,7 @@ export class FiltersController {
   @ApiOkResponse({ description: "A list of filters", type: FilterListItem, isArray: true })
   @ApiNotFoundResponse({ description: "No account found with this id or no filters found on this account" })
   public async getFilters(@Request() req, @Param() accountIdParams: AccountIdParams): Promise<FilterListItem[]> {
-    return await this.filtersService.getFilters(req.user, accountIdParams.accountId)
+    return this.filtersService.getFilters(req.user, accountIdParams.accountId)
   }
 
   @Get(":filterId")
@@ -62,7 +62,7 @@ export class FiltersController {
     @Param() accountIdParams: AccountIdParams,
     @Body() createUpdateFilterDto: CreateUpdateFilterDto
   ): Promise<void> {
-    await this.filtersService.createFilter(req.user, accountIdParams.accountId, createUpdateFilterDto)
+    return this.filtersService.createFilter(req.user, accountIdParams.accountId, createUpdateFilterDto)
   }
 
   @Put(":filterId")
@@ -74,7 +74,7 @@ export class FiltersController {
     @Param() filterIdParams: FilterIdParams,
     @Body() createUpdateFilterDto: CreateUpdateFilterDto
   ): Promise<void> {
-    await this.filtersService.updateFilter(
+    return this.filtersService.updateFilter(
       req.user,
       filterIdParams.accountId,
       filterIdParams.filterId,

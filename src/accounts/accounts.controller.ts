@@ -34,7 +34,7 @@ export class AccountsController {
   @ApiOkResponse({ description: "Account deleted successfully" })
   @ApiNotFoundResponse({ description: "No account found with this id" })
   private async deleteAccount(@Request() req, @Param() accountIdParams: AccountIdParams): Promise<void> {
-    return await this.accountsService.deleteAccount(req.user, accountIdParams.accountId)
+    return this.accountsService.deleteAccount(req.user, accountIdParams.accountId)
   }
 
   @Get()
@@ -42,7 +42,7 @@ export class AccountsController {
   @ApiOkResponse({ description: "A list of accounts", type: Account, isArray: true })
   @ApiNotFoundResponse({ description: "No accounts found" })
   private async getAccounts(@Request() req): Promise<Account[]> {
-    return await this.accountsService.getAccounts(req.user)
+    return this.accountsService.getAccounts(req.user)
   }
 
   @Get(":accountId")
@@ -50,14 +50,14 @@ export class AccountsController {
   @ApiOkResponse({ description: "Account details", type: AccountDetails })
   @ApiNotFoundResponse({ description: "No account found with this id" })
   private async getAccountDetails(@Request() req, @Param() accountIdParams: AccountIdParams): Promise<AccountDetails> {
-    return await this.accountsService.getAccountDetails(req.user, accountIdParams.accountId)
+    return this.accountsService.getAccountDetails(req.user, accountIdParams.accountId)
   }
 
   @Post()
   @ApiOperation({ title: "Create a new email account" })
   @ApiCreatedResponse({ description: "Account created successfully" })
   private async createAccount(@Request() req, @Body() createAccountDto: CreateAccountDto): Promise<void> {
-    await this.accountsService.createAccount(req.user, createAccountDto)
+    return this.accountsService.createAccount(req.user, createAccountDto)
   }
 
   @Put(":accountId")
@@ -69,6 +69,6 @@ export class AccountsController {
     @Param() accountIdParams: AccountIdParams,
     @Body() updateAccountDto: UpdateAccountDto
   ): Promise<void> {
-    await this.accountsService.updateAccount(req.user, accountIdParams.accountId, updateAccountDto)
+    return this.accountsService.updateAccount(req.user, accountIdParams.accountId, updateAccountDto)
   }
 }

@@ -33,7 +33,7 @@ export class DomainsController {
   @ApiOkResponse({ description: "Domain successfully removed" })
   @ApiNotFoundResponse({ description: "Domain not found on account" })
   private async deleteDomain(@Request() req, @Param() domainParams: DomainParams): Promise<void> {
-    await this.domainsService.deleteDomain(req.user, domainParams.domain)
+    return this.domainsService.deleteDomain(req.user, domainParams.domain)
   }
 
   @Get()
@@ -48,6 +48,6 @@ export class DomainsController {
   @ApiOperation({ title: "Add domain" })
   @ApiCreatedResponse({ description: "Domain successfully added" })
   private async addDomain(@Request() req, @Param() domainParams: DomainParams): Promise<void> {
-    await this.domainsService.addDomain(req.user, domainParams.domain)
+    return this.domainsService.addDomain(req.user, domainParams.domain)
   }
 }

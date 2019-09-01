@@ -44,20 +44,28 @@ export class DomainsService {
     try {
       accounts = await this.accountsService.getAccounts(user, domain)
     } catch (error) {
-      if (!(error instanceof NotFoundException)) {
-        // Don't throw error if no accounts were found
+      // Don't throw error if no accounts were found
+      if (error.response.error != "AccountNotFoundError") {
         throw error
       }
     }
 
+    const promises = []
     if (accounts.length > 0) {
-      const promises = []
       for (const account of accounts) {
         promises.push(this.accountsService.deleteAccount(user, account.id))
       }
-      await Promise.all(promises)
     }
-    this.dkimService.deleteDkim(user, domain)
-    this.usersService.pullDomain(user._id, domain)
+    promises.push(
+      this.dkimService.deleteDkim(user, domain).catch((error): void => {
+        // Don't throw error if no DKIM key is found
+        if (error.response.error != "DkimNotFoundError") {
+          throw error
+        }
+      })
+    )
+    promises.push(this.usersService.pullDomain(user._id, domain))
+
+    await Promise.all(promises)
   }
 }
