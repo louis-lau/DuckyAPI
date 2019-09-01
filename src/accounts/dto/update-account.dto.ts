@@ -8,7 +8,7 @@ export class UpdateAccountDto extends CreateUpdateCommonDto {
   @IsOptional()
   @IsNotEmpty()
   @IsString()
-  public password: string
+  public password?: string
 
   @ApiModelProperty({
     example: false,
@@ -17,5 +17,5 @@ export class UpdateAccountDto extends CreateUpdateCommonDto {
   })
   @IsOptional()
   @IsBoolean()
-  public disabled: boolean
+  public disabled?: boolean
 }

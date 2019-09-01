@@ -17,7 +17,7 @@ export class CreateUpdateCommonDto {
   @IsOptional()
   @IsNotEmpty()
   @IsString()
-  public name: string | null
+  public name?: string | null
 
   @ApiModelProperty({
     example: 50,
@@ -28,7 +28,7 @@ export class CreateUpdateCommonDto {
   @IsNumber()
   @Min(0)
   @Max(100)
-  public spamLevel: number
+  public spamLevel?: number
 
   @ApiModelProperty({
     example: 1073741824,
@@ -38,7 +38,7 @@ export class CreateUpdateCommonDto {
   @IsOptional()
   @IsNumber()
   @IsPositive()
-  public quotaAllowed: number | null
+  public quotaAllowed?: number | null
 
   @ApiModelProperty({
     example: ["imap", "pop3"],
@@ -52,5 +52,5 @@ export class CreateUpdateCommonDto {
     each: true,
     message: "each value in disabledScopes must be either pop3, imap, smtp"
   })
-  public disabledScopes: ("pop3" | "imap" | "smtp")[]
+  public disabledScopes?: ("pop3" | "imap" | "smtp")[]
 }
