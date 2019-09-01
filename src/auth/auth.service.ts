@@ -20,10 +20,14 @@ export class AuthService {
     }
   }
 
-  public async getAccessToken(user: User): Promise<AccessToken> {
+  public async getAccessToken(user: User, rememberMe = false): Promise<AccessToken> {
     const payload = { sub: user._id }
+    const expireHours = rememberMe ? 7 * 24 : 8
+    const expireDate = new Date()
+    expireDate.setHours(expireDate.getHours() + expireHours)
     return {
-      accessToken: this.jwtService.sign(payload)
+      accessToken: this.jwtService.sign(payload, { expiresIn: `${expireHours}h` }),
+      expires: expireDate
     }
   }
 

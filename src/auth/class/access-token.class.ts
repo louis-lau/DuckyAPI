@@ -7,4 +7,10 @@ export class AccessToken {
     description: "Access token that can be used to authenticate against the api"
   })
   public accessToken: string
+
+  @ApiModelProperty({
+    example: "2019-09-01T22:12:08.882Z",
+    description: "The expiry date of the access token"
+  })
+  public expires: Date
 }
