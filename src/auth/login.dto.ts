@@ -1,5 +1,5 @@
 import { ApiModelProperty } from "@nestjs/swagger"
-import { IsBoolean,IsNotEmpty, IsOptional, IsString } from "class-validator"
+import { IsBoolean, IsNotEmpty, IsOptional, IsString } from "class-validator"
 
 export class LoginDto {
   @ApiModelProperty({ example: "johndoe", description: "Username of the user you want to login as" })

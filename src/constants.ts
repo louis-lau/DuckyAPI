@@ -7,3 +7,10 @@ export const allowUnsafePasswords = false
 export const jwtConstants = {
   secret: "secretKey"
 }
+
+export const maxLimits = {
+  quota: undefined,
+  send: 300,
+  forward: 1400,
+  receive: 2000
+}

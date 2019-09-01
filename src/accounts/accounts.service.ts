@@ -7,11 +7,11 @@ import {
   NotFoundException
 } from "@nestjs/common"
 import { AxiosResponse } from "axios"
-import { allowUnsafePasswords, wildDuckApiToken, wildDuckApiUrl } from "src/constants"
+import { allowUnsafePasswords, maxLimits,wildDuckApiToken, wildDuckApiUrl } from "src/constants"
 import { User } from "src/users/user.class"
 
 import { AccountDetails } from "./class/account-details.class"
-import { Account } from "./class/account.class"
+import { AccountListItem } from "./class/account-list-item.class"
 import { CreateAccountDto } from "./dto/create-account.dto"
 import { UpdateAccountDto } from "./dto/update-account.dto"
 
@@ -21,7 +21,7 @@ export class AccountsService {
 
   public constructor(private readonly httpService: HttpService) {}
 
-  public async getAccounts(user: User, domain?: string): Promise<Account[]> {
+  public async getAccounts(user: User, domain?: string): Promise<AccountListItem[]> {
     if (user.domains.length === 0) {
       throw new NotFoundException(`No accounts found for user: ${user.username}`, "AccountNotFoundError")
     }
@@ -64,14 +64,16 @@ export class AccountsService {
       throw new NotFoundException(`No accounts found for user: ${user.username}`, "AccountNotFoundError")
     }
 
-    const accounts: Account[] = []
+    const accounts: AccountListItem[] = []
     for (const result of apiResponse.data.results) {
       accounts.push({
         id: result.id,
         name: result.name,
         address: result.address,
-        quotaAllowed: result.quota.allowed,
-        quotaUsed: result.quota.used,
+        quota: {
+          allowed: result.quota.allowed,
+          used: result.quota.used
+        },
         disabled: result.disabled
       })
     }
@@ -116,8 +118,27 @@ export class AccountsService {
       id: apiResponse.data.id,
       name: apiResponse.data.name,
       address: apiResponse.data.address,
-      quotaAllowed: apiResponse.data.limits.quota.allowed,
-      quotaUsed: apiResponse.data.limits.quota.used,
+      limits: {
+        quota: {
+          allowed: apiResponse.data.limits.quota.allowed,
+          used: apiResponse.data.limits.quota.used
+        },
+        send: {
+          allowed: apiResponse.data.limits.recipients.allowed,
+          used: apiResponse.data.limits.recipients.used,
+          ttl: apiResponse.data.limits.recipients.ttl
+        },
+        receive: {
+          allowed: apiResponse.data.limits.received.allowed,
+          used: apiResponse.data.limits.received.used,
+          ttl: apiResponse.data.limits.received.ttl
+        },
+        forward: {
+          allowed: apiResponse.data.limits.forwards.allowed,
+          used: apiResponse.data.limits.forwards.used,
+          ttl: apiResponse.data.limits.forwards.ttl
+        }
+      },
       disabled: apiResponse.data.disabled,
       spamLevel: apiResponse.data.spamLevel,
       disabledScopes: apiResponse.data.disabledScopes
@@ -146,7 +167,10 @@ export class AccountsService {
             name: createAccountDto.name,
             password: createAccountDto.password,
             spamLevel: createAccountDto.spamLevel,
-            quota: createAccountDto.quotaAllowed,
+            quota: createAccountDto.limits.quota || maxLimits.quota,
+            recipients: createAccountDto.limits.send || maxLimits.send,
+            receivedMax: createAccountDto.limits.receive || maxLimits.receive,
+            forwards: createAccountDto.limits.forward || maxLimits.forward,
             disabledScopes: createAccountDto.disabledScopes,
             allowUnsafe: allowUnsafePasswords,
             tags: [`domain:${addressDomain}`]
@@ -199,7 +223,10 @@ export class AccountsService {
             name: updateAccountDto.name,
             password: updateAccountDto.password,
             spamLevel: updateAccountDto.spamLevel,
-            quota: updateAccountDto.quotaAllowed,
+            quota: updateAccountDto.limits.quota,
+            recipients: updateAccountDto.limits.send,
+            receivedMax: updateAccountDto.limits.receive,
+            forwards: updateAccountDto.limits.forward,
             disabledScopes: updateAccountDto.disabledScopes,
             allowUnsafe: allowUnsafePasswords,
             disabled: updateAccountDto.disabled

@@ -2,20 +2,20 @@ import { ApiModelProperty } from "@nestjs/swagger"
 
 import { Forwarder } from "./forwarder.class"
 
-class Forwards {
-  @ApiModelProperty({ example: 600, description: "How many messages can be forwarded per period" })
+class ForwarderDetailsForwards {
+  @ApiModelProperty({ example: 100, description: "How many messages can be forwarded per period" })
   public allowed: number
 
-  @ApiModelProperty({ example: 213, description: "How many messages were forwarded in the current period" })
+  @ApiModelProperty({ example: 56, description: "How many messages were forwarded in the current period" })
   public used: number
 
   @ApiModelProperty({ example: 3600, description: "Seconds until the end of the current period" })
   public ttl: number
 }
 
-class Limits {
+class ForwarderDetailsLimits {
   @ApiModelProperty({ description: "Forwarding quota" })
-  public forwards: Forwards
+  public forwards: ForwarderDetailsForwards
 }
 
 export class ForwarderDetails extends Forwarder {
@@ -29,5 +29,5 @@ export class ForwarderDetails extends Forwarder {
   public targets: string[]
 
   @ApiModelProperty({ description: "Forwarder limits and usage" })
-  public limits: Limits
+  public limits: ForwarderDetailsLimits
 }

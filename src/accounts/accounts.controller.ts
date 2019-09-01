@@ -14,7 +14,7 @@ import {
 
 import { AccountsService } from "./accounts.service"
 import { AccountDetails } from "./class/account-details.class"
-import { Account } from "./class/account.class"
+import { AccountListItem } from "./class/account-list-item.class"
 import { CreateAccountDto } from "./dto/create-account.dto"
 import { UpdateAccountDto } from "./dto/update-account.dto"
 import { AccountIdParams } from "./params/account-id.params"
@@ -39,9 +39,9 @@ export class AccountsController {
 
   @Get()
   @ApiOperation({ title: "List email accounts" })
-  @ApiOkResponse({ description: "A list of accounts", type: Account, isArray: true })
+  @ApiOkResponse({ description: "A list of accounts", type: AccountListItem, isArray: true })
   @ApiNotFoundResponse({ description: "No accounts found" })
-  private async getAccounts(@Request() req): Promise<Account[]> {
+  private async getAccounts(@Request() req): Promise<AccountListItem[]> {
     return this.accountsService.getAccounts(req.user)
   }
 

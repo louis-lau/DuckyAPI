@@ -1,4 +1,5 @@
 import { ApiModelProperty } from "@nestjs/swagger"
+import { Type } from "class-transformer"
 import {
   ArrayUnique,
   IsArray,
@@ -9,15 +10,66 @@ import {
   IsString,
   Matches,
   Max,
-  Min
+  Min,
+  ValidateNested
 } from "class-validator"
+import { maxLimits } from "src/constants"
 
-export class CreateUpdateCommonDto {
+class CreateUpdateAccountLimits {
+  @ApiModelProperty({
+    example: 1073741824,
+    description: "How many bytes the account is allowed to use",
+    required: false
+  })
+  @IsOptional()
+  @IsNumber()
+  @IsPositive()
+  @Min(maxLimits.quota ? 1 : 0) // If limit is defined don't allow 0, as that means no limit for WildDuck
+  @Max(maxLimits.quota ? maxLimits.quota : Infinity) // If limit is defined set max, else no max
+  public quota?: number
+
+  @ApiModelProperty({
+    example: 200,
+    description: "How many emails the account can send in a period",
+    required: false
+  })
+  @IsOptional()
+  @IsNumber()
+  @IsPositive()
+  @Min(maxLimits.send ? 1 : 0)
+  @Max(maxLimits.send ? maxLimits.send : Infinity)
+  public send?: number
+
+  @ApiModelProperty({
+    example: 1000,
+    description: "How many emails the account can receive in a period",
+    required: false
+  })
+  @IsOptional()
+  @IsNumber()
+  @IsPositive()
+  @Min(maxLimits.receive ? 1 : 0)
+  @Max(maxLimits.receive ? maxLimits.receive : Infinity)
+  public receive?: number
+
+  @ApiModelProperty({
+    example: 100,
+    description: "How many emails the account can forward in a period",
+    required: false
+  })
+  @IsOptional()
+  @IsNumber()
+  @Min(maxLimits.forward ? 1 : 0)
+  @Max(maxLimits.forward ? maxLimits.forward : Infinity)
+  public forward?: number
+}
+
+export class CreateUpdateAccountCommonDto {
   @ApiModelProperty({ example: "John Doe", description: "The name of the email account", required: false })
   @IsOptional()
   @IsNotEmpty()
   @IsString()
-  public name?: string | null
+  public name?: string
 
   @ApiModelProperty({
     example: 50,
@@ -30,15 +82,11 @@ export class CreateUpdateCommonDto {
   @Max(100)
   public spamLevel?: number
 
-  @ApiModelProperty({
-    example: 1073741824,
-    description: "How many bytes the account is allowed to use",
-    required: false
-  })
+  @ApiModelProperty({ description: "Account limits" })
   @IsOptional()
-  @IsNumber()
-  @IsPositive()
-  public quotaAllowed?: number | null
+  @ValidateNested()
+  @Type((): typeof CreateUpdateAccountLimits => CreateUpdateAccountLimits)
+  public limits?: CreateUpdateAccountLimits = {}
 
   @ApiModelProperty({
     example: ["imap", "pop3"],

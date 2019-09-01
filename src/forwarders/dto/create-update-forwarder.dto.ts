@@ -1,6 +1,18 @@
 import { ApiModelProperty } from "@nestjs/swagger"
-import { ArrayUnique, IsArray, IsEmail, IsNotEmpty, IsNumber, IsOptional, IsString, Validate } from "class-validator"
+import {
+  ArrayUnique,
+  IsArray,
+  IsEmail,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsPositive,
+  IsString,
+  Max,
+  Validate
+} from "class-validator"
 import { EachIsEmailOrHttpOrSmtp } from "src/common/is-email-or-url.validator"
+import { maxLimits } from "src/constants"
 
 export class CreateUpdateForwarderDto {
   @ApiModelProperty({ example: "john@example.com", description: "The E-Mail address that should be forwarded" })
@@ -28,5 +40,7 @@ export class CreateUpdateForwarderDto {
   @ApiModelProperty({ example: 600, description: "How many messages can be forwarded per period", required: false })
   @IsOptional()
   @IsNumber()
+  @IsPositive()
+  @Max(maxLimits.forward)
   public forwards?: number
 }

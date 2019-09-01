@@ -1,9 +1,9 @@
 import { ApiModelProperty } from "@nestjs/swagger"
 import { IsBoolean, IsNotEmpty, IsOptional, IsString } from "class-validator"
 
-import { CreateUpdateCommonDto } from "./create-update-common.dto"
+import { CreateUpdateAccountCommonDto } from "./create-update-common.dto"
 
-export class UpdateAccountDto extends CreateUpdateCommonDto {
+export class UpdateAccountDto extends CreateUpdateAccountCommonDto {
   @ApiModelProperty({ example: "verysecret", description: "The new password of the email account", required: false })
   @IsOptional()
   @IsNotEmpty()

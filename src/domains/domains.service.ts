@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common"
 import { AccountsService } from "src/accounts/accounts.service"
-import { Account } from "src/accounts/class/account.class"
+import { AccountListItem } from "src/accounts/class/account-list-item.class"
 import { DkimService } from "src/dkim/dkim.service"
 import { User } from "src/users/user.class"
 import { UsersService } from "src/users/users.service"
@@ -40,12 +40,12 @@ export class DomainsService {
       throw new NotFoundException(`Domain: ${domain} doesn't exist on user: ${user.username}`, "DomainNotFoundError")
     }
 
-    let accounts: Account[] = []
+    let accounts: AccountListItem[] = []
     try {
       accounts = await this.accountsService.getAccounts(user, domain)
     } catch (error) {
       // Don't throw error if no accounts were found
-      if (error.response.error != "AccountNotFoundError") {
+      if (error.response.error !== "AccountNotFoundError") {
         throw error
       }
     }
@@ -59,7 +59,7 @@ export class DomainsService {
     promises.push(
       this.dkimService.deleteDkim(user, domain).catch((error): void => {
         // Don't throw error if no DKIM key is found
-        if (error.response.error != "DkimNotFoundError") {
+        if (error.response.error !== "DkimNotFoundError") {
           throw error
         }
       })

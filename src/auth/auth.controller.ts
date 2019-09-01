@@ -4,7 +4,6 @@ import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiCreatedResponse,
-  ApiImplicitBody,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
   ApiOperation,
