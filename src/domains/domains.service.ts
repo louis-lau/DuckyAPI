@@ -2,6 +2,8 @@ import { BadRequestException, Injectable, NotFoundException } from "@nestjs/comm
 import { AccountsService } from "src/accounts/accounts.service"
 import { AccountListItem } from "src/accounts/class/account-list-item.class"
 import { DkimService } from "src/dkim/dkim.service"
+import { Forwarder } from "src/forwarders/class/forwarder.class"
+import { ForwardersService } from "src/forwarders/forwarders.service"
 import { User } from "src/users/user.class"
 import { UsersService } from "src/users/users.service"
 
@@ -12,6 +14,7 @@ export class DomainsService {
   public constructor(
     private readonly usersService: UsersService,
     private readonly accountsService: AccountsService,
+    private readonly forwardersService: ForwardersService,
     private readonly dkimService: DkimService
   ) {}
 
@@ -50,10 +53,24 @@ export class DomainsService {
       }
     }
 
+    let forwarders: Forwarder[] = []
+    try {
+      forwarders = await this.forwardersService.getForwarders(user, domain)
+    } catch (error) {
+      if (error.response.error !== "ForwarderNotFoundError") {
+        throw error
+      }
+    }
+
     const promises = []
     if (accounts.length > 0) {
       for (const account of accounts) {
         promises.push(this.accountsService.deleteAccount(user, account.id))
+      }
+    }
+    if (forwarders.length > 0) {
+      for (const forwarder of forwarders) {
+        promises.push(this.forwardersService.deleteForwarder(user, forwarder.id))
       }
     }
     promises.push(
@@ -64,8 +81,8 @@ export class DomainsService {
         }
       })
     )
-    promises.push(this.usersService.pullDomain(user._id, domain))
 
     await Promise.all(promises)
+    await this.usersService.pullDomain(user._id, domain)
   }
 }

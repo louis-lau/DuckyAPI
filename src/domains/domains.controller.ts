@@ -28,7 +28,8 @@ export class DomainsController {
   @Delete(":domain")
   @ApiOperation({
     title: "Remove domain",
-    description: "WARNING: This will also remove any email accounts associated with this domain"
+    description:
+      "WARNING: This will also remove any email accounts, forwarders, and DKIM keys associated with this domain"
   })
   @ApiOkResponse({ description: "Domain successfully removed" })
   @ApiNotFoundResponse({ description: "Domain not found on account" })

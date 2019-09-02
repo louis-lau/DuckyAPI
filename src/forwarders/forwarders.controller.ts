@@ -14,7 +14,8 @@ import {
 
 import { ForwarderDetails } from "./class/forwarder-details.class"
 import { Forwarder } from "./class/forwarder.class"
-import { CreateUpdateForwarderDto } from "./dto/create-update-forwarder.dto"
+import { CreateForwarderDto } from "./dto/create-forwarder.dto"
+import { UpdateForwarderDto } from "./dto/update-forwarder.dto"
 import { ForwardersService } from "./forwarders.service"
 import { ForwarderIdParams } from "./params/forwarder-id.params"
 
@@ -33,7 +34,7 @@ export class ForwardersController {
   @ApiOkResponse({ description: "Forwarder deleted successfully" })
   @ApiNotFoundResponse({ description: "No forwarder found with this id" })
   private async deleteForwarder(@Request() req, @Param() forwarderIdParams: ForwarderIdParams): Promise<void> {
-    // return await this.forwardersService.deleteForwarder(req.user, forwarderIdParams.forwarderId)
+    return this.forwardersService.deleteForwarder(req.user, forwarderIdParams.forwarderId)
   }
 
   @Get()
@@ -41,7 +42,7 @@ export class ForwardersController {
   @ApiOkResponse({ description: "A list of forwarders", type: Forwarder, isArray: true })
   @ApiNotFoundResponse({ description: "No forwarders found" })
   private async getForwarders(@Request() req): Promise<Forwarder[]> {
-    // return await this.forwardersService.getForwarders(req.user)
+    return this.forwardersService.getForwarders(req.user)
   }
 
   @Get(":forwarderId")
@@ -52,17 +53,14 @@ export class ForwardersController {
     @Request() req,
     @Param() forwarderIdParams: ForwarderIdParams
   ): Promise<ForwarderDetails> {
-    // return await this.forwardersService.getForwarderDetails(req.user, forwarderIdParams.forwarderId)
+    return this.forwardersService.getForwarderDetails(req.user, forwarderIdParams.forwarderId)
   }
 
   @Post()
   @ApiOperation({ title: "Create a new forwarder" })
   @ApiCreatedResponse({ description: "Forwarder created successfully" })
-  private async createForwarder(
-    @Request() req,
-    @Body() createUpdateForwarderDto: CreateUpdateForwarderDto
-  ): Promise<void> {
-    await this.forwardersService.createForwarder(req.user, createUpdateForwarderDto)
+  private async createForwarder(@Request() req, @Body() createForwarderDto: CreateForwarderDto): Promise<void> {
+    return this.forwardersService.createForwarder(req.user, createForwarderDto)
   }
 
   @Put(":forwarderId")
@@ -72,8 +70,8 @@ export class ForwardersController {
   private async updateForwarder(
     @Request() req,
     @Param() forwarderIdParams: ForwarderIdParams,
-    @Body() createUpdateForwarderDto: CreateUpdateForwarderDto
+    @Body() updateForwarderDto: UpdateForwarderDto
   ): Promise<void> {
-    await this.forwardersService.updateForwarder(req.user, forwarderIdParams.forwarderId, createUpdateForwarderDto)
+    return this.forwardersService.updateForwarder(req.user, forwarderIdParams.forwarderId, updateForwarderDto)
   }
 }

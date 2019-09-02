@@ -15,7 +15,7 @@ class ForwarderDetailsForwards {
 
 class ForwarderDetailsLimits {
   @ApiModelProperty({ description: "Forwarding quota" })
-  public forwards: ForwarderDetailsForwards
+  public forward: ForwarderDetailsForwards
 }
 
 export class ForwarderDetails extends Forwarder {

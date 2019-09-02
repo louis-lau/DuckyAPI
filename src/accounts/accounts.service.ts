@@ -7,7 +7,7 @@ import {
   NotFoundException
 } from "@nestjs/common"
 import { AxiosResponse } from "axios"
-import { allowUnsafePasswords, maxLimits,wildDuckApiToken, wildDuckApiUrl } from "src/constants"
+import { allowUnsafePasswords, maxLimits, wildDuckApiToken, wildDuckApiUrl } from "src/constants"
 import { User } from "src/users/user.class"
 
 import { AccountDetails } from "./class/account-details.class"
@@ -36,9 +36,9 @@ export class AccountsService {
       }
       domainTags = `domain:${domain}`
     } else {
+      // Comma delimited list of domains with "domain:" prefix to match the tags added to accounts
       domainTags = user.domains.map((domain): string => `domain:${domain.domain}`).join()
     }
-    // Comma delimited list of domains with "domain:" prefix to match the tags added to accounts
 
     // Response can be anything, ignore eslint rule
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -190,10 +190,7 @@ export class AccountsService {
     if (apiResponse.data.error || !apiResponse.data.success) {
       switch (apiResponse.data.code) {
         case "AddressExistsError":
-          throw new BadRequestException(
-            `Email account: ${createAccountDto.address} already exists`,
-            "AddressExistsError"
-          )
+          throw new BadRequestException(`Address: ${createAccountDto.address} already exists`, "AddressExistsError")
 
         case "InsecurePasswordError":
           throw new BadRequestException(
