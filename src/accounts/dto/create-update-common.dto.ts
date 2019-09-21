@@ -6,7 +6,6 @@ import {
   IsNotEmpty,
   IsNumber,
   IsOptional,
-  IsPositive,
   IsString,
   Matches,
   Max,
@@ -23,7 +22,6 @@ class CreateUpdateAccountLimits {
   })
   @IsOptional()
   @IsNumber()
-  @IsPositive()
   @Min(maxLimits.quota ? 1 : 0) // If limit is defined don't allow 0, as that means no limit for WildDuck
   @Max(maxLimits.quota ? maxLimits.quota : Infinity) // If limit is defined set max, else no max
   public quota?: number
@@ -35,7 +33,6 @@ class CreateUpdateAccountLimits {
   })
   @IsOptional()
   @IsNumber()
-  @IsPositive()
   @Min(maxLimits.send ? 1 : 0)
   @Max(maxLimits.send ? maxLimits.send : Infinity)
   public send?: number
@@ -47,7 +44,6 @@ class CreateUpdateAccountLimits {
   })
   @IsOptional()
   @IsNumber()
-  @IsPositive()
   @Min(maxLimits.receive ? 1 : 0)
   @Max(maxLimits.receive ? maxLimits.receive : Infinity)
   public receive?: number
@@ -67,7 +63,6 @@ class CreateUpdateAccountLimits {
 export class CreateUpdateAccountCommonDto {
   @ApiModelProperty({ example: "John Doe", description: "The name of the email account", required: false })
   @IsOptional()
-  @IsNotEmpty()
   @IsString()
   public name?: string
 

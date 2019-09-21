@@ -152,7 +152,7 @@ export class ForwardersService {
             address: createForwarderDto.address,
             name: createForwarderDto.name,
             targets: createForwarderDto.targets,
-            forwards: createForwarderDto.forwards || maxLimits.forward,
+            forwards: createForwarderDto.limits.forward || maxLimits.forward,
             allowWildcard: allowForwarderWildcard,
             tags: [`domain:${addressDomain}`, "forwarder"]
           },
@@ -206,7 +206,7 @@ export class ForwardersService {
             address: updateForwarderDto.address,
             name: updateForwarderDto.name,
             targets: updateForwarderDto.targets,
-            forwards: updateForwarderDto.forwards
+            forwards: updateForwarderDto.limits.forward
           },
           {
             headers: {
