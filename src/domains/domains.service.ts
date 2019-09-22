@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common"
 import { AccountsService } from "src/accounts/accounts.service"
 import { AccountListItem } from "src/accounts/class/account-list-item.class"
+import { DkimKey } from "src/dkim/class/dkim-key.class"
 import { DkimService } from "src/dkim/dkim.service"
 import { Forwarder } from "src/forwarders/class/forwarder.class"
 import { ForwardersService } from "src/forwarders/forwarders.service"
@@ -19,11 +20,36 @@ export class DomainsService {
   ) {}
 
   public async getDomains(user: User): Promise<Domain[]> {
-    if (user.domains.length === 0) {
+    const domains = user.domains
+
+    if (domains.length === 0) {
       throw new NotFoundException(`No domains found for user: ${user.username}`, "DomainNotFoundError")
     }
 
-    return user.domains
+    const dkimKeyPromises: Promise<DkimKey | void>[] = []
+    for (const [i, domain] of domains.entries()) {
+      dkimKeyPromises.push(
+        this.dkimService
+          .getDKIM(user, domain.domain)
+          .catch((error): void => {
+            // Don't throw error if no DKIM key is found
+            if (error.response.error !== "DkimNotFoundError") {
+              throw error
+            }
+          })
+          .then((dkimKey): void => {
+            if (dkimKey) {
+              // DKIM key exists for this domain
+              domains[i].dkim = true
+            } else {
+              domains[i].dkim = false
+            }
+          })
+      )
+    }
+    await Promise.all(dkimKeyPromises)
+
+    return domains
   }
 
   public async addDomain(user: User, domain: string): Promise<void> {
@@ -35,7 +61,7 @@ export class DomainsService {
       throw new BadRequestException(`Domain: ${domain} already claimed by another user`, "DomainClaimedError")
     }
 
-    await this.usersService.pushDomain(user._id, { domain: domain, admin: true })
+    await this.usersService.pushDomain(user._id, { domain: domain })
   }
 
   public async deleteDomain(user: User, domain: string): Promise<void> {
@@ -62,7 +88,7 @@ export class DomainsService {
       }
     }
 
-    const promises = []
+    const promises: Promise<void>[] = []
     if (accounts.length > 0) {
       for (const account of accounts) {
         promises.push(this.accountsService.deleteAccount(user, account.id))

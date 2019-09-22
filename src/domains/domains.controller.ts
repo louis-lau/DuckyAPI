@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, Param, Post, Request, UseGuards } from "@nestjs/common"
+import { Body,Controller, Delete, Get, Param, Post, Request, UseGuards } from "@nestjs/common"
 import { AuthGuard } from "@nestjs/passport"
 import {
   ApiBadRequestResponse,
@@ -13,6 +13,7 @@ import {
 } from "@nestjs/swagger"
 
 import { Domain } from "./domain.class"
+import { DomainDto } from "./domain.dto"
 import { DomainParams } from "./domain.params"
 import { DomainsService } from "./domains.service"
 
@@ -45,10 +46,10 @@ export class DomainsController {
     return this.domainsService.getDomains(req.user)
   }
 
-  @Post(":domain")
+  @Post()
   @ApiOperation({ title: "Add domain" })
   @ApiCreatedResponse({ description: "Domain successfully added" })
-  private async addDomain(@Request() req, @Param() domainParams: DomainParams): Promise<void> {
-    return this.domainsService.addDomain(req.user, domainParams.domain)
+  private async addDomain(@Request() req, @Body() domainDto: DomainDto): Promise<void> {
+    return this.domainsService.addDomain(req.user, domainDto.domain)
   }
 }
