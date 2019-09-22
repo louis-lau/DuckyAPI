@@ -7,6 +7,7 @@ import {
   NotFoundException
 } from "@nestjs/common"
 import { AxiosResponse } from "axios"
+import * as shortid from "shortid"
 import { allowUnsafePasswords, maxLimits, wildDuckApiToken, wildDuckApiUrl } from "src/constants"
 import { User } from "src/users/user.class"
 
@@ -163,7 +164,8 @@ export class AccountsService {
         .post(
           `${wildDuckApiUrl}/users`,
           {
-            username: createAccountDto.address,
+            username: shortid.generate(),
+            address: createAccountDto.address,
             name: createAccountDto.name,
             password: createAccountDto.password,
             spamLevel: createAccountDto.spamLevel,
@@ -190,6 +192,7 @@ export class AccountsService {
     if (apiResponse.data.error || !apiResponse.data.success) {
       switch (apiResponse.data.code) {
         case "AddressExistsError":
+        case "UserExistsError":
           throw new BadRequestException(`Address: ${createAccountDto.address} already exists`, "AddressExistsError")
 
         case "InsecurePasswordError":
