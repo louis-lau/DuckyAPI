@@ -1,5 +1,5 @@
 import { ApiModelProperty } from "@nestjs/swagger"
-import { IsNotEmpty, IsString } from "class-validator"
+import { IsAscii, IsNotEmpty, IsString, NotContains } from "class-validator"
 
 export class CreateUserDto {
   @ApiModelProperty({
@@ -8,6 +8,8 @@ export class CreateUserDto {
   })
   @IsNotEmpty()
   @IsString()
+  @IsAscii()
+  @NotContains(" ", { message: "username must not contain spaces" })
   public username: string
 
   @ApiModelProperty({

@@ -15,6 +15,7 @@ export class UsersService {
   public constructor(@InjectModel("User") private readonly userModel: Model<UserDocument>) {}
 
   public async findOne(username: string): Promise<User | undefined> {
+    username = username.toLowerCase()
     return this.userModel
       .findOne({ username: username })
       .lean()
@@ -78,6 +79,7 @@ export class UsersService {
   }
 
   public async createUser(createUserDto: CreateUserDto): Promise<UserDocument> {
+    createUserDto.username = createUserDto.username.toLowerCase()
     const createdUser = new this.userModel(createUserDto)
     try {
       return await createdUser.save()
