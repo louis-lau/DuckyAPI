@@ -41,32 +41,48 @@ export class AccountsService {
       domainTags = user.domains.map((domain): string => `domain:${domain.domain}`).join()
     }
 
-    // Response can be anything, ignore eslint rule
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let apiResponse: AxiosResponse<any>
-    try {
-      apiResponse = await this.httpService
-        .get(`${wildDuckApiUrl}/users`, {
-          headers: {
-            "X-Access-Token": wildDuckApiToken
-          },
-          params: {
-            tags: domainTags,
-            limit: 250
-          }
-        })
-        .toPromise()
-    } catch (error) {
-      this.logger.error(error.message)
-      throw new InternalServerErrorException("Backend service not reachable", "WildduckApiError")
-    }
+    let results: any[] = []
+    let nextCursor: string | false
 
-    if (apiResponse.data.results.length === 0) {
-      throw new NotFoundException(`No accounts found for user: ${user.username}`, "AccountNotFoundError")
+    // Loop until no more pages
+    while (true) {
+      let apiResponse: AxiosResponse<any>
+      try {
+        apiResponse = await this.httpService
+          .get(`${wildDuckApiUrl}/users`, {
+            headers: {
+              "X-Access-Token": wildDuckApiToken
+            },
+            params: {
+              tags: domainTags,
+              limit: 250,
+              next: nextCursor
+            }
+          })
+          .toPromise()
+      } catch (error) {
+        this.logger.error(error.message)
+        throw new InternalServerErrorException("Backend service not reachable", "WildduckApiError")
+      }
+      if (apiResponse.data.results.length === 0) {
+        throw new NotFoundException(`No accounts found for user: ${user.username}`, "AccountNotFoundError")
+      }
+
+      // Add results of this page to the results array
+      results = results.concat(apiResponse.data.results)
+
+      console.log(apiResponse.data.nextCursor)
+
+      if (apiResponse.data.nextCursor) {
+        // Set next cursor value and repeat
+        nextCursor = apiResponse.data.nextCursor
+      } else {
+        break
+      }
     }
 
     const accounts: AccountListItem[] = []
-    for (const result of apiResponse.data.results) {
+    for (const result of results) {
       accounts.push({
         id: result.id,
         name: result.name,
