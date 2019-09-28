@@ -82,8 +82,6 @@ export class AccountsService {
   }
 
   public async getAccountDetails(user: User, accountId: string): Promise<AccountDetails> {
-    // Response can be anything, ignore eslint rule
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
@@ -156,8 +154,6 @@ export class AccountsService {
       )
     }
 
-    // Response can be anything, ignore eslint rule
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
@@ -212,8 +208,6 @@ export class AccountsService {
     // Run get accountdetails to make sure account exists and user has permission, we don't do anything with it because it will throw an exception if needed
     await this.getAccountDetails(user, accountId)
 
-    // Response can be anything, ignore eslint rule
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
@@ -262,8 +256,6 @@ export class AccountsService {
     // Run get accountdetails to make sure account exists and user has permission, we don't do anything with it because it will throw an exception if needed
     await this.getAccountDetails(user, accountId)
 
-    // Response can be anything, ignore eslint rule
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService

@@ -25,8 +25,6 @@ export class FiltersService {
     // Run get accountdetails to make sure account exists and user has permission, we don't do anything with it because it will throw an exception if needed
     await this.accountsService.getAccountDetails(user, accountId)
 
-    // Response can be anything, ignore eslint rule
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
@@ -61,8 +59,6 @@ export class FiltersService {
     // Run get accountdetails to make sure account exists and user has permission, we don't do anything with it because it will throw an exception if needed
     await this.accountsService.getAccountDetails(user, accountId)
 
-    // Response can be anything, ignore eslint rule
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
@@ -107,8 +103,6 @@ export class FiltersService {
     // Run get accountdetails to make sure account exists and user has permission, we don't do anything with it because it will throw an exception if needed
     await this.accountsService.getAccountDetails(user, accountId)
 
-    // Response can be anything, ignore eslint rule
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
@@ -153,8 +147,6 @@ export class FiltersService {
     // Run get accountdetails to make sure account exists and user has permission, we don't do anything with it because it will throw an exception if needed
     await this.accountsService.getAccountDetails(user, accountId)
 
-    // Response can be anything, ignore eslint rule
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let apiResponse: AxiosResponse<any>
     try {
       // Pass createUpdateFilterDto directly as it's exactly what the WildDuck API requires
@@ -194,8 +186,6 @@ export class FiltersService {
     // Run get accountdetails to make sure account exists and user has permission, we don't do anything with it because it will throw an exception if needed
     await this.accountsService.getAccountDetails(user, accountId)
 
-    // Response can be anything, ignore eslint rule
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let apiResponse: AxiosResponse<any>
     try {
       // Pass createUpdateFilterDto directly as it's exactly what the WildDuck API requires

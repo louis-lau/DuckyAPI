@@ -5,8 +5,6 @@ import * as helmet from "helmet"
 
 import { AppModule } from "./app.module"
 
-// No type for this
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare const module: any
 
 async function bootstrap(): Promise<void> {

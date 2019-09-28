@@ -40,8 +40,6 @@ export class ForwardersService {
       domainTags = user.domains.map((domain): string => `domain:${domain.domain}`).join()
     }
 
-    // Response can be anything, ignore eslint rule
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
@@ -76,8 +74,6 @@ export class ForwardersService {
   }
 
   public async getForwarderDetails(user: User, forwarderId: string): Promise<ForwarderDetails> {
-    // Response can be anything, ignore eslint rule
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
@@ -141,8 +137,6 @@ export class ForwardersService {
       )
     }
 
-    // Response can be anything, ignore eslint rule
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
@@ -195,8 +189,6 @@ export class ForwardersService {
     // Run get forwarderdetails to make sure forwarder exists and user has permission, we don't do anything with it because it will throw an exception if needed
     await this.getForwarderDetails(user, forwarderId)
 
-    // Response can be anything, ignore eslint rule
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
@@ -242,8 +234,6 @@ export class ForwardersService {
     // Run get accountdetails to make sure account exists and user has permission, we don't do anything with it because it will throw an exception if needed
     await this.getForwarderDetails(user, forwarderId)
 
-    // Response can be anything, ignore eslint rule
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService

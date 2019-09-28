@@ -13,8 +13,6 @@ export class DkimService {
   public constructor(private readonly httpService: HttpService) {}
 
   public async resolveDkimId(domain: string): Promise<string> {
-    // Response can be anything, ignore eslint rule
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let ApiResponse: AxiosResponse<any>
     try {
       ApiResponse = await this.httpService
@@ -50,8 +48,6 @@ export class DkimService {
 
     const dkimId = await this.resolveDkimId(domain)
 
-    // Response can be anything, ignore eslint rule
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
@@ -85,8 +81,6 @@ export class DkimService {
 
     const dkimId = await this.resolveDkimId(domain)
 
-    // Response can be anything, ignore eslint rule
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
@@ -131,8 +125,6 @@ export class DkimService {
       throw new NotFoundException(`Domain: ${domain} doesn't exist on user: ${user.username}`, "DomainNotFoundError")
     }
 
-    // Response can be anything, ignore eslint rule
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService

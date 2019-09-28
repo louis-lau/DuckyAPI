@@ -4,7 +4,6 @@ import { Domain } from "src/domains/domain.class"
 export class User {
   @ApiModelProperty({ example: "5d49e11f600a423ffc0b1297", description: "Unique id for this user" })
   // any type is needed here so _id is the same type as it is on Document
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public _id: any
 
   @ApiModelProperty({ example: "johndoe", description: "The username for this user" })
