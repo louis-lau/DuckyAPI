@@ -40,31 +40,46 @@ export class ForwardersService {
       domainTags = user.domains.map((domain): string => `domain:${domain.domain}`).join()
     }
 
-    let apiResponse: AxiosResponse<any>
-    try {
-      apiResponse = await this.httpService
-        .get(`${wildDuckApiUrl}/addresses`, {
-          headers: {
-            "X-Access-Token": wildDuckApiToken
-          },
-          params: {
-            tags: domainTags,
-            requiredTags: "forwarder",
-            limit: 250
-          }
-        })
-        .toPromise()
-    } catch (error) {
-      this.logger.error(error.message)
-      throw new InternalServerErrorException("Backend service not reachable", "WildduckApiError")
-    }
+    let results: any[] = []
+    let nextCursor: string | false
 
-    if (apiResponse.data.results.length === 0) {
-      throw new NotFoundException(`No forwarders found for user: ${user.username}`, "ForwarderNotFoundError")
+    while (true) {
+      let apiResponse: AxiosResponse<any>
+      try {
+        apiResponse = await this.httpService
+          .get(`${wildDuckApiUrl}/addresses`, {
+            headers: {
+              "X-Access-Token": wildDuckApiToken
+            },
+            params: {
+              tags: domainTags,
+              requiredTags: "forwarder",
+              limit: 250,
+              next: nextCursor
+            }
+          })
+          .toPromise()
+      } catch (error) {
+        this.logger.error(error.message)
+        throw new InternalServerErrorException("Backend service not reachable", "WildduckApiError")
+      }
+      if (apiResponse.data.results.length === 0) {
+        throw new NotFoundException(`No forwarders found for user: ${user.username}`, "ForwarderNotFoundError")
+      }
+
+      // Add results of this page to the results array
+      results = results.concat(apiResponse.data.results)
+
+      if (apiResponse.data.nextCursor) {
+        // Set next cursor value and repeat
+        nextCursor = apiResponse.data.nextCursor
+      } else {
+        break
+      }
     }
 
     const forwarders: Forwarder[] = []
-    for (const result of apiResponse.data.results) {
+    for (const result of results) {
       forwarders.push({
         id: result.id,
         address: result.address

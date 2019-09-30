@@ -1,6 +1,6 @@
 import { User } from "src/users/user.class"
 
-export interface DeleteAccountsData {
+export interface DeleteForDomain {
   user: User
   domain: string
 }

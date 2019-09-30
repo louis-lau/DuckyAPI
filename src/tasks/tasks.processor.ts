@@ -6,7 +6,7 @@ import { AccountListItem } from "src/accounts/class/account-list-item.class"
 import { Forwarder } from "src/forwarders/class/forwarder.class"
 import { ForwardersService } from "src/forwarders/forwarders.service"
 
-import { DeleteAccountsData } from "./tasks.interfaces"
+import { DeleteForDomain } from "./tasks.interfaces"
 
 @Processor({ name: "tasks" })
 export class TasksProcessor {
@@ -18,7 +18,7 @@ export class TasksProcessor {
   private readonly logger = new Logger(TasksProcessor.name, true)
 
   @Process({ name: "deleteAccounts" })
-  private async processDeleteAccounts(job: Job<DeleteAccountsData>): Promise<void> {
+  private async processDeleteAccounts(job: Job<DeleteForDomain>): Promise<void> {
     let accounts: AccountListItem[] = []
     try {
       accounts = await this.accountsService.getAccounts(job.data.user, job.data.domain)
@@ -51,7 +51,7 @@ export class TasksProcessor {
   }
 
   @Process({ name: "deleteForwarders" })
-  private async processDeleteForwarders(job: Job<DeleteAccountsData>): Promise<void> {
+  private async processDeleteForwarders(job: Job<DeleteForDomain>): Promise<void> {
     let forwarders: Forwarder[] = []
     try {
       forwarders = await this.forwardersService.getForwarders(job.data.user, job.data.domain)
@@ -87,6 +87,7 @@ export class TasksProcessor {
   private onActive(job: Job): void {
     switch (job.name) {
       case "deleteAccounts":
+      case "deleteForwarders":
         this.logger.log(
           `Processing job ${job.id} (${job.name}) for user ${job.data.user._id} and domain ${job.data.domain}`
         )
