@@ -3,7 +3,6 @@ import { Type } from "class-transformer"
 import {
   ArrayUnique,
   IsArray,
-  IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,

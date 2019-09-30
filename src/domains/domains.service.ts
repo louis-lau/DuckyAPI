@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common"
+import { Queue } from "bull"
+import { InjectQueue } from "nest-bull"
 import { AccountsService } from "src/accounts/accounts.service"
-import { AccountListItem } from "src/accounts/class/account-list-item.class"
 import { DkimKey } from "src/dkim/class/dkim-key.class"
 import { DkimService } from "src/dkim/dkim.service"
-import { Forwarder } from "src/forwarders/class/forwarder.class"
 import { ForwardersService } from "src/forwarders/forwarders.service"
 import { User } from "src/users/user.class"
 import { UsersService } from "src/users/users.service"
@@ -16,7 +16,8 @@ export class DomainsService {
     private readonly usersService: UsersService,
     private readonly accountsService: AccountsService,
     private readonly forwardersService: ForwardersService,
-    private readonly dkimService: DkimService
+    private readonly dkimService: DkimService,
+    @InjectQueue("tasks") readonly taskQueue: Queue
   ) {}
 
   public async getDomains(user: User): Promise<Domain[]> {
@@ -69,46 +70,45 @@ export class DomainsService {
       throw new NotFoundException(`Domain: ${domain} doesn't exist on user: ${user.username}`, "DomainNotFoundError")
     }
 
-    let accounts: AccountListItem[] = []
     try {
-      accounts = await this.accountsService.getAccounts(user, domain)
+      await this.dkimService.deleteDkim(user, domain)
     } catch (error) {
-      // Don't throw error if no accounts were found
-      if (error.response.error !== "AccountNotFoundError") {
+      // Don't throw error if no DKIM key is found
+      if (error.response.error !== "DkimNotFoundError") {
         throw error
       }
     }
 
-    let forwarders: Forwarder[] = []
-    try {
-      forwarders = await this.forwardersService.getForwarders(user, domain)
-    } catch (error) {
-      if (error.response.error !== "ForwarderNotFoundError") {
-        throw error
-      }
-    }
-
-    const promises: Promise<void>[] = []
-    if (accounts.length > 0) {
-      for (const account of accounts) {
-        promises.push(this.accountsService.deleteAccount(user, account.id))
-      }
-    }
-    if (forwarders.length > 0) {
-      for (const forwarder of forwarders) {
-        promises.push(this.forwardersService.deleteForwarder(user, forwarder.id))
-      }
-    }
-    promises.push(
-      this.dkimService.deleteDkim(user, domain).catch((error): void => {
-        // Don't throw error if no DKIM key is found
-        if (error.response.error !== "DkimNotFoundError") {
-          throw error
+    this.taskQueue.add(
+      "deleteAccounts",
+      {
+        user: user,
+        domain: domain
+      },
+      {
+        attempts: 5,
+        backoff: {
+          delay: 6000,
+          type: "exponential"
         }
-      })
+      }
     )
 
-    await Promise.all(promises)
+    this.taskQueue.add(
+      "deleteForwarders",
+      {
+        user: user,
+        domain: domain
+      },
+      {
+        attempts: 5,
+        backoff: {
+          delay: 6000,
+          type: "exponential"
+        }
+      }
+    )
+
     await this.usersService.pullDomain(user._id, domain)
   }
 }

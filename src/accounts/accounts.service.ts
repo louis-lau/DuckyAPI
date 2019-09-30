@@ -71,8 +71,6 @@ export class AccountsService {
       // Add results of this page to the results array
       results = results.concat(apiResponse.data.results)
 
-      console.log(apiResponse.data.nextCursor)
-
       if (apiResponse.data.nextCursor) {
         // Set next cursor value and repeat
         nextCursor = apiResponse.data.nextCursor
