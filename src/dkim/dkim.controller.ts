@@ -10,7 +10,7 @@ import {
   ApiUnauthorizedResponse,
   ApiUseTags
 } from "@nestjs/swagger"
-import { DomainParams } from "src/domains/domain.params"
+import { DomainParams } from "src/domains/params/domain.params"
 
 import { DkimKey } from "./class/dkim-key.class"
 import { DkimService } from "./dkim.service"

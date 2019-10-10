@@ -1,5 +1,5 @@
 import { ApiModelProperty } from "@nestjs/swagger"
-import { Domain } from "src/domains/domain.class"
+import { Domain } from "src/domains/class/domain.class"
 
 export class User {
   @ApiModelProperty({ example: "5d49e11f600a423ffc0b1297", description: "Unique id for this user" })

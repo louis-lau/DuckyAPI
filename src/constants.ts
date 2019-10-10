@@ -34,3 +34,18 @@ export const arena = {
     }
   }
 }
+
+export const DnsConfig = {
+  mx: {
+    records: [
+      {
+        exchange: "london.mxroute.com",
+        priority: 10
+      }
+    ]
+  },
+  spf: {
+    correctValue: "v=spf1 include:mxroute.com -all",
+    regex: new RegExp("^v=spf.* include:(mxroute\\.com|mxlogin\\.com) .*(-|~|\\?)all$")
+  }
+}

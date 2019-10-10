@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, InternalServerErrorException, Logger }
 import { InjectModel } from "@nestjs/mongoose"
 import { Model } from "mongoose"
 import * as shortid from "shortid"
-import { Domain } from "src/domains/domain.class"
+import { Domain } from "src/domains/class/domain.class"
 
 import { CreateUserDto } from "./create-user.dto"
 import { UserDocument } from "./user-document.interface"
