@@ -28,13 +28,13 @@ class DnsCheckCurrentValues {
   @ApiModelProperty({ example: DnsConfig.spf.correctValue, description: "Value of the SPF record" })
   public spf: string
 
-  @ApiModelProperty({ description: "DKIM record selector and value" })
-  public dkim: DnsCheckDkimRecord
+  @ApiModelProperty({ description: "DKIM record selector and value", required: false })
+  public dkim?: DnsCheckDkimRecord
 }
 
 class DnsCheckError {
-  @ApiModelProperty({ example: "dkim", description: "Type of error/warning. Can be mx, spf, dkim" })
-  public type: "mx" | "spf" | "dkim"
+  @ApiModelProperty({ example: "dkim", description: "Type of error/warning. Can be ns, mx, spf, dkim" })
+  public type: "ns" | "mx" | "spf" | "dkim"
 
   @ApiModelProperty({ example: "DkimNotFound", description: "Machine readable error/warning string" })
   public error: string

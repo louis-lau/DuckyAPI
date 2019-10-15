@@ -83,19 +83,42 @@ export class DomainsService {
       }
     })
 
-    const dnsCheckPromises: Promise<any>[] = []
-
     if (dkimKey) {
       dnsCheck.correctValues.dkim = {
         selector: dkimKey.selector,
         value: dkimKey.dnsTxt.value
       }
+    }
 
+    const nsRecords = await dns.resolveNs(domain).catch((error): string[] => {
+      switch (error.code) {
+        case "ENODATA":
+        case "ENOTFOUND":
+          return []
+
+        default:
+          throw error
+      }
+    })
+
+    if (nsRecords.length === 0) {
+      dnsCheck.errors.push({
+        type: "ns",
+        error: "NsNotFound",
+        message: `No nameservers found for ${domain}. You need them for your domain to work.`
+      })
+      return dnsCheck
+    }
+
+    const dnsCheckPromises: Promise<any>[] = []
+
+    if (dkimKey) {
       dnsCheckPromises.push(
         dns
           .resolveTxt(`${dkimKey.selector}._domainkey.${domain}`)
           .catch((error): string[][] => {
             switch (error.code) {
+              case "ENODATA":
               case "ENOTFOUND":
                 return [[]]
 
@@ -152,6 +175,7 @@ export class DomainsService {
         .catch((error): MxRecord[] => {
           switch (error.code) {
             case "ENODATA":
+            case "ENOTFOUND":
               return []
 
             default:
@@ -188,6 +212,7 @@ export class DomainsService {
         .resolveTxt(domain)
         .catch((error): string[][] => {
           switch (error.code) {
+            case "ENODATA":
             case "ENOTFOUND":
               return [[]]
 
