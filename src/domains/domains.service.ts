@@ -143,7 +143,7 @@ export class DomainsService {
                 dnsCheck.errors.push({
                   type: "dkim",
                   error: "DkimNotFound",
-                  message: `DKIM signing is enabled on the server, but no DKIM record is configured on ${dkimKey.selector}._domainkey.${domain}. Please configure it.`
+                  message: `DKIM signing is enabled on the server, but no DKIM record is configured on ${dkimKey.selector}._domainkey.${domain}.`
                 })
                 return
               }
@@ -161,7 +161,7 @@ export class DomainsService {
                 dnsCheck.errors.push({
                   type: "dkim",
                   error: "DkimInvalid",
-                  message: "The DKIM record does not match. Please check for differences."
+                  message: "The DKIM record does not match the one above. Check for differences."
                 })
               }
             }
@@ -189,7 +189,7 @@ export class DomainsService {
             dnsCheck.errors.push({
               type: "mx",
               error: "MxNotFound",
-              message: "No MX record(s) found for this domain. Please configure it."
+              message: "No MX record(s) found for this domain. You need these to receive email."
             })
             return
           }
@@ -200,7 +200,7 @@ export class DomainsService {
               dnsCheck.errors.push({
                 type: "mx",
                 error: "MxNotFound",
-                message: `${correctMxRecord.exchange} was not found in the current MX records. Please add it.`
+                message: `${correctMxRecord.exchange} was not found in the current MX records. Valid MX records are needed to receive email.`
               })
             }
           }
@@ -234,7 +234,7 @@ export class DomainsService {
               dnsCheck.errors.push({
                 type: "spf",
                 error: "SpfNotFound",
-                message: "No SPF record found for this domain. Please configure it."
+                message: "No SPF record found for this domain. You need this to send email."
               })
               return
             }
@@ -252,7 +252,7 @@ export class DomainsService {
               dnsCheck.errors.push({
                 type: "spf",
                 error: "SpfInvalid",
-                message: `The SPF record is invalid. It should match the following regex: ${DnsConfig.spf.regex.source}`
+                message: `The SPF record is invalid. You need a valid SPF record to send email.`
               })
             }
           }

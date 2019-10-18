@@ -41,6 +41,10 @@ export const DnsConfig = {
       {
         exchange: "london.mxroute.com",
         priority: 10
+      },
+      {
+        exchange: "london-relay.mxroute.com",
+        priority: 20
       }
     ]
   },
