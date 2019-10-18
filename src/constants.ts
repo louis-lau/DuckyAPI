@@ -39,11 +39,11 @@ export const DnsConfig = {
   mx: {
     records: [
       {
-        exchange: "london.mxroute.com",
+        exchange: "server1.example.com",
         priority: 10
       },
       {
-        exchange: "london-relay.mxroute.com",
+        exchange: "server2.example.com",
         priority: 20
       }
     ]
