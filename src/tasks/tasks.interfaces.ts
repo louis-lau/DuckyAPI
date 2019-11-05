@@ -1,4 +1,4 @@
-import { User } from "src/users/user.class"
+import { User } from "src/users/class/user.class"
 
 export interface DeleteForDomain {
   user: User

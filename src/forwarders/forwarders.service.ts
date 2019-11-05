@@ -8,7 +8,7 @@ import {
 } from "@nestjs/common"
 import { AxiosResponse } from "axios"
 import { allowForwarderWildcard, maxLimits, wildDuckApiToken, wildDuckApiUrl } from "src/constants"
-import { User } from "src/users/user.class"
+import { User } from "src/users/class/user.class"
 
 import { ForwarderDetails } from "./class/forwarder-details.class"
 import { Forwarder } from "./class/forwarder.class"
@@ -190,8 +190,9 @@ export class ForwardersService {
   }
 
   public async updateForwarder(user: User, forwarderId: string, updateForwarderDto: UpdateForwarderDto): Promise<void> {
+    let addressDomain
     if (updateForwarderDto.address) {
-      const addressDomain = updateForwarderDto.address.substring(updateForwarderDto.address.lastIndexOf("@") + 1)
+      addressDomain = updateForwarderDto.address.substring(updateForwarderDto.address.lastIndexOf("@") + 1)
       if (!user.domains.some((domain): boolean => domain.domain === addressDomain)) {
         // if address domain doesn't belong to user
         throw new BadRequestException(
@@ -213,7 +214,8 @@ export class ForwardersService {
             address: updateForwarderDto.address,
             name: updateForwarderDto.name,
             targets: updateForwarderDto.targets,
-            forwards: updateForwarderDto.limits.forward
+            forwards: updateForwarderDto.limits.forward,
+            tags: addressDomain ? [`domain:${addressDomain}`, "forwarder"] : undefined
           },
           {
             headers: {

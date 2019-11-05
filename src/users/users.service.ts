@@ -4,9 +4,9 @@ import { Model } from "mongoose"
 import * as shortid from "shortid"
 import { Domain } from "src/domains/class/domain.class"
 
-import { CreateUserDto } from "./create-user.dto"
+import { User } from "./class/user.class"
+import { CreateUserDto } from "./dto/create-user.dto"
 import { UserDocument } from "./user-document.interface"
-import { User } from "./user.class"
 
 @Injectable()
 export class UsersService {

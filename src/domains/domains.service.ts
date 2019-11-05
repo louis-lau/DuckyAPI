@@ -7,7 +7,7 @@ import { DnsConfig } from "src/constants"
 import { DkimKey } from "src/dkim/class/dkim-key.class"
 import { DkimService } from "src/dkim/dkim.service"
 import { ForwardersService } from "src/forwarders/forwarders.service"
-import { User } from "src/users/user.class"
+import { User } from "src/users/class/user.class"
 import { UsersService } from "src/users/users.service"
 
 import { DnsCheck } from "./class/dns.class"

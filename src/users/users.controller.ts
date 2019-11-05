@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from "@nestjs/common"
+import { Body, Controller, Get,Post } from "@nestjs/common"
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -8,7 +8,7 @@ import {
   ApiUseTags
 } from "@nestjs/swagger"
 
-import { CreateUserDto } from "./create-user.dto"
+import { CreateUserDto } from "./dto/create-user.dto"
 import { UsersService } from "./users.service"
 
 @Controller("users")
