@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Request, UseGuards } from "@nestjs/common"
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from "@nestjs/common"
 import { AuthGuard } from "@nestjs/passport"
 import {
   ApiBadRequestResponse,
@@ -11,6 +11,8 @@ import {
   ApiUnauthorizedResponse,
   ApiUseTags
 } from "@nestjs/swagger"
+import { ReqUser } from "src/common/decorators/req-user.decorator"
+import { User } from "src/users/class/user.class"
 
 import { ForwarderDetails } from "./class/forwarder-details.class"
 import { Forwarder } from "./class/forwarder.class"
@@ -33,16 +35,16 @@ export class ForwardersController {
   @ApiOperation({ title: "Delete forwarder" })
   @ApiOkResponse({ description: "Forwarder deleted successfully" })
   @ApiNotFoundResponse({ description: "No forwarder found with this id" })
-  private async deleteForwarder(@Request() req, @Param() forwarderIdParams: ForwarderIdParams): Promise<void> {
-    return this.forwardersService.deleteForwarder(req.user, forwarderIdParams.forwarderId)
+  private async deleteForwarder(@ReqUser() user: User, @Param() forwarderIdParams: ForwarderIdParams): Promise<void> {
+    return this.forwardersService.deleteForwarder(user, forwarderIdParams.forwarderId)
   }
 
   @Get()
   @ApiOperation({ title: "List forwarders" })
   @ApiOkResponse({ description: "A list of forwarders", type: Forwarder, isArray: true })
   @ApiNotFoundResponse({ description: "No forwarders found" })
-  private async getForwarders(@Request() req): Promise<Forwarder[]> {
-    return this.forwardersService.getForwarders(req.user)
+  private async getForwarders(@ReqUser() user: User): Promise<Forwarder[]> {
+    return this.forwardersService.getForwarders(user)
   }
 
   @Get(":forwarderId")
@@ -50,17 +52,17 @@ export class ForwardersController {
   @ApiOkResponse({ description: "Forwarder details", type: ForwarderDetails })
   @ApiNotFoundResponse({ description: "No forwarder found with this id" })
   private async getForwarderDetails(
-    @Request() req,
+    @ReqUser() user: User,
     @Param() forwarderIdParams: ForwarderIdParams
   ): Promise<ForwarderDetails> {
-    return this.forwardersService.getForwarderDetails(req.user, forwarderIdParams.forwarderId)
+    return this.forwardersService.getForwarderDetails(user, forwarderIdParams.forwarderId)
   }
 
   @Post()
   @ApiOperation({ title: "Create a new forwarder" })
   @ApiCreatedResponse({ description: "Forwarder created successfully" })
-  private async createForwarder(@Request() req, @Body() createForwarderDto: CreateForwarderDto): Promise<void> {
-    return this.forwardersService.createForwarder(req.user, createForwarderDto)
+  private async createForwarder(@ReqUser() user: User, @Body() createForwarderDto: CreateForwarderDto): Promise<void> {
+    return this.forwardersService.createForwarder(user, createForwarderDto)
   }
 
   @Put(":forwarderId")
@@ -68,10 +70,10 @@ export class ForwardersController {
   @ApiOkResponse({ description: "Forwarder updated successfully" })
   @ApiNotFoundResponse({ description: "No forwarder found with this id" })
   private async updateForwarder(
-    @Request() req,
+    @ReqUser() user: User,
     @Param() forwarderIdParams: ForwarderIdParams,
     @Body() updateForwarderDto: UpdateForwarderDto
   ): Promise<void> {
-    return this.forwardersService.updateForwarder(req.user, forwarderIdParams.forwarderId, updateForwarderDto)
+    return this.forwardersService.updateForwarder(user, forwarderIdParams.forwarderId, updateForwarderDto)
   }
 }

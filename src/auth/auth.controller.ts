@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Post, Request, UseGuards } from "@nestjs/common"
+import { Body, Controller, Delete, Post, UseGuards } from "@nestjs/common"
 import { AuthGuard } from "@nestjs/passport"
 import {
   ApiBadRequestResponse,
@@ -10,6 +10,8 @@ import {
   ApiUnauthorizedResponse,
   ApiUseTags
 } from "@nestjs/swagger"
+import { ReqUser } from "src/common/decorators/req-user.decorator"
+import { User } from "src/users/class/user.class"
 
 import { AuthService } from "./auth.service"
 import { AccessToken } from "./class/access-token.class"
@@ -28,8 +30,8 @@ export class AuthController {
   @ApiBearerAuth()
   @ApiOkResponse({ description: "Successfully expired previous tokens" })
   @ApiUnauthorizedResponse({ description: "Invalid or expired token" })
-  public async logoutAll(@Request() req): Promise<void> {
-    return this.authService.expireTokens(req.user)
+  public async logoutAll(@ReqUser() user: User): Promise<void> {
+    return this.authService.expireTokens(user)
   }
 
   @Post()
@@ -37,7 +39,7 @@ export class AuthController {
   @UseGuards(AuthGuard("local"))
   @ApiCreatedResponse({ description: "Login successful", type: AccessToken })
   @ApiUnauthorizedResponse({ description: "Invalid username or password" })
-  public async login(@Request() req, @Body() loginDto: LoginDto): Promise<AccessToken> {
-    return this.authService.getAccessToken(req.user, loginDto.rememberMe)
+  public async login(@ReqUser() user: User, @Body() loginDto: LoginDto): Promise<AccessToken> {
+    return this.authService.getAccessToken(user, loginDto.rememberMe)
   }
 }

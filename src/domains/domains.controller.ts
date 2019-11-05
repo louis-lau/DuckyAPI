@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Request, UseGuards } from "@nestjs/common"
+import { Body, Controller, Delete, Get, Param, Post, UseGuards } from "@nestjs/common"
 import { AuthGuard } from "@nestjs/passport"
 import {
   ApiBadRequestResponse,
@@ -11,6 +11,8 @@ import {
   ApiUnauthorizedResponse,
   ApiUseTags
 } from "@nestjs/swagger"
+import { ReqUser } from "src/common/decorators/req-user.decorator"
+import { User } from "src/users/class/user.class"
 
 import { DnsCheck } from "./class/dns.class"
 import { Domain } from "./class/domain.class"
@@ -35,30 +37,30 @@ export class DomainsController {
   })
   @ApiOkResponse({ description: "Domain successfully removed" })
   @ApiNotFoundResponse({ description: "Domain not found on account" })
-  private async deleteDomain(@Request() req, @Param() domainParams: DomainParams): Promise<void> {
-    return this.domainsService.deleteDomain(req.user, domainParams.domain)
+  private async deleteDomain(@ReqUser() user: User, @Param() domainParams: DomainParams): Promise<void> {
+    return this.domainsService.deleteDomain(user, domainParams.domain)
   }
 
   @Get()
   @ApiOperation({ title: "List domains" })
   @ApiOkResponse({ description: "A list of domains", type: Domain, isArray: true })
   @ApiNotFoundResponse({ description: "No domains found" })
-  private async getDomains(@Request() req): Promise<Domain[]> {
-    return this.domainsService.getDomains(req.user)
+  private async getDomains(@ReqUser() user: User): Promise<Domain[]> {
+    return this.domainsService.getDomains(user)
   }
 
   @Get(":domain/DNS")
   @ApiOperation({ title: "Get and check DNS records" })
   @ApiOkResponse({ description: "The current and the correct DNS records for this domain", type: DnsCheck })
   @ApiNotFoundResponse({ description: "Domain not found on account" })
-  private async checkDNS(@Request() req, @Param() domainParams: DomainParams): Promise<DnsCheck> {
-    return this.domainsService.checkDns(req.user, domainParams.domain)
+  private async checkDNS(@ReqUser() user: User, @Param() domainParams: DomainParams): Promise<DnsCheck> {
+    return this.domainsService.checkDns(user, domainParams.domain)
   }
 
   @Post()
   @ApiOperation({ title: "Add domain" })
   @ApiCreatedResponse({ description: "Domain successfully added" })
-  private async addDomain(@Request() req, @Body() domainDto: DomainDto): Promise<void> {
-    return this.domainsService.addDomain(req.user, domainDto.domain)
+  private async addDomain(@ReqUser() user: User, @Body() domainDto: DomainDto): Promise<void> {
+    return this.domainsService.addDomain(user, domainDto.domain)
   }
 }

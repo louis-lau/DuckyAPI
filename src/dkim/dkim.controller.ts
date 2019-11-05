@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Put, Request, UseGuards } from "@nestjs/common"
+import { Body, Controller, Delete, Get, Param, Put, UseGuards } from "@nestjs/common"
 import { AuthGuard } from "@nestjs/passport"
 import {
   ApiBadRequestResponse,
@@ -10,7 +10,9 @@ import {
   ApiUnauthorizedResponse,
   ApiUseTags
 } from "@nestjs/swagger"
+import { ReqUser } from "src/common/decorators/req-user.decorator"
 import { DomainParams } from "src/domains/params/domain.params"
+import { User } from "src/users/class/user.class"
 
 import { DkimKey } from "./class/dkim-key.class"
 import { DkimService } from "./dkim.service"
@@ -30,25 +32,25 @@ export class DkimController {
   @Delete()
   @ApiOperation({ title: "Delete DKIM key for a domain" })
   @ApiOkResponse({ description: "DKIM key successfully deleted" })
-  public async deleteDkim(@Request() req, @Param() domainParams: DomainParams): Promise<void> {
-    return this.dkimService.deleteDkim(req.user, domainParams.domain)
+  public async deleteDkim(@ReqUser() user: User, @Param() domainParams: DomainParams): Promise<void> {
+    return this.dkimService.deleteDkim(user, domainParams.domain)
   }
 
   @Get()
   @ApiOperation({ title: "Get DKIM key info for a domain" })
   @ApiOkResponse({ description: "DKIM key info", type: DkimKey })
-  public async getDkim(@Request() req, @Param() domainParams: DomainParams): Promise<DkimKey> {
-    return this.dkimService.getDKIM(req.user, domainParams.domain)
+  public async getDkim(@ReqUser() user: User, @Param() domainParams: DomainParams): Promise<DkimKey> {
+    return this.dkimService.getDKIM(user, domainParams.domain)
   }
 
   @Put()
   @ApiOperation({ title: "Add or update DKIM key for a domain" })
   @ApiOkResponse({ description: "DKIM key info", type: DkimKey })
   public async updateDkim(
-    @Request() req,
+    @ReqUser() user: User,
     @Body() addDkimDto: AddDkimDto,
     @Param() domainParams: DomainParams
   ): Promise<DkimKey> {
-    return this.dkimService.updateDkim(req.user, addDkimDto, domainParams.domain)
+    return this.dkimService.updateDkim(user, addDkimDto, domainParams.domain)
   }
 }
