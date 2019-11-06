@@ -2,4 +2,8 @@ import { Document } from "mongoose"
 
 import { User } from "./class/user.class"
 
-export interface UserDocument extends User, Document {}
+class UserWithId extends User {
+  public _id: any
+}
+
+export interface UserDocument extends UserWithId, Document {}

@@ -6,6 +6,7 @@ import { Domain } from "src/domains/class/domain.class"
 
 import { User } from "./class/user.class"
 import { CreateUserDto } from "./dto/create-user.dto"
+import { UpdateUserDto } from "./dto/update-user.dto"
 import { UserDocument } from "./user-document.interface"
 
 @Injectable()
@@ -91,6 +92,37 @@ export class UsersService {
         default:
           throw new InternalServerErrorException("Unknown error")
       }
+    }
+  }
+
+  public async updateUser(userId: string, updateuserDto: UpdateUserDto): Promise<UserDocument> {
+    const user = await this.userModel.findById(userId).exec()
+    if (updateuserDto.username) {
+      updateuserDto.username = updateuserDto.username.toLowerCase()
+      user.username = updateuserDto.username
+    }
+    if (updateuserDto.password) {
+      user.password = updateuserDto.password
+    }
+    try {
+      return await user.save()
+    } catch (error) {
+      switch (error.code) {
+        case 11000:
+          throw new BadRequestException("This username is already taken", "UserExistsError")
+
+        default:
+          throw new InternalServerErrorException("Unknown error")
+      }
+    }
+  }
+
+  public async userNoPasswordStrip(user: User): Promise<User> {
+    return {
+      _id: user._id,
+      username: user.username,
+      minTokenDate: user.minTokenDate,
+      domains: user.domains
     }
   }
 }
