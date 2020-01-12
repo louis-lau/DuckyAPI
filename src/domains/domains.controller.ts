@@ -8,8 +8,8 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiTags,
   ApiUnauthorizedResponse,
-  ApiUseTags,
 } from '@nestjs/swagger'
 import { ReqUser } from 'src/common/decorators/req-user.decorator'
 import { User } from 'src/users/class/user.class'
@@ -21,7 +21,7 @@ import { DomainDto } from './dto/domain.dto'
 import { DomainParams } from './params/domain.params'
 
 @Controller('domains')
-@ApiUseTags('Domains')
+@ApiTags('Domains')
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: 'Invalid or expired token' })
@@ -31,7 +31,7 @@ export class DomainsController {
   public constructor(private readonly domainsService: DomainsService) {}
   @Delete(':domain')
   @ApiOperation({
-    title: 'Remove domain',
+    summary: 'Remove domain',
     description:
       'WARNING: This will also remove any email accounts, forwarders, and DKIM keys associated with this domain',
   })
@@ -42,7 +42,7 @@ export class DomainsController {
   }
 
   @Get()
-  @ApiOperation({ title: 'List domains' })
+  @ApiOperation({ summary: 'List domains' })
   @ApiOkResponse({ description: 'A list of domains', type: Domain, isArray: true })
   @ApiNotFoundResponse({ description: 'No domains found' })
   private async getDomains(@ReqUser() user: User): Promise<Domain[]> {
@@ -50,7 +50,7 @@ export class DomainsController {
   }
 
   @Get(':domain/DNS')
-  @ApiOperation({ title: 'Get and check DNS records' })
+  @ApiOperation({ summary: 'Get and check DNS records' })
   @ApiOkResponse({ description: 'The current and the correct DNS records for this domain', type: DnsCheck })
   @ApiNotFoundResponse({ description: 'Domain not found on account' })
   private async checkDNS(@ReqUser() user: User, @Param() domainParams: DomainParams): Promise<DnsCheck> {
@@ -58,7 +58,7 @@ export class DomainsController {
   }
 
   @Post()
-  @ApiOperation({ title: 'Add domain' })
+  @ApiOperation({ summary: 'Add domain' })
   @ApiCreatedResponse({ description: 'Domain successfully added' })
   private async addDomain(@ReqUser() user: User, @Body() domainDto: DomainDto): Promise<void> {
     return this.domainsService.addDomain(user, domainDto.domain)

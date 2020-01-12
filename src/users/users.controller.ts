@@ -7,8 +7,8 @@ import {
   ApiInternalServerErrorResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiTags,
   ApiUnauthorizedResponse,
-  ApiUseTags,
 } from '@nestjs/swagger'
 import { ReqUser } from 'src/common/decorators/req-user.decorator'
 
@@ -19,7 +19,7 @@ import { UpdateUserDto } from './dto/update-user.dto'
 import { UsersService } from './users.service'
 
 @Controller('users')
-@ApiUseTags('Users')
+@ApiTags('Users')
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: 'Invalid or expired token' })
@@ -29,21 +29,21 @@ export class UsersController {
   public constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  @ApiOperation({ title: '[Admin only] Create new API user' })
+  @ApiOperation({ summary: '[Admin only] Create new API user' })
   @ApiCreatedResponse({ description: 'User successfully created' })
   public async createUser(@Body() createUserDto: CreateUserDto): Promise<void> {
     await this.usersService.createUser(createUserDto)
   }
 
   @Get('me')
-  @ApiOperation({ title: 'Get account info for current access token' })
+  @ApiOperation({ summary: 'Get account info for current access token' })
   @ApiOkResponse({ description: 'User info', type: UserNoPassword })
   public async getMe(@ReqUser() user: User): Promise<UserNoPassword> {
     return this.usersService.userNoPasswordStrip(user)
   }
 
   @Put('me')
-  @ApiOperation({ title: 'Update username/password' })
+  @ApiOperation({ summary: 'Update username/password' })
   @ApiOkResponse({ description: 'User updated successfully' })
   public async updateMe(@ReqUser() user: User, @Body() updateUserDto: UpdateUserDto): Promise<void> {
     this.usersService.updateUser(user._id, updateUserDto)

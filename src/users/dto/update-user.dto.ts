@@ -1,8 +1,8 @@
-import { ApiModelProperty } from '@nestjs/swagger'
+import { ApiProperty } from '@nestjs/swagger'
 import { IsAscii, IsNotEmpty, IsOptional, IsString, NotContains } from 'class-validator'
 
 export class UpdateUserDto {
-  @ApiModelProperty({
+  @ApiProperty({
     example: 'johndoe',
     description: 'The username for this user',
   })
@@ -13,7 +13,7 @@ export class UpdateUserDto {
   @NotContains(' ', { message: 'username must not contain spaces' })
   public username?: string
 
-  @ApiModelProperty({
+  @ApiProperty({
     example: 'supersecret',
     description: 'The password for this user',
   })

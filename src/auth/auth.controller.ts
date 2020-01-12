@@ -7,8 +7,8 @@ import {
   ApiInternalServerErrorResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiTags,
   ApiUnauthorizedResponse,
-  ApiUseTags,
 } from '@nestjs/swagger'
 import { ReqUser } from 'src/common/decorators/req-user.decorator'
 import { User } from 'src/users/class/user.class'
@@ -18,14 +18,14 @@ import { AccessToken } from './class/access-token.class'
 import { LoginDto } from './login.dto'
 
 @Controller('authentication')
-@ApiUseTags('Authentication')
+@ApiTags('Authentication')
 @ApiBadRequestResponse({ description: 'Error that is resolvable user side' })
 @ApiInternalServerErrorResponse({ description: 'Server error that is not resolvable user side' })
 export class AuthController {
   public constructor(private readonly authService: AuthService) {}
 
   @Delete()
-  @ApiOperation({ title: 'Revoke previous access tokens' })
+  @ApiOperation({ summary: 'Revoke previous access tokens' })
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
   @ApiOkResponse({ description: 'Successfully expired previous tokens' })
@@ -35,7 +35,7 @@ export class AuthController {
   }
 
   @Post()
-  @ApiOperation({ title: 'Create an access token' })
+  @ApiOperation({ summary: 'Create an access token' })
   @UseGuards(AuthGuard('local'))
   @ApiCreatedResponse({ description: 'Login successful', type: AccessToken })
   @ApiUnauthorizedResponse({ description: 'Invalid username or password' })

@@ -1,13 +1,13 @@
-import { ApiModelProperty } from '@nestjs/swagger'
+import { ApiProperty } from '@nestjs/swagger'
 import { IsNotEmpty, IsOptional, IsString, Matches } from 'class-validator'
 
 export class AddDkimDto {
-  @ApiModelProperty({ example: 'default', description: 'Selector for dkim key' })
+  @ApiProperty({ example: 'default', description: 'Selector for dkim key' })
   @IsNotEmpty()
   @IsString()
   public selector: string
 
-  @ApiModelProperty({
+  @ApiProperty({
     example: '-----BEGIN RSA PRIVATE KEY-----...',
     description:
       'Pem formatted DKIM private key. If not set then a new 2048 bit RSA key is generated, beware though that it can take several seconds to complete',

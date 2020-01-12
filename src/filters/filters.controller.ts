@@ -8,8 +8,8 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiTags,
   ApiUnauthorizedResponse,
-  ApiUseTags,
 } from '@nestjs/swagger'
 import { AccountIdParams } from 'src/accounts/params/account-id.params'
 import { ReqUser } from 'src/common/decorators/req-user.decorator'
@@ -22,7 +22,7 @@ import { FiltersService } from './filters.service'
 import { FilterIdParams } from './params/filter-id.params'
 
 @Controller('accounts/:accountId/filters')
-@ApiUseTags('Filters')
+@ApiTags('Filters')
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: 'Invalid or expired token' })
@@ -32,7 +32,7 @@ export class FiltersController {
   public constructor(private readonly filtersService: FiltersService) {}
 
   @Delete(':filterId')
-  @ApiOperation({ title: 'Delete filter' })
+  @ApiOperation({ summary: 'Delete filter' })
   @ApiOkResponse({ description: 'Filter deleted successfully' })
   @ApiNotFoundResponse({ description: 'No account or filter found with this id' })
   public async deleteFilter(@ReqUser() user: User, @Param() filterIdParams: FilterIdParams): Promise<void> {
@@ -40,7 +40,7 @@ export class FiltersController {
   }
 
   @Get()
-  @ApiOperation({ title: 'List filters' })
+  @ApiOperation({ summary: 'List filters' })
   @ApiOkResponse({ description: 'A list of filters', type: FilterListItem, isArray: true })
   @ApiNotFoundResponse({ description: 'No account found with this id or no filters found on this account' })
   public async getFilters(@ReqUser() user: User, @Param() accountIdParams: AccountIdParams): Promise<FilterListItem[]> {
@@ -48,7 +48,7 @@ export class FiltersController {
   }
 
   @Get(':filterId')
-  @ApiOperation({ title: 'Get filter details' })
+  @ApiOperation({ summary: 'Get filter details' })
   @ApiOkResponse({ description: 'Filter details', type: FilterDetails })
   @ApiNotFoundResponse({ description: 'No account or filter found with this id' })
   public async getFilter(@ReqUser() user: User, @Param() filterIdParams: FilterIdParams): Promise<FilterDetails> {
@@ -56,7 +56,7 @@ export class FiltersController {
   }
 
   @Post()
-  @ApiOperation({ title: 'Create a new filter' })
+  @ApiOperation({ summary: 'Create a new filter' })
   @ApiCreatedResponse({ description: 'Filter created successfully' })
   @ApiNotFoundResponse({ description: 'No account found with this id' })
   public async createFilter(
@@ -68,7 +68,7 @@ export class FiltersController {
   }
 
   @Put(':filterId')
-  @ApiOperation({ title: 'Update existing filter' })
+  @ApiOperation({ summary: 'Update existing filter' })
   @ApiOkResponse({ description: 'Account updated successfully' })
   @ApiNotFoundResponse({ description: 'No account or filter found with this id' })
   public async updateFilter(

@@ -8,8 +8,8 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiTags,
   ApiUnauthorizedResponse,
-  ApiUseTags,
 } from '@nestjs/swagger'
 import { ReqUser } from 'src/common/decorators/req-user.decorator'
 import { User } from 'src/users/class/user.class'
@@ -22,7 +22,7 @@ import { ForwardersService } from './forwarders.service'
 import { ForwarderIdParams } from './params/forwarder-id.params'
 
 @Controller('forwarders')
-@ApiUseTags('Forwarders')
+@ApiTags('Forwarders')
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: 'Invalid or expired token' })
@@ -32,7 +32,7 @@ export class ForwardersController {
   public constructor(private readonly forwardersService: ForwardersService) {}
 
   @Delete(':forwarderId')
-  @ApiOperation({ title: 'Delete forwarder' })
+  @ApiOperation({ summary: 'Delete forwarder' })
   @ApiOkResponse({ description: 'Forwarder deleted successfully' })
   @ApiNotFoundResponse({ description: 'No forwarder found with this id' })
   private async deleteForwarder(@ReqUser() user: User, @Param() forwarderIdParams: ForwarderIdParams): Promise<void> {
@@ -40,7 +40,7 @@ export class ForwardersController {
   }
 
   @Get()
-  @ApiOperation({ title: 'List forwarders' })
+  @ApiOperation({ summary: 'List forwarders' })
   @ApiOkResponse({ description: 'A list of forwarders', type: Forwarder, isArray: true })
   @ApiNotFoundResponse({ description: 'No forwarders found' })
   private async getForwarders(@ReqUser() user: User): Promise<Forwarder[]> {
@@ -48,7 +48,7 @@ export class ForwardersController {
   }
 
   @Get(':forwarderId')
-  @ApiOperation({ title: 'Get forwarder details' })
+  @ApiOperation({ summary: 'Get forwarder details' })
   @ApiOkResponse({ description: 'Forwarder details', type: ForwarderDetails })
   @ApiNotFoundResponse({ description: 'No forwarder found with this id' })
   private async getForwarderDetails(
@@ -59,14 +59,14 @@ export class ForwardersController {
   }
 
   @Post()
-  @ApiOperation({ title: 'Create a new forwarder' })
+  @ApiOperation({ summary: 'Create a new forwarder' })
   @ApiCreatedResponse({ description: 'Forwarder created successfully' })
   private async createForwarder(@ReqUser() user: User, @Body() createForwarderDto: CreateForwarderDto): Promise<void> {
     return this.forwardersService.createForwarder(user, createForwarderDto)
   }
 
   @Put(':forwarderId')
-  @ApiOperation({ title: 'Update existing forwarder' })
+  @ApiOperation({ summary: 'Update existing forwarder' })
   @ApiOkResponse({ description: 'Forwarder updated successfully' })
   @ApiNotFoundResponse({ description: 'No forwarder found with this id' })
   private async updateForwarder(

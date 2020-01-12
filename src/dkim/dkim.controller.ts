@@ -7,8 +7,8 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiTags,
   ApiUnauthorizedResponse,
-  ApiUseTags,
 } from '@nestjs/swagger'
 import { ReqUser } from 'src/common/decorators/req-user.decorator'
 import { DomainParams } from 'src/domains/params/domain.params'
@@ -19,7 +19,7 @@ import { DkimService } from './dkim.service'
 import { AddDkimDto } from './dto/add-dkim.dto'
 
 @Controller('domains/:domain/dkim')
-@ApiUseTags('DKIM')
+@ApiTags('DKIM')
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: 'Invalid or expired token' })
@@ -30,21 +30,21 @@ export class DkimController {
   public constructor(private readonly dkimService: DkimService) {}
 
   @Delete()
-  @ApiOperation({ title: 'Delete DKIM key for a domain' })
+  @ApiOperation({ summary: 'Delete DKIM key for a domain' })
   @ApiOkResponse({ description: 'DKIM key successfully deleted' })
   public async deleteDkim(@ReqUser() user: User, @Param() domainParams: DomainParams): Promise<void> {
     return this.dkimService.deleteDkim(user, domainParams.domain)
   }
 
   @Get()
-  @ApiOperation({ title: 'Get DKIM key info for a domain' })
+  @ApiOperation({ summary: 'Get DKIM key info for a domain' })
   @ApiOkResponse({ description: 'DKIM key info', type: DkimKey })
   public async getDkim(@ReqUser() user: User, @Param() domainParams: DomainParams): Promise<DkimKey> {
     return this.dkimService.getDKIM(user, domainParams.domain)
   }
 
   @Put()
-  @ApiOperation({ title: 'Add or update DKIM key for a domain' })
+  @ApiOperation({ summary: 'Add or update DKIM key for a domain' })
   @ApiOkResponse({ description: 'DKIM key info', type: DkimKey })
   public async updateDkim(
     @ReqUser() user: User,

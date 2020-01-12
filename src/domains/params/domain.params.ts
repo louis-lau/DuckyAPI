@@ -1,8 +1,8 @@
-import { ApiModelProperty } from '@nestjs/swagger'
+import { ApiProperty } from '@nestjs/swagger'
 import { IsFQDN, IsNotEmpty } from 'class-validator'
 
 export class DomainParams {
-  @ApiModelProperty({ description: 'example.com' })
+  @ApiProperty({ description: 'example.com' })
   @IsNotEmpty()
   @IsFQDN()
   public domain: string

@@ -14,7 +14,7 @@ module.exports = {
     "@typescript-eslint/no-explicit-any": "off",
     "prettier/prettier": "warn",
     "simple-import-sort/sort": "warn",
-    "@typescript-eslint/indent": ["error", 2],
+    "@typescript-eslint/indent": "off",
     "@typescript-eslint/no-parameter-properties": "off",
     "no-var": "error",
     // "no-await-in-loop": "warn",

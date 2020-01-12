@@ -4,7 +4,6 @@ import Arena from 'bull-arena'
 import BasicAuth from 'express-basic-auth'
 
 import { AccountsModule } from './accounts/accounts.module'
-import { AppController } from './app.controller'
 import { AuthModule } from './auth/auth.module'
 import { arena } from './constants'
 import { redisOptions } from './constants'
@@ -32,7 +31,6 @@ import { UsersModule } from './users/users.module'
     ForwardersModule,
     TasksModule,
   ],
-  controllers: [AppController],
 })
 export class AppModule implements NestModule {
   public configure(consumer: MiddlewareConsumer): void {

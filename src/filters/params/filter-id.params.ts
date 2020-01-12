@@ -1,12 +1,12 @@
-import { ApiModelProperty } from '@nestjs/swagger'
+import { ApiProperty } from '@nestjs/swagger'
 import { IsMongoId } from 'class-validator'
 
 export class FilterIdParams {
-  @ApiModelProperty({ description: 'Unique id of the account' })
+  @ApiProperty({ description: 'Unique id of the account' })
   @IsMongoId()
   public accountId: string
 
-  @ApiModelProperty({ description: 'Unique id of the filter' })
+  @ApiProperty({ description: 'Unique id of the filter' })
   @IsMongoId()
   public filterId: string
 }

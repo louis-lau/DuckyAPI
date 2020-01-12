@@ -1,4 +1,4 @@
-import { ApiModelProperty } from '@nestjs/swagger'
+import { ApiProperty } from '@nestjs/swagger'
 import { Type } from 'class-transformer'
 import {
   ArrayUnique,
@@ -14,7 +14,7 @@ import {
 import { maxLimits } from 'src/constants'
 
 class CreateUpdateAccountLimits {
-  @ApiModelProperty({
+  @ApiProperty({
     example: 1073741824,
     description: 'How many bytes the account is allowed to use',
     required: false,
@@ -25,7 +25,7 @@ class CreateUpdateAccountLimits {
   @Max(maxLimits.quota ? maxLimits.quota : Infinity) // If limit is defined set max, else no max
   public quota?: number
 
-  @ApiModelProperty({
+  @ApiProperty({
     example: 200,
     description: 'How many emails the account can send in a period',
     required: false,
@@ -36,7 +36,7 @@ class CreateUpdateAccountLimits {
   @Max(maxLimits.send ? maxLimits.send : Infinity)
   public send?: number
 
-  @ApiModelProperty({
+  @ApiProperty({
     example: 1000,
     description: 'How many emails the account can receive in a period',
     required: false,
@@ -47,7 +47,7 @@ class CreateUpdateAccountLimits {
   @Max(maxLimits.receive ? maxLimits.receive : Infinity)
   public receive?: number
 
-  @ApiModelProperty({
+  @ApiProperty({
     example: 100,
     description: 'How many emails the account can forward in a period',
     required: false,
@@ -60,12 +60,12 @@ class CreateUpdateAccountLimits {
 }
 
 export class CreateUpdateAccountCommonDto {
-  @ApiModelProperty({ example: 'John Doe', description: 'The name of the email account', required: false })
+  @ApiProperty({ example: 'John Doe', description: 'The name of the email account', required: false })
   @IsOptional()
   @IsString()
   public name?: string
 
-  @ApiModelProperty({
+  @ApiProperty({
     example: 50,
     description: 'Relative scale for detecting spam. 0 means that everything is spam, 100 means that nothing is spam',
     required: false,
@@ -76,13 +76,13 @@ export class CreateUpdateAccountCommonDto {
   @Max(100)
   public spamLevel?: number
 
-  @ApiModelProperty({ description: 'Account limits' })
+  @ApiProperty({ description: 'Account limits' })
   @IsOptional()
   @ValidateNested()
   @Type((): typeof CreateUpdateAccountLimits => CreateUpdateAccountLimits)
   public limits?: CreateUpdateAccountLimits = {}
 
-  @ApiModelProperty({
+  @ApiProperty({
     example: ['imap', 'pop3'],
     description: 'List of scopes that are disabled for this user',
     required: false,

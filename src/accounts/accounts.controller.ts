@@ -8,8 +8,8 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiTags,
   ApiUnauthorizedResponse,
-  ApiUseTags,
 } from '@nestjs/swagger'
 import { ReqUser } from 'src/common/decorators/req-user.decorator'
 import { User } from 'src/users/class/user.class'
@@ -22,7 +22,7 @@ import { UpdateAccountDto } from './dto/update-account.dto'
 import { AccountIdParams } from './params/account-id.params'
 
 @Controller('accounts')
-@ApiUseTags('Email Accounts')
+@ApiTags('Email Accounts')
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: 'Invalid or expired token' })
@@ -32,7 +32,7 @@ export class AccountsController {
   public constructor(private readonly accountsService: AccountsService) {}
 
   @Delete(':accountId')
-  @ApiOperation({ title: 'Delete email account' })
+  @ApiOperation({ summary: 'Delete email account' })
   @ApiOkResponse({ description: 'Account deleted successfully' })
   @ApiNotFoundResponse({ description: 'No account found with this id' })
   private async deleteAccount(@ReqUser() user: User, @Param() accountIdParams: AccountIdParams): Promise<void> {
@@ -40,7 +40,7 @@ export class AccountsController {
   }
 
   @Get()
-  @ApiOperation({ title: 'List email accounts' })
+  @ApiOperation({ summary: 'List email accounts' })
   @ApiOkResponse({ description: 'A list of accounts', type: AccountListItem, isArray: true })
   @ApiNotFoundResponse({ description: 'No accounts found' })
   private async getAccounts(@ReqUser() user: User): Promise<AccountListItem[]> {
@@ -48,7 +48,7 @@ export class AccountsController {
   }
 
   @Get(':accountId')
-  @ApiOperation({ title: 'Get email account details' })
+  @ApiOperation({ summary: 'Get email account details' })
   @ApiOkResponse({ description: 'Account details', type: AccountDetails })
   @ApiNotFoundResponse({ description: 'No account found with this id' })
   private async getAccountDetails(
@@ -59,14 +59,14 @@ export class AccountsController {
   }
 
   @Post()
-  @ApiOperation({ title: 'Create a new email account' })
+  @ApiOperation({ summary: 'Create a new email account' })
   @ApiCreatedResponse({ description: 'Account created successfully' })
   private async createAccount(@ReqUser() user: User, @Body() createAccountDto: CreateAccountDto): Promise<void> {
     return this.accountsService.createAccount(user, createAccountDto)
   }
 
   @Put(':accountId')
-  @ApiOperation({ title: 'Update existing email account' })
+  @ApiOperation({ summary: 'Update existing email account' })
   @ApiOkResponse({ description: 'Account updated successfully' })
   @ApiNotFoundResponse({ description: 'No account found with this id' })
   private async updateAccount(
