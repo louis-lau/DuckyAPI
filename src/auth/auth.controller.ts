@@ -30,7 +30,7 @@ export class AuthController {
   @ApiBearerAuth()
   @ApiOkResponse({ description: 'Successfully expired previous tokens' })
   @ApiUnauthorizedResponse({ description: 'Invalid or expired token' })
-  public async logoutAll(@ReqUser() user: User): Promise<void> {
+  public async revokeAllAccessTokens(@ReqUser() user: User): Promise<void> {
     return this.authService.expireTokens(user)
   }
 
@@ -39,7 +39,7 @@ export class AuthController {
   @UseGuards(AuthGuard('local'))
   @ApiCreatedResponse({ description: 'Login successful', type: AccessToken })
   @ApiUnauthorizedResponse({ description: 'Invalid username or password' })
-  public async login(@ReqUser() user: User, @Body() loginDto: LoginDto): Promise<AccessToken> {
+  public async getAccessToken(@ReqUser() user: User, @Body() loginDto: LoginDto): Promise<AccessToken> {
     return this.authService.getAccessToken(user, loginDto.rememberMe)
   }
 }

@@ -19,7 +19,7 @@ import { DkimService } from './dkim.service'
 import { AddDkimDto } from './dto/add-dkim.dto'
 
 @Controller('domains/:domain/dkim')
-@ApiTags('DKIM')
+@ApiTags('Dkim')
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: 'Invalid or expired token' })

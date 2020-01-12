@@ -51,7 +51,10 @@ export class FiltersController {
   @ApiOperation({ summary: 'Get filter details' })
   @ApiOkResponse({ description: 'Filter details', type: FilterDetails })
   @ApiNotFoundResponse({ description: 'No account or filter found with this id' })
-  public async getFilter(@ReqUser() user: User, @Param() filterIdParams: FilterIdParams): Promise<FilterDetails> {
+  public async getFilterDetails(
+    @ReqUser() user: User,
+    @Param() filterIdParams: FilterIdParams,
+  ): Promise<FilterDetails> {
     return this.filtersService.getFilter(user, filterIdParams.accountId, filterIdParams.filterId)
   }
 
