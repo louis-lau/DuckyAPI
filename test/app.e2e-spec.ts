@@ -1,25 +1,25 @@
-import { Test, TestingModule } from "@nestjs/testing"
-import { AppModule } from "src/app.module"
-import Request from "supertest"
+import { Test, TestingModule } from '@nestjs/testing'
+import { AppModule } from 'src/app.module'
+import Request from 'supertest'
 
-describe("AppController (e2e)", (): void => {
+describe('AppController (e2e)', (): void => {
   let app
 
   beforeEach(
     async (): Promise<void> => {
       const moduleFixture: TestingModule = await Test.createTestingModule({
-        imports: [AppModule]
+        imports: [AppModule],
       }).compile()
 
       app = moduleFixture.createNestApplication()
       await app.init()
-    }
+    },
   )
 
-  it("/ (GET)", (): Request.Test => {
+  it('/ (GET)', (): Request.Test => {
     return Request(app.getHttpServer())
-      .get("/")
+      .get('/')
       .expect(200)
-      .expect("Hello World!")
+      .expect('Hello World!')
   })
 })

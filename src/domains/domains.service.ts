@@ -1,17 +1,17 @@
-import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common"
-import { Queue } from "bull"
-import { MxRecord, promises as dns } from "dns"
-import { InjectQueue } from "nest-bull"
-import { AccountsService } from "src/accounts/accounts.service"
-import { DnsConfig } from "src/constants"
-import { DkimKey } from "src/dkim/class/dkim-key.class"
-import { DkimService } from "src/dkim/dkim.service"
-import { ForwardersService } from "src/forwarders/forwarders.service"
-import { User } from "src/users/class/user.class"
-import { UsersService } from "src/users/users.service"
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
+import { Queue } from 'bull'
+import { MxRecord, promises as dns } from 'dns'
+import { InjectQueue } from 'nest-bull'
+import { AccountsService } from 'src/accounts/accounts.service'
+import { DnsConfig } from 'src/constants'
+import { DkimKey } from 'src/dkim/class/dkim-key.class'
+import { DkimService } from 'src/dkim/dkim.service'
+import { ForwardersService } from 'src/forwarders/forwarders.service'
+import { User } from 'src/users/class/user.class'
+import { UsersService } from 'src/users/users.service'
 
-import { DnsCheck } from "./class/dns.class"
-import { Domain } from "./class/domain.class"
+import { DnsCheck } from './class/dns.class'
+import { Domain } from './class/domain.class'
 
 @Injectable()
 export class DomainsService {
@@ -20,14 +20,14 @@ export class DomainsService {
     private readonly accountsService: AccountsService,
     private readonly forwardersService: ForwardersService,
     private readonly dkimService: DkimService,
-    @InjectQueue("tasks") readonly taskQueue: Queue
+    @InjectQueue('tasks') readonly taskQueue: Queue,
   ) {}
 
   public async getDomains(user: User): Promise<Domain[]> {
     const domains = user.domains
 
     if (domains.length === 0) {
-      throw new NotFoundException(`No domains found for user: ${user.username}`, "DomainNotFoundError")
+      throw new NotFoundException(`No domains found for user: ${user.username}`, 'DomainNotFoundError')
     }
 
     const dkimKeyPromises: Promise<DkimKey | void>[] = []
@@ -37,7 +37,7 @@ export class DomainsService {
           .resolveDkimId(domain.domain)
           .catch((error): void => {
             // Don't throw error if no DKIM key is found
-            if (error.response.error !== "DkimNotFoundError") {
+            if (error.response.error !== 'DkimNotFoundError') {
               throw error
             }
           })
@@ -48,7 +48,7 @@ export class DomainsService {
             } else {
               domains[i].dkim = false
             }
-          })
+          }),
       )
     }
     await Promise.all(dkimKeyPromises)
@@ -58,27 +58,27 @@ export class DomainsService {
 
   public async checkDns(user: User, domain: string): Promise<DnsCheck> {
     if (!user.domains.some((userDomain): boolean => userDomain.domain === domain)) {
-      throw new NotFoundException(`Domain: ${domain} doesn't exist on user: ${user.username}`, "DomainNotFoundError")
+      throw new NotFoundException(`Domain: ${domain} doesn't exist on user: ${user.username}`, 'DomainNotFoundError')
     }
 
     const dnsCheck: DnsCheck = {
       correctValues: {
         mx: DnsConfig.mx.records,
         spf: DnsConfig.spf.correctValue,
-        dkim: undefined
+        dkim: undefined,
       },
       currentValues: {
         mx: undefined,
         spf: undefined,
-        dkim: undefined
+        dkim: undefined,
       },
       errors: [],
-      warnings: []
+      warnings: [],
     }
 
     const dkimKey = await this.dkimService.getDKIM(user, domain).catch((error): void => {
       // Don't throw error if no DKIM key is found
-      if (error.response.error !== "DkimNotFoundError") {
+      if (error.response.error !== 'DkimNotFoundError') {
         throw error
       }
     })
@@ -86,14 +86,14 @@ export class DomainsService {
     if (dkimKey) {
       dnsCheck.correctValues.dkim = {
         selector: dkimKey.selector,
-        value: dkimKey.dnsTxt.value
+        value: dkimKey.dnsTxt.value,
       }
     }
 
     const nsRecords = await dns.resolveNs(domain).catch((error): string[] => {
       switch (error.code) {
-        case "ENODATA":
-        case "ENOTFOUND":
+        case 'ENODATA':
+        case 'ENOTFOUND':
           return []
 
         default:
@@ -103,9 +103,9 @@ export class DomainsService {
 
     if (nsRecords.length === 0) {
       dnsCheck.errors.push({
-        type: "ns",
-        error: "NsNotFound",
-        message: `No nameservers found for ${domain}. You need them for your domain to work.`
+        type: 'ns',
+        error: 'NsNotFound',
+        message: `No nameservers found for ${domain}. You need them for your domain to work.`,
       })
       return dnsCheck
     }
@@ -118,8 +118,8 @@ export class DomainsService {
           .resolveTxt(`${dkimKey.selector}._domainkey.${domain}`)
           .catch((error): string[][] => {
             switch (error.code) {
-              case "ENODATA":
-              case "ENOTFOUND":
+              case 'ENODATA':
+              case 'ENOTFOUND':
                 return [[]]
 
               default:
@@ -129,43 +129,43 @@ export class DomainsService {
           .then(
             async (txtRecords): Promise<void> => {
               // Combine chunked txt records. e.g. [["v=spf1 ip4:0.0.0.0 ", "~all"]] to ["v=spf1 ip4:0.0.0.0 ~all"]
-              const combinedTxtRecords = txtRecords.map((item): string => item.join(""))
+              const combinedTxtRecords = txtRecords.map((item): string => item.join(''))
 
               // Only keep txt records that include v=DKIM1
-              const dkimTxtRecords = combinedTxtRecords.filter((value): boolean => value.includes("v=DKIM1"))
+              const dkimTxtRecords = combinedTxtRecords.filter((value): boolean => value.includes('v=DKIM1'))
 
               dnsCheck.currentValues.dkim = {
                 selector: dkimKey.selector,
-                value: dkimTxtRecords.join()
+                value: dkimTxtRecords.join(),
               }
 
               if (dkimTxtRecords.length === 0) {
                 dnsCheck.errors.push({
-                  type: "dkim",
-                  error: "DkimNotFound",
-                  message: `DKIM signing is enabled on the server, but no DKIM record is configured on ${dkimKey.selector}._domainkey.${domain}.`
+                  type: 'dkim',
+                  error: 'DkimNotFound',
+                  message: `DKIM signing is enabled on the server, but no DKIM record is configured on ${dkimKey.selector}._domainkey.${domain}.`,
                 })
                 return
               }
 
               if (dkimTxtRecords.length > 1) {
                 dnsCheck.errors.push({
-                  type: "dkim",
-                  error: "DkimMultipleFound",
+                  type: 'dkim',
+                  error: 'DkimMultipleFound',
                   message:
-                    "Multiple DKIM records found for this domain and selector, only one is allowed. The rest of the checks will be done on the first record."
+                    'Multiple DKIM records found for this domain and selector, only one is allowed. The rest of the checks will be done on the first record.',
                 })
               }
 
               if (dkimTxtRecords[0] !== dkimKey.dnsTxt.value) {
                 dnsCheck.errors.push({
-                  type: "dkim",
-                  error: "DkimInvalid",
-                  message: "The DKIM record does not match the one above. Check for differences."
+                  type: 'dkim',
+                  error: 'DkimInvalid',
+                  message: 'The DKIM record does not match the one above. Check for differences.',
                 })
               }
-            }
-          )
+            },
+          ),
       )
     }
 
@@ -174,8 +174,8 @@ export class DomainsService {
         .resolveMx(domain)
         .catch((error): MxRecord[] => {
           switch (error.code) {
-            case "ENODATA":
-            case "ENOTFOUND":
+            case 'ENODATA':
+            case 'ENOTFOUND':
               return []
 
             default:
@@ -187,9 +187,9 @@ export class DomainsService {
 
           if (mxRecords.length === 0) {
             dnsCheck.errors.push({
-              type: "mx",
-              error: "MxNotFound",
-              message: "No MX record(s) found for this domain. You need these to receive email."
+              type: 'mx',
+              error: 'MxNotFound',
+              message: 'No MX record(s) found for this domain. You need these to receive email.',
             })
             return
           }
@@ -198,13 +198,13 @@ export class DomainsService {
             // if mxRecords doesn't include this correct mx record
             if (!mxRecords.some((mxRecord): boolean => mxRecord.exchange === correctMxRecord.exchange)) {
               dnsCheck.errors.push({
-                type: "mx",
-                error: "MxNotFound",
-                message: `${correctMxRecord.exchange} was not found in the current MX records. Valid MX records are needed to receive email.`
+                type: 'mx',
+                error: 'MxNotFound',
+                message: `${correctMxRecord.exchange} was not found in the current MX records. Valid MX records are needed to receive email.`,
               })
             }
           }
-        })
+        }),
     )
 
     dnsCheckPromises.push(
@@ -212,8 +212,8 @@ export class DomainsService {
         .resolveTxt(domain)
         .catch((error): string[][] => {
           switch (error.code) {
-            case "ENODATA":
-            case "ENOTFOUND":
+            case 'ENODATA':
+            case 'ENOTFOUND':
               return [[]]
 
             default:
@@ -223,40 +223,40 @@ export class DomainsService {
         .then(
           async (txtRecords): Promise<void> => {
             // Combine chunked txt records. e.g. [["v=spf1 ip4:0.0.0.0 ", "~all"]] to ["v=spf1 ip4:0.0.0.0 ~all"]
-            const combinedTxtRecords = txtRecords.map((item): string => item.join(""))
+            const combinedTxtRecords = txtRecords.map((item): string => item.join(''))
 
             // Only keep txt records that include v=spf1
-            const spfTxtRecords = combinedTxtRecords.filter((value): boolean => value.includes("v=spf1"))
+            const spfTxtRecords = combinedTxtRecords.filter((value): boolean => value.includes('v=spf1'))
 
             dnsCheck.currentValues.spf = spfTxtRecords.join()
 
             if (spfTxtRecords.length === 0) {
               dnsCheck.errors.push({
-                type: "spf",
-                error: "SpfNotFound",
-                message: "No SPF record found for this domain. You need this to send email."
+                type: 'spf',
+                error: 'SpfNotFound',
+                message: 'No SPF record found for this domain. You need this to send email.',
               })
               return
             }
 
             if (spfTxtRecords.length > 1) {
               dnsCheck.errors.push({
-                type: "spf",
-                error: "SpfMultipleFound",
+                type: 'spf',
+                error: 'SpfMultipleFound',
                 message:
-                  "Multiple SPF records found for this domain, only one is allowed. The rest of the checks will be done on the first record."
+                  'Multiple SPF records found for this domain, only one is allowed. The rest of the checks will be done on the first record.',
               })
             }
 
             if (!DnsConfig.spf.regex.test(spfTxtRecords[0])) {
               dnsCheck.errors.push({
-                type: "spf",
-                error: "SpfInvalid",
-                message: `The SPF record is invalid. You need a valid SPF record to send email.`
+                type: 'spf',
+                error: 'SpfInvalid',
+                message: `The SPF record is invalid. You need a valid SPF record to send email.`,
               })
             }
-          }
-        )
+          },
+        ),
     )
 
     await Promise.all(dnsCheckPromises)
@@ -265,11 +265,11 @@ export class DomainsService {
 
   public async addDomain(user: User, domain: string): Promise<void> {
     if (user.domains.some((userdomain): boolean => userdomain.domain === domain)) {
-      throw new BadRequestException(`Domain: ${domain} already added for user: ${user.username}`, "DomainExistsError")
+      throw new BadRequestException(`Domain: ${domain} already added for user: ${user.username}`, 'DomainExistsError')
     }
     const usersWithDomain = await this.usersService.findByDomain(domain)
     if (usersWithDomain.length > 0) {
-      throw new BadRequestException(`Domain: ${domain} already claimed by another user`, "DomainClaimedError")
+      throw new BadRequestException(`Domain: ${domain} already claimed by another user`, 'DomainClaimedError')
     }
 
     await this.usersService.pushDomain(user._id, { domain: domain, admin: true })
@@ -277,46 +277,46 @@ export class DomainsService {
 
   public async deleteDomain(user: User, domain: string): Promise<void> {
     if (!user.domains.some((userDomain): boolean => userDomain.domain === domain)) {
-      throw new NotFoundException(`Domain: ${domain} doesn't exist on user: ${user.username}`, "DomainNotFoundError")
+      throw new NotFoundException(`Domain: ${domain} doesn't exist on user: ${user.username}`, 'DomainNotFoundError')
     }
 
     try {
       await this.dkimService.deleteDkim(user, domain)
     } catch (error) {
       // Don't throw error if no DKIM key is found
-      if (error.response.error !== "DkimNotFoundError") {
+      if (error.response.error !== 'DkimNotFoundError') {
         throw error
       }
     }
 
     await this.taskQueue.add(
-      "deleteAccounts",
+      'deleteAccounts',
       {
         user: user,
-        domain: domain
+        domain: domain,
       },
       {
         attempts: 5,
         backoff: {
           delay: 6000,
-          type: "exponential"
-        }
-      }
+          type: 'exponential',
+        },
+      },
     )
 
     await this.taskQueue.add(
-      "deleteForwarders",
+      'deleteForwarders',
       {
         user: user,
-        domain: domain
+        domain: domain,
       },
       {
         attempts: 5,
         backoff: {
           delay: 6000,
-          type: "exponential"
-        }
-      }
+          type: 'exponential',
+        },
+      },
     )
 
     await this.usersService.pullDomain(user._id, domain)

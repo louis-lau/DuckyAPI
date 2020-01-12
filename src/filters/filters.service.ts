@@ -4,16 +4,16 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
-  NotFoundException
-} from "@nestjs/common"
-import { AxiosResponse } from "axios"
-import { AccountsService } from "src/accounts/accounts.service"
-import { wildDuckApiToken, wildDuckApiUrl } from "src/constants"
-import { User } from "src/users/class/user.class"
+  NotFoundException,
+} from '@nestjs/common'
+import { AxiosResponse } from 'axios'
+import { AccountsService } from 'src/accounts/accounts.service'
+import { wildDuckApiToken, wildDuckApiUrl } from 'src/constants'
+import { User } from 'src/users/class/user.class'
 
-import { FilterDetails } from "./class/filter-details.class"
-import { FilterListItem } from "./class/filter-list-item.class"
-import { CreateUpdateFilterDto } from "./dto/create-update-filter.dto"
+import { FilterDetails } from './class/filter-details.class'
+import { FilterListItem } from './class/filter-list-item.class'
+import { CreateUpdateFilterDto } from './dto/create-update-filter.dto'
 
 @Injectable()
 export class FiltersService {
@@ -30,27 +30,27 @@ export class FiltersService {
       apiResponse = await this.httpService
         .delete(`${wildDuckApiUrl}/users/${accountId}/filters/${filterId}`, {
           headers: {
-            "X-Access-Token": wildDuckApiToken
-          }
+            'X-Access-Token': wildDuckApiToken,
+          },
         })
         .toPromise()
     } catch (error) {
       if (error.response.status === 404) {
         // TODO: remove this when the 404 gets changed to 200 with FilterNotFoundError in WildDuck
-        throw new NotFoundException(`Filter: ${filterId} not found`, "FilterNotFoundError")
+        throw new NotFoundException(`Filter: ${filterId} not found`, 'FilterNotFoundError')
       }
       this.logger.error(error.message)
-      throw new InternalServerErrorException("Backend service not reachable", "WildduckApiError")
+      throw new InternalServerErrorException('Backend service not reachable', 'WildduckApiError')
     }
 
     if (apiResponse.data.error || !apiResponse.data.success) {
       switch (apiResponse.data.code) {
-        case "FilterNotFound":
-          throw new NotFoundException(`Filter: ${filterId} not found`, "FilterNotFoundError")
+        case 'FilterNotFound':
+          throw new NotFoundException(`Filter: ${filterId} not found`, 'FilterNotFoundError')
 
         default:
           this.logger.error(apiResponse.data)
-          throw new InternalServerErrorException("Unknown error")
+          throw new InternalServerErrorException('Unknown error')
       }
     }
   }
@@ -64,25 +64,25 @@ export class FiltersService {
       apiResponse = await this.httpService
         .get(`${wildDuckApiUrl}/users/${accountId}/filters`, {
           headers: {
-            "X-Access-Token": wildDuckApiToken
-          }
+            'X-Access-Token': wildDuckApiToken,
+          },
         })
         .toPromise()
     } catch (error) {
       this.logger.error(error.message)
-      throw new InternalServerErrorException("Backend service not reachable", "WildduckApiError")
+      throw new InternalServerErrorException('Backend service not reachable', 'WildduckApiError')
     }
 
     if (apiResponse.data.error || !apiResponse.data.success) {
       switch (apiResponse.data.code) {
         default:
           this.logger.error(apiResponse.data)
-          throw new InternalServerErrorException("Unknown error")
+          throw new InternalServerErrorException('Unknown error')
       }
     }
 
     if (apiResponse.data.results.length === 0) {
-      throw new NotFoundException(`No filters found for account: ${accountId}`, "FilterNotFoundError")
+      throw new NotFoundException(`No filters found for account: ${accountId}`, 'FilterNotFoundError')
     }
 
     const filters: FilterListItem[] = []
@@ -93,7 +93,7 @@ export class FiltersService {
         disabled: result.disabled,
         created: result.created,
         action: result.action,
-        query: result.query
+        query: result.query,
       })
     }
     return filters
@@ -108,23 +108,23 @@ export class FiltersService {
       apiResponse = await this.httpService
         .get(`${wildDuckApiUrl}/users/${accountId}/filters/${filterId}`, {
           headers: {
-            "X-Access-Token": wildDuckApiToken
-          }
+            'X-Access-Token': wildDuckApiToken,
+          },
         })
         .toPromise()
     } catch (error) {
       this.logger.error(error.message)
-      throw new InternalServerErrorException("Backend service not reachable", "WildduckApiError")
+      throw new InternalServerErrorException('Backend service not reachable', 'WildduckApiError')
     }
 
     if (apiResponse.data.error || !apiResponse.data.success) {
       switch (apiResponse.data.code) {
-        case "FilterNotFound":
-          throw new NotFoundException(`Filter: ${filterId} not found`, "FilterNotFoundError")
+        case 'FilterNotFound':
+          throw new NotFoundException(`Filter: ${filterId} not found`, 'FilterNotFoundError')
 
         default:
           this.logger.error(apiResponse.data)
-          throw new InternalServerErrorException("Unknown error")
+          throw new InternalServerErrorException('Unknown error')
       }
     }
 
@@ -133,7 +133,7 @@ export class FiltersService {
       name: apiResponse.data.name,
       disabled: apiResponse.data.disabled,
       action: apiResponse.data.action,
-      query: apiResponse.data.query
+      query: apiResponse.data.query,
     }
 
     return filter
@@ -142,7 +142,7 @@ export class FiltersService {
   public async createFilter(
     user: User,
     accountId: string,
-    createUpdateFilterDto: CreateUpdateFilterDto
+    createUpdateFilterDto: CreateUpdateFilterDto,
   ): Promise<void> {
     // Run get accountdetails to make sure account exists and user has permission, we don't do anything with it because it will throw an exception if needed
     await this.accountsService.getAccountDetails(user, accountId)
@@ -153,26 +153,26 @@ export class FiltersService {
       apiResponse = await this.httpService
         .post(`${wildDuckApiUrl}/users/${accountId}/filters`, createUpdateFilterDto, {
           headers: {
-            "X-Access-Token": wildDuckApiToken
-          }
+            'X-Access-Token': wildDuckApiToken,
+          },
         })
         .toPromise()
     } catch (error) {
       this.logger.error(error.message)
-      throw new InternalServerErrorException("Backend service not reachable", "WildduckApiError")
+      throw new InternalServerErrorException('Backend service not reachable', 'WildduckApiError')
     }
 
     if (apiResponse.data.error || !apiResponse.data.success) {
       switch (apiResponse.data.code) {
-        case "NoSuchMailbox":
+        case 'NoSuchMailbox':
           throw new BadRequestException(
             `The mailbox: ${createUpdateFilterDto.action.mailbox} does not exist on account: ${accountId}`,
-            "MailboxNotFoundError"
+            'MailboxNotFoundError',
           )
 
         default:
           this.logger.error(apiResponse.data)
-          throw new InternalServerErrorException("Unknown error")
+          throw new InternalServerErrorException('Unknown error')
       }
     }
   }
@@ -181,7 +181,7 @@ export class FiltersService {
     user: User,
     accountId: string,
     filterId: string,
-    createUpdateFilterDto: CreateUpdateFilterDto
+    createUpdateFilterDto: CreateUpdateFilterDto,
   ): Promise<void> {
     // Run get accountdetails to make sure account exists and user has permission, we don't do anything with it because it will throw an exception if needed
     await this.accountsService.getAccountDetails(user, accountId)
@@ -192,29 +192,29 @@ export class FiltersService {
       apiResponse = await this.httpService
         .put(`${wildDuckApiUrl}/users/${accountId}/filters/${filterId}`, createUpdateFilterDto, {
           headers: {
-            "X-Access-Token": wildDuckApiToken
-          }
+            'X-Access-Token': wildDuckApiToken,
+          },
         })
         .toPromise()
     } catch (error) {
       this.logger.error(error.message)
-      throw new InternalServerErrorException("Backend service not reachable", "WildduckApiError")
+      throw new InternalServerErrorException('Backend service not reachable', 'WildduckApiError')
     }
 
     if (apiResponse.data.error || !apiResponse.data.success) {
       switch (apiResponse.data.code) {
-        case "FilterNotFound":
-          throw new NotFoundException(`Filter: ${filterId} not found`, "FilterNotFoundError")
+        case 'FilterNotFound':
+          throw new NotFoundException(`Filter: ${filterId} not found`, 'FilterNotFoundError')
 
-        case "NoSuchMailbox":
+        case 'NoSuchMailbox':
           throw new BadRequestException(
             `The mailbox: ${createUpdateFilterDto.action.mailbox} does not exist on account: ${accountId}`,
-            "MailboxNotFoundError"
+            'MailboxNotFoundError',
           )
 
         default:
           this.logger.error(apiResponse.data)
-          throw new InternalServerErrorException("Unknown error")
+          throw new InternalServerErrorException('Unknown error')
       }
     }
   }

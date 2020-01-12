@@ -4,16 +4,16 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
-  NotFoundException
-} from "@nestjs/common"
-import { AxiosResponse } from "axios"
-import { allowForwarderWildcard, maxLimits, wildDuckApiToken, wildDuckApiUrl } from "src/constants"
-import { User } from "src/users/class/user.class"
+  NotFoundException,
+} from '@nestjs/common'
+import { AxiosResponse } from 'axios'
+import { allowForwarderWildcard, maxLimits, wildDuckApiToken, wildDuckApiUrl } from 'src/constants'
+import { User } from 'src/users/class/user.class'
 
-import { ForwarderDetails } from "./class/forwarder-details.class"
-import { Forwarder } from "./class/forwarder.class"
-import { CreateForwarderDto } from "./dto/create-forwarder.dto"
-import { UpdateForwarderDto } from "./dto/update-forwarder.dto"
+import { ForwarderDetails } from './class/forwarder-details.class'
+import { Forwarder } from './class/forwarder.class'
+import { CreateForwarderDto } from './dto/create-forwarder.dto'
+import { UpdateForwarderDto } from './dto/update-forwarder.dto'
 
 @Injectable()
 export class ForwardersService {
@@ -23,7 +23,7 @@ export class ForwardersService {
 
   public async getForwarders(user: User, domain?: string): Promise<Forwarder[]> {
     if (user.domains.length === 0) {
-      throw new NotFoundException(`No forwarders found for user: ${user.username}`, "ForwarderNotFoundError")
+      throw new NotFoundException(`No forwarders found for user: ${user.username}`, 'ForwarderNotFoundError')
     }
 
     let domainTags: string
@@ -31,7 +31,7 @@ export class ForwardersService {
       if (!user.domains.some((userDomain): boolean => userDomain.domain === domain)) {
         throw new BadRequestException(
           `Domain: ${domain} doesn't exist on user: ${user.username}`,
-          "DomainNotFoundError"
+          'DomainNotFoundError',
         )
       }
       domainTags = `domain:${domain}`
@@ -49,22 +49,22 @@ export class ForwardersService {
         apiResponse = await this.httpService
           .get(`${wildDuckApiUrl}/addresses`, {
             headers: {
-              "X-Access-Token": wildDuckApiToken
+              'X-Access-Token': wildDuckApiToken,
             },
             params: {
               tags: domainTags,
-              requiredTags: "forwarder",
+              requiredTags: 'forwarder',
               limit: 250,
-              next: nextCursor
-            }
+              next: nextCursor,
+            },
           })
           .toPromise()
       } catch (error) {
         this.logger.error(error.message)
-        throw new InternalServerErrorException("Backend service not reachable", "WildduckApiError")
+        throw new InternalServerErrorException('Backend service not reachable', 'WildduckApiError')
       }
       if (apiResponse.data.results.length === 0) {
-        throw new NotFoundException(`No forwarders found for user: ${user.username}`, "ForwarderNotFoundError")
+        throw new NotFoundException(`No forwarders found for user: ${user.username}`, 'ForwarderNotFoundError')
       }
 
       // Add results of this page to the results array
@@ -82,7 +82,7 @@ export class ForwardersService {
     for (const result of results) {
       forwarders.push({
         id: result.id,
-        address: result.address
+        address: result.address,
       })
     }
     return forwarders
@@ -94,37 +94,37 @@ export class ForwardersService {
       apiResponse = await this.httpService
         .get(`${wildDuckApiUrl}/addresses/forwarded/${forwarderId}`, {
           headers: {
-            "X-Access-Token": wildDuckApiToken
-          }
+            'X-Access-Token': wildDuckApiToken,
+          },
         })
         .toPromise()
     } catch (error) {
       if (error.response.data.error) {
         switch (error.response.data.code) {
-          case "AddressNotFound":
-            throw new NotFoundException(`No forwarder found with id: ${forwarderId}`, "ForwarderNotFoundError")
+          case 'AddressNotFound':
+            throw new NotFoundException(`No forwarder found with id: ${forwarderId}`, 'ForwarderNotFoundError')
 
           default:
             this.logger.error(error.response.data)
-            throw new InternalServerErrorException("Backend service not reachable", "WildduckApiError")
+            throw new InternalServerErrorException('Backend service not reachable', 'WildduckApiError')
         }
       }
       this.logger.error(error.message)
-      throw new InternalServerErrorException("Backend service not reachable", "WildduckApiError")
+      throw new InternalServerErrorException('Backend service not reachable', 'WildduckApiError')
     }
 
     if (apiResponse.data.error || !apiResponse.data.success) {
       switch (apiResponse.data.code) {
         default:
           this.logger.error(apiResponse.data)
-          throw new InternalServerErrorException("Unknown error")
+          throw new InternalServerErrorException('Unknown error')
       }
     }
 
-    const addressDomain: string = apiResponse.data.address.substring(apiResponse.data.address.lastIndexOf("@") + 1)
+    const addressDomain: string = apiResponse.data.address.substring(apiResponse.data.address.lastIndexOf('@') + 1)
     if (!user.domains.some((domain): boolean => domain.domain === addressDomain)) {
       // if address domain doesn't belong to user
-      throw new NotFoundException(`No forwarder found with id: ${forwarderId}`, "ForwarderNotFoundError")
+      throw new NotFoundException(`No forwarder found with id: ${forwarderId}`, 'ForwarderNotFoundError')
     }
 
     return {
@@ -136,19 +136,19 @@ export class ForwardersService {
         forward: {
           allowed: apiResponse.data.limits.forwards.allowed,
           used: apiResponse.data.limits.forwards.used,
-          ttl: apiResponse.data.limits.forwards.ttl
-        }
-      }
+          ttl: apiResponse.data.limits.forwards.ttl,
+        },
+      },
     }
   }
 
   public async createForwarder(user: User, createForwarderDto: CreateForwarderDto): Promise<void> {
-    const addressDomain = createForwarderDto.address.substring(createForwarderDto.address.lastIndexOf("@") + 1)
+    const addressDomain = createForwarderDto.address.substring(createForwarderDto.address.lastIndexOf('@') + 1)
     if (!user.domains.some((domain): boolean => domain.domain === addressDomain)) {
       // if address domain doesn't belong to user
       throw new BadRequestException(
         `You don't have permission to add forwarders on ${addressDomain}. Add the domain first.`,
-        "DomainNotFoundError"
+        'DomainNotFoundError',
       )
     }
 
@@ -163,28 +163,28 @@ export class ForwardersService {
             targets: createForwarderDto.targets,
             forwards: createForwarderDto.limits.forward || maxLimits.forward,
             allowWildcard: allowForwarderWildcard,
-            tags: [`domain:${addressDomain}`, "forwarder"]
+            tags: [`domain:${addressDomain}`, 'forwarder'],
           },
           {
             headers: {
-              "X-Access-Token": wildDuckApiToken
-            }
-          }
+              'X-Access-Token': wildDuckApiToken,
+            },
+          },
         )
         .toPromise()
     } catch (error) {
       this.logger.error(error.message)
-      throw new InternalServerErrorException("Backend service not reachable", "WildduckApiError")
+      throw new InternalServerErrorException('Backend service not reachable', 'WildduckApiError')
     }
 
     if (apiResponse.data.error || !apiResponse.data.success) {
       switch (apiResponse.data.code) {
-        case "AddressExists":
-          throw new BadRequestException(`Address: ${createForwarderDto.address} already exists`, "AddressExistsError")
+        case 'AddressExists':
+          throw new BadRequestException(`Address: ${createForwarderDto.address} already exists`, 'AddressExistsError')
 
         default:
           this.logger.error(apiResponse.data)
-          throw new InternalServerErrorException("Unknown error")
+          throw new InternalServerErrorException('Unknown error')
       }
     }
   }
@@ -192,12 +192,12 @@ export class ForwardersService {
   public async updateForwarder(user: User, forwarderId: string, updateForwarderDto: UpdateForwarderDto): Promise<void> {
     let addressDomain
     if (updateForwarderDto.address) {
-      addressDomain = updateForwarderDto.address.substring(updateForwarderDto.address.lastIndexOf("@") + 1)
+      addressDomain = updateForwarderDto.address.substring(updateForwarderDto.address.lastIndexOf('@') + 1)
       if (!user.domains.some((domain): boolean => domain.domain === addressDomain)) {
         // if address domain doesn't belong to user
         throw new BadRequestException(
           `You don't have permission to add forwarders on ${addressDomain}. Add the domain first.`,
-          "DomainNotFoundError"
+          'DomainNotFoundError',
         )
       }
     }
@@ -215,34 +215,34 @@ export class ForwardersService {
             name: updateForwarderDto.name,
             targets: updateForwarderDto.targets,
             forwards: updateForwarderDto.limits.forward,
-            tags: addressDomain ? [`domain:${addressDomain}`, "forwarder"] : undefined
+            tags: addressDomain ? [`domain:${addressDomain}`, 'forwarder'] : undefined,
           },
           {
             headers: {
-              "X-Access-Token": wildDuckApiToken
-            }
-          }
+              'X-Access-Token': wildDuckApiToken,
+            },
+          },
         )
         .toPromise()
     } catch (error) {
       this.logger.error(error.message)
-      throw new InternalServerErrorException("Backend service not reachable", "WildduckApiError")
+      throw new InternalServerErrorException('Backend service not reachable', 'WildduckApiError')
     }
 
     if (apiResponse.data.error || !apiResponse.data.success) {
       switch (apiResponse.data.code) {
-        case "AddressExistsError":
-          throw new BadRequestException(`Address: ${updateForwarderDto.address} already exists`, "AddressExistsError")
+        case 'AddressExistsError':
+          throw new BadRequestException(`Address: ${updateForwarderDto.address} already exists`, 'AddressExistsError')
 
-        case "ChangeNotAllowed":
+        case 'ChangeNotAllowed':
           throw new BadRequestException(
             `Update to address: ${updateForwarderDto.address} not allowed. Keep in mind wildcard addresses can not be changed`,
-            "AddressChangeNotAllowedError"
+            'AddressChangeNotAllowedError',
           )
 
         default:
           this.logger.error(apiResponse.data)
-          throw new InternalServerErrorException("Unknown error")
+          throw new InternalServerErrorException('Unknown error')
       }
     }
   }
@@ -256,23 +256,23 @@ export class ForwardersService {
       apiResponse = await this.httpService
         .delete(`${wildDuckApiUrl}/addresses/forwarded/${forwarderId}`, {
           headers: {
-            "X-Access-Token": wildDuckApiToken
-          }
+            'X-Access-Token': wildDuckApiToken,
+          },
         })
         .toPromise()
     } catch (error) {
       this.logger.error(error.message)
-      throw new InternalServerErrorException("Backend service not reachable", "WildduckApiError")
+      throw new InternalServerErrorException('Backend service not reachable', 'WildduckApiError')
     }
 
     if (apiResponse.data.error || !apiResponse.data.success) {
       switch (apiResponse.data.code) {
-        case "AddressNotFound":
-          throw new NotFoundException(`No forwarder found with id: ${forwarderId}`, "ForwarderNotFoundError")
+        case 'AddressNotFound':
+          throw new NotFoundException(`No forwarder found with id: ${forwarderId}`, 'ForwarderNotFoundError')
 
         default:
           this.logger.error(apiResponse.data)
-          throw new InternalServerErrorException("Unknown error")
+          throw new InternalServerErrorException('Unknown error')
       }
     }
   }

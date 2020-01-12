@@ -1,10 +1,10 @@
-import { Injectable } from "@nestjs/common"
-import { JwtService } from "@nestjs/jwt"
-import Bcrypt from "bcrypt"
-import { User } from "src/users/class/user.class"
-import { UsersService } from "src/users/users.service"
+import { Injectable } from '@nestjs/common'
+import { JwtService } from '@nestjs/jwt'
+import Bcrypt from 'bcrypt'
+import { User } from 'src/users/class/user.class'
+import { UsersService } from 'src/users/users.service'
 
-import { AccessToken } from "./class/access-token.class"
+import { AccessToken } from './class/access-token.class'
 
 @Injectable()
 export class AuthService {
@@ -27,7 +27,7 @@ export class AuthService {
     expireDate.setHours(expireDate.getHours() + expireHours)
     return {
       accessToken: this.jwtService.sign(payload, { expiresIn: `${expireHours}h` }),
-      expires: expireDate
+      expires: expireDate,
     }
   }
 

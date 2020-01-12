@@ -1,11 +1,11 @@
-import { Module } from "@nestjs/common"
-import { AccountsModule } from "src/accounts/accounts.module"
-import { ForwardersModule } from "src/forwarders/forwarders.module"
+import { Module } from '@nestjs/common'
+import { AccountsModule } from 'src/accounts/accounts.module'
+import { ForwardersModule } from 'src/forwarders/forwarders.module'
 
-import { TasksProcessor } from "./tasks.processor"
+import { TasksProcessor } from './tasks.processor'
 
 @Module({
   imports: [AccountsModule, ForwardersModule],
-  providers: [TasksProcessor]
+  providers: [TasksProcessor],
 })
 export class TasksModule {}

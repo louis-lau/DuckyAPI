@@ -1,19 +1,19 @@
-import { BadRequestException, Injectable, InternalServerErrorException, Logger } from "@nestjs/common"
-import { InjectModel } from "@nestjs/mongoose"
-import { Model } from "mongoose"
-import Shortid from "shortid"
-import { Domain } from "src/domains/class/domain.class"
+import { BadRequestException, Injectable, InternalServerErrorException, Logger } from '@nestjs/common'
+import { InjectModel } from '@nestjs/mongoose'
+import { Model } from 'mongoose'
+import Shortid from 'shortid'
+import { Domain } from 'src/domains/class/domain.class'
 
-import { User } from "./class/user.class"
-import { CreateUserDto } from "./dto/create-user.dto"
-import { UpdateUserDto } from "./dto/update-user.dto"
-import { UserDocument } from "./user-document.interface"
+import { User } from './class/user.class'
+import { CreateUserDto } from './dto/create-user.dto'
+import { UpdateUserDto } from './dto/update-user.dto'
+import { UserDocument } from './user-document.interface'
 
 @Injectable()
 export class UsersService {
   private readonly logger = new Logger(UsersService.name, true)
 
-  public constructor(@InjectModel("User") private readonly userModel: Model<UserDocument>) {}
+  public constructor(@InjectModel('User') private readonly userModel: Model<UserDocument>) {}
 
   public async findOne(username: string): Promise<User | undefined> {
     username = username.toLowerCase()
@@ -32,7 +32,7 @@ export class UsersService {
 
   public async findByDomain(domain: string): Promise<User[] | undefined> {
     return this.userModel
-      .find({ "domains.domain": domain })
+      .find({ 'domains.domain': domain })
       .lean()
       .exec()
   }
@@ -57,7 +57,7 @@ export class UsersService {
       return await user.save()
     } catch (error) {
       this.logger.error(error.message)
-      throw new InternalServerErrorException("Unknown error")
+      throw new InternalServerErrorException('Unknown error')
     }
   }
 
@@ -65,9 +65,9 @@ export class UsersService {
     const user = await this.userModel.findByIdAndUpdate(userId, {
       $pull: {
         domains: {
-          domain: domain
-        }
-      }
+          domain: domain,
+        },
+      },
     })
     try {
       return await user.save()
@@ -87,10 +87,10 @@ export class UsersService {
     } catch (error) {
       switch (error.code) {
         case 11000:
-          throw new BadRequestException("This user already exists", "UserExistsError")
+          throw new BadRequestException('This user already exists', 'UserExistsError')
 
         default:
-          throw new InternalServerErrorException("Unknown error")
+          throw new InternalServerErrorException('Unknown error')
       }
     }
   }
@@ -109,10 +109,10 @@ export class UsersService {
     } catch (error) {
       switch (error.code) {
         case 11000:
-          throw new BadRequestException("This username is already taken", "UserExistsError")
+          throw new BadRequestException('This username is already taken', 'UserExistsError')
 
         default:
-          throw new InternalServerErrorException("Unknown error")
+          throw new InternalServerErrorException('Unknown error')
       }
     }
   }
@@ -122,7 +122,7 @@ export class UsersService {
       _id: user._id,
       username: user.username,
       minTokenDate: user.minTokenDate,
-      domains: user.domains
+      domains: user.domains,
     }
   }
 }

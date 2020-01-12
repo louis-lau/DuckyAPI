@@ -1,13 +1,13 @@
-import { Module } from "@nestjs/common"
-import { BullModule } from "nest-bull"
-import { AccountsModule } from "src/accounts/accounts.module"
-import { redisOptions } from "src/constants"
-import { DkimModule } from "src/dkim/dkim.module"
-import { ForwardersModule } from "src/forwarders/forwarders.module"
-import { UsersModule } from "src/users/users.module"
+import { Module } from '@nestjs/common'
+import { BullModule } from 'nest-bull'
+import { AccountsModule } from 'src/accounts/accounts.module'
+import { redisOptions } from 'src/constants'
+import { DkimModule } from 'src/dkim/dkim.module'
+import { ForwardersModule } from 'src/forwarders/forwarders.module'
+import { UsersModule } from 'src/users/users.module'
 
-import { DomainsController } from "./domains.controller"
-import { DomainsService } from "./domains.service"
+import { DomainsController } from './domains.controller'
+import { DomainsService } from './domains.service'
 
 @Module({
   imports: [
@@ -16,13 +16,13 @@ import { DomainsService } from "./domains.service"
     DkimModule,
     ForwardersModule,
     BullModule.register({
-      name: "tasks",
+      name: 'tasks',
       options: {
-        redis: redisOptions
-      }
-    })
+        redis: redisOptions,
+      },
+    }),
   ],
   controllers: [DomainsController],
-  providers: [DomainsService]
+  providers: [DomainsService],
 })
 export class DomainsModule {}

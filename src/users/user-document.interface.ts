@@ -1,6 +1,6 @@
-import { Document } from "mongoose"
+import { Document } from 'mongoose'
 
-import { User } from "./class/user.class"
+import { User } from './class/user.class'
 
 class UserWithId extends User {
   public _id: any

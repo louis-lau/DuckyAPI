@@ -1,30 +1,30 @@
-import { Logger } from "@nestjs/common"
-import { Job } from "bull"
-import { BullQueueEvents, OnQueueActive, OnQueueEvent, Process, Processor } from "nest-bull"
-import { AccountsService } from "src/accounts/accounts.service"
-import { AccountListItem } from "src/accounts/class/account-list-item.class"
-import { Forwarder } from "src/forwarders/class/forwarder.class"
-import { ForwardersService } from "src/forwarders/forwarders.service"
+import { Logger } from '@nestjs/common'
+import { Job } from 'bull'
+import { BullQueueEvents, OnQueueActive, OnQueueEvent, Process, Processor } from 'nest-bull'
+import { AccountsService } from 'src/accounts/accounts.service'
+import { AccountListItem } from 'src/accounts/class/account-list-item.class'
+import { Forwarder } from 'src/forwarders/class/forwarder.class'
+import { ForwardersService } from 'src/forwarders/forwarders.service'
 
-import { DeleteForDomain } from "./tasks.interfaces"
+import { DeleteForDomain } from './tasks.interfaces'
 
-@Processor({ name: "tasks" })
+@Processor({ name: 'tasks' })
 export class TasksProcessor {
   public constructor(
     private readonly accountsService: AccountsService,
-    private readonly forwardersService: ForwardersService
+    private readonly forwardersService: ForwardersService,
   ) {}
 
   private readonly logger = new Logger(TasksProcessor.name, true)
 
-  @Process({ name: "deleteAccounts" })
+  @Process({ name: 'deleteAccounts' })
   private async processDeleteAccounts(job: Job<DeleteForDomain>): Promise<void> {
     let accounts: AccountListItem[] = []
     try {
       accounts = await this.accountsService.getAccounts(job.data.user, job.data.domain)
     } catch (error) {
       // Don't throw error if no accounts were found
-      if (error.response.error === "AccountNotFoundError") {
+      if (error.response.error === 'AccountNotFoundError') {
         return
       } else {
         throw error
@@ -50,14 +50,14 @@ export class TasksProcessor {
     job.progress(100)
   }
 
-  @Process({ name: "deleteForwarders" })
+  @Process({ name: 'deleteForwarders' })
   private async processDeleteForwarders(job: Job<DeleteForDomain>): Promise<void> {
     let forwarders: Forwarder[] = []
     try {
       forwarders = await this.forwardersService.getForwarders(job.data.user, job.data.domain)
     } catch (error) {
       // Don't throw error if no forwarders were found
-      if (error.response.error === "ForwarderNotFoundError") {
+      if (error.response.error === 'ForwarderNotFoundError') {
         return
       } else {
         throw error
@@ -86,10 +86,10 @@ export class TasksProcessor {
   @OnQueueActive()
   private onActive(job: Job): void {
     switch (job.name) {
-      case "deleteAccounts":
-      case "deleteForwarders":
+      case 'deleteAccounts':
+      case 'deleteForwarders':
         this.logger.log(
-          `Processing job ${job.id} (${job.name}) for user ${job.data.user._id} and domain ${job.data.domain}`
+          `Processing job ${job.id} (${job.name}) for user ${job.data.user._id} and domain ${job.data.domain}`,
         )
         break
 

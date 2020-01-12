@@ -1,11 +1,11 @@
-import { BadRequestException, Injectable, UnauthorizedException } from "@nestjs/common"
-import { PassportStrategy } from "@nestjs/passport"
-import { validateOrReject } from "class-validator"
-import { Strategy } from "passport-local"
-import { User } from "src/users/class/user.class"
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common'
+import { PassportStrategy } from '@nestjs/passport'
+import { validateOrReject } from 'class-validator'
+import { Strategy } from 'passport-local'
+import { User } from 'src/users/class/user.class'
 
-import { AuthService } from "./auth.service"
-import { LoginDto } from "./login.dto"
+import { AuthService } from './auth.service'
+import { LoginDto } from './login.dto'
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
@@ -21,7 +21,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     try {
       await validateOrReject(loginDto)
     } catch (errors) {
-      throw new BadRequestException(errors, "ValidationError")
+      throw new BadRequestException(errors, 'ValidationError')
     }
 
     const user = await this.authService.validateUser(loginDto.username, loginDto.password)

@@ -1,26 +1,26 @@
-import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common"
-import { MongooseModule } from "@nestjs/mongoose"
-import Arena from "bull-arena"
-import BasicAuth from "express-basic-auth"
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
+import { MongooseModule } from '@nestjs/mongoose'
+import Arena from 'bull-arena'
+import BasicAuth from 'express-basic-auth'
 
-import { AccountsModule } from "./accounts/accounts.module"
-import { AppController } from "./app.controller"
-import { AuthModule } from "./auth/auth.module"
-import { arena } from "./constants"
-import { redisOptions } from "./constants"
-import { DkimModule } from "./dkim/dkim.module"
-import { DomainsModule } from "./domains/domains.module"
-import { FiltersModule } from "./filters/filters.module"
-import { ForwardersModule } from "./forwarders/forwarders.module"
-import { TasksModule } from "./tasks/tasks.module"
-import { UsersModule } from "./users/users.module"
+import { AccountsModule } from './accounts/accounts.module'
+import { AppController } from './app.controller'
+import { AuthModule } from './auth/auth.module'
+import { arena } from './constants'
+import { redisOptions } from './constants'
+import { DkimModule } from './dkim/dkim.module'
+import { DomainsModule } from './domains/domains.module'
+import { FiltersModule } from './filters/filters.module'
+import { ForwardersModule } from './forwarders/forwarders.module'
+import { TasksModule } from './tasks/tasks.module'
+import { UsersModule } from './users/users.module'
 
 @Module({
   imports: [
-    MongooseModule.forRoot("mongodb://mailserver.local/ducky-api", {
+    MongooseModule.forRoot('mongodb://mailserver.local/ducky-api', {
       useCreateIndex: true,
       useNewUrlParser: true,
-      useFindAndModify: false
+      useFindAndModify: false,
     }),
     AuthModule,
     AccountsModule,
@@ -29,9 +29,9 @@ import { UsersModule } from "./users/users.module"
     FiltersModule,
     DkimModule,
     ForwardersModule,
-    TasksModule
+    TasksModule,
   ],
-  controllers: [AppController]
+  controllers: [AppController],
 })
 export class AppModule implements NestModule {
   public configure(consumer: MiddlewareConsumer): void {
@@ -41,10 +41,10 @@ export class AppModule implements NestModule {
           .apply(
             BasicAuth({
               challenge: true,
-              users: arena.basicAuth.users
-            })
+              users: arena.basicAuth.users,
+            }),
           )
-          .forRoutes("arena")
+          .forRoutes('arena')
       }
 
       consumer
@@ -53,19 +53,19 @@ export class AppModule implements NestModule {
             {
               queues: [
                 {
-                  name: "tasks",
-                  hostId: "DuckyAPI",
-                  redis: redisOptions
-                }
-              ]
+                  name: 'tasks',
+                  hostId: 'DuckyAPI',
+                  redis: redisOptions,
+                },
+              ],
             },
             {
               // basePath: "/tasks",
-              disableListen: true
-            }
-          )
+              disableListen: true,
+            },
+          ),
         )
-        .forRoutes("arena")
+        .forRoutes('arena')
     }
   }
 }

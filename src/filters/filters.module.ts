@@ -1,17 +1,17 @@
-import { HttpModule, Module } from "@nestjs/common"
-import { AccountsModule } from "src/accounts/accounts.module"
+import { HttpModule, Module } from '@nestjs/common'
+import { AccountsModule } from 'src/accounts/accounts.module'
 
-import { FiltersController } from "./filters.controller"
-import { FiltersService } from "./filters.service"
+import { FiltersController } from './filters.controller'
+import { FiltersService } from './filters.service'
 
 @Module({
   imports: [
     HttpModule.register({
-      timeout: 10000
+      timeout: 10000,
     }),
-    AccountsModule
+    AccountsModule,
   ],
   controllers: [FiltersController],
-  providers: [FiltersService]
+  providers: [FiltersService],
 })
 export class FiltersModule {}

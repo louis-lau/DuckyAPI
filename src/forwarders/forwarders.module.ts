@@ -1,16 +1,16 @@
-import { HttpModule, Module } from "@nestjs/common"
+import { HttpModule, Module } from '@nestjs/common'
 
-import { ForwardersController } from "./forwarders.controller"
-import { ForwardersService } from "./forwarders.service"
+import { ForwardersController } from './forwarders.controller'
+import { ForwardersService } from './forwarders.service'
 
 @Module({
   imports: [
     HttpModule.register({
-      timeout: 10000
-    })
+      timeout: 10000,
+    }),
   ],
   exports: [ForwardersService],
   providers: [ForwardersService],
-  controllers: [ForwardersController]
+  controllers: [ForwardersController],
 })
 export class ForwardersModule {}

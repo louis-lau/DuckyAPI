@@ -1,7 +1,7 @@
-import Bcrypt from "bcrypt"
-import Mongoose from "mongoose"
-import MongooseLeanId from "mongoose-lean-id"
-import MongooseUniqueArray from "mongoose-unique-array"
+import Bcrypt from 'bcrypt'
+import Mongoose from 'mongoose'
+import MongooseLeanId from 'mongoose-lean-id'
+import MongooseUniqueArray from 'mongoose-unique-array'
 
 function HashPassword(password: string): string {
   return Bcrypt.hashSync(password, 10)
@@ -15,9 +15,9 @@ export const UserSchema = new Mongoose.Schema({
     {
       _id: false,
       domain: { type: String, unique: true },
-      admin: Boolean
-    }
-  ]
+      admin: Boolean,
+    },
+  ],
 })
   .plugin(MongooseLeanId)
   .plugin(MongooseUniqueArray)
