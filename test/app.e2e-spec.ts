@@ -1,6 +1,6 @@
 import { Test, TestingModule } from "@nestjs/testing"
 import { AppModule } from "src/app.module"
-import * as request from "supertest"
+import Request from "supertest"
 
 describe("AppController (e2e)", (): void => {
   let app
@@ -16,8 +16,8 @@ describe("AppController (e2e)", (): void => {
     }
   )
 
-  it("/ (GET)", (): request.Test => {
-    return request(app.getHttpServer())
+  it("/ (GET)", (): Request.Test => {
+    return Request(app.getHttpServer())
       .get("/")
       .expect(200)
       .expect("Hello World!")

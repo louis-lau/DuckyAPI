@@ -10,7 +10,8 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "incremental": true,
-    "pretty": true
+    "pretty": true,
+    "esModuleInterop": true
   },
   "exclude": ["node_modules", "dist"]
 }

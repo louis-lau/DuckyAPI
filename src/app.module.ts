@@ -1,7 +1,7 @@
 import { MiddlewareConsumer, Module, NestModule } from "@nestjs/common"
 import { MongooseModule } from "@nestjs/mongoose"
-import * as Arena from "bull-arena"
-import * as basicAuth from "express-basic-auth"
+import Arena from "bull-arena"
+import BasicAuth from "express-basic-auth"
 
 import { AccountsModule } from "./accounts/accounts.module"
 import { AppController } from "./app.controller"
@@ -39,7 +39,7 @@ export class AppModule implements NestModule {
       if (arena.basicAuth.enabled) {
         consumer
           .apply(
-            basicAuth({
+            BasicAuth({
               challenge: true,
               users: arena.basicAuth.users
             })

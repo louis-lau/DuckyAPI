@@ -7,7 +7,7 @@ import {
   NotFoundException
 } from "@nestjs/common"
 import { AxiosResponse } from "axios"
-import * as shortid from "shortid"
+import Shortid from "shortid"
 import { allowUnsafePasswords, maxLimits, wildDuckApiToken, wildDuckApiUrl } from "src/constants"
 import { User } from "src/users/class/user.class"
 
@@ -174,7 +174,7 @@ export class AccountsService {
         .post(
           `${wildDuckApiUrl}/users`,
           {
-            username: shortid.generate(),
+            username: Shortid.generate(),
             address: createAccountDto.address,
             name: createAccountDto.name,
             password: createAccountDto.password,

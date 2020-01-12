@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, InternalServerErrorException, Logger } from "@nestjs/common"
 import { InjectModel } from "@nestjs/mongoose"
 import { Model } from "mongoose"
-import * as shortid from "shortid"
+import Shortid from "shortid"
 import { Domain } from "src/domains/class/domain.class"
 
 import { User } from "./class/user.class"
@@ -44,7 +44,7 @@ export class UsersService {
       return await user.save()
     } catch (error) {
       // TODO: add custom exception handler for unknown errors that basically does the following:
-      const errorId = shortid.generate()
+      const errorId = Shortid.generate()
       this.logger.error(`${errorId}: ${error.message}`)
       throw new InternalServerErrorException(`Unknown error: ${errorId}`)
     }
@@ -73,7 +73,7 @@ export class UsersService {
       return await user.save()
     } catch (error) {
       // TODO: add custom exception handler for unknown errors that basically does the following:
-      const errorId = shortid.generate()
+      const errorId = Shortid.generate()
       this.logger.error(`${errorId}: ${error.message}`)
       throw new InternalServerErrorException(`Unknown error: ${errorId}`)
     }

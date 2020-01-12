@@ -1,7 +1,7 @@
 import { BadRequestException, ValidationError, ValidationPipe } from "@nestjs/common"
 import { NestFactory } from "@nestjs/core"
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger"
-import * as helmet from "helmet"
+import Helmet from "helmet"
 
 import { AppModule } from "./app.module"
 
@@ -19,7 +19,7 @@ async function bootstrap(): Promise<void> {
         new BadRequestException(errors, "ValidationError")
     })
   )
-  app.use(helmet())
+  app.use(Helmet())
 
   const options = new DocumentBuilder()
     .setTitle("DuckyAPI")
