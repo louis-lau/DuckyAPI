@@ -21,6 +21,7 @@ import { UsersModule } from './users/users.module'
       useCreateIndex: true,
       useNewUrlParser: true,
       useFindAndModify: false,
+      useUnifiedTopology: true,
     }),
     AuthModule,
     AccountsModule,
