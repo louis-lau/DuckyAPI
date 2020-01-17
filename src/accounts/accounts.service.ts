@@ -9,7 +9,7 @@ import {
 import { AxiosResponse } from 'axios'
 import Shortid from 'shortid'
 import { allowUnsafePasswords, maxLimits, wildDuckApiToken, wildDuckApiUrl } from 'src/constants'
-import { User } from 'src/users/class/user.class'
+import { User } from 'src/users/user.entity'
 
 import { AccountDetails } from './class/account-details.class'
 import { AccountListItem } from './class/account-list-item.class'

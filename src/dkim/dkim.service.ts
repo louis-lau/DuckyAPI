@@ -1,7 +1,7 @@
 import { HttpService, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common'
 import { AxiosResponse } from 'axios'
 import { wildDuckApiToken, wildDuckApiUrl } from 'src/constants'
-import { User } from 'src/users/class/user.class'
+import { User } from 'src/users/user.entity'
 
 import { DkimKey } from './class/dkim-key.class'
 import { AddDkimDto } from './dto/add-dkim.dto'

@@ -12,7 +12,7 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger'
 import { ReqUser } from 'src/common/decorators/req-user.decorator'
-import { User } from 'src/users/class/user.class'
+import { User } from 'src/users/user.entity'
 
 import { AccountsService } from './accounts.service'
 import { AccountDetails } from './class/account-details.class'

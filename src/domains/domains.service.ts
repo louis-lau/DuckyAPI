@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common'
 import { Queue } from 'bull'
 import { MxRecord, promises as dns } from 'dns'
 import { InjectQueue } from 'nest-bull'
@@ -7,11 +7,11 @@ import { DnsConfig } from 'src/constants'
 import { DkimKey } from 'src/dkim/class/dkim-key.class'
 import { DkimService } from 'src/dkim/dkim.service'
 import { ForwardersService } from 'src/forwarders/forwarders.service'
-import { User } from 'src/users/class/user.class'
+import { User } from 'src/users/user.entity'
 import { UsersService } from 'src/users/users.service'
 
 import { DnsCheck } from './class/dns.class'
-import { Domain } from './class/domain.class'
+import { Domain } from './domain.entity'
 
 @Injectable()
 export class DomainsService {
@@ -271,7 +271,6 @@ export class DomainsService {
     if (usersWithDomain.length > 0) {
       throw new BadRequestException(`Domain: ${domain} already claimed by another user`, 'DomainClaimedError')
     }
-
     await this.usersService.pushDomain(user._id, { domain: domain, admin: true })
   }
 

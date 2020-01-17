@@ -28,10 +28,10 @@
     "@nestjs/common": "^6.10.14",
     "@nestjs/core": "^6.10.14",
     "@nestjs/jwt": "^6.1.1",
-    "@nestjs/mongoose": "^6.1.2",
     "@nestjs/passport": "^6.1.1",
     "@nestjs/platform-express": "^6.10.14",
     "@nestjs/swagger": "^4.1.10",
+    "@nestjs/typeorm": "^6.2.0",
     "bcrypt": "^3.0.7",
     "bull": "^3.12.1",
     "bull-arena": "^2.6.4",
@@ -39,9 +39,7 @@
     "class-validator": "^0.11.0",
     "express-basic-auth": "^1.2.0",
     "helmet": "^3.21.2",
-    "mongoose": "^5.8.7",
-    "mongoose-lean-id": "^0.2.0",
-    "mongoose-unique-array": "^0.3.3",
+    "mongodb": "^3.5.0",
     "nest-bull": "^0.9.0",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
@@ -50,7 +48,8 @@
     "rimraf": "^3.0.0",
     "rxjs": "^6.5.4",
     "shortid": "^2.2.15",
-    "swagger-ui-express": "^4.1.2"
+    "swagger-ui-express": "^4.1.2",
+    "typeorm": "^0.2.22"
   },
   "devDependencies": {
     "@nestjs/testing": "^6.10.14",

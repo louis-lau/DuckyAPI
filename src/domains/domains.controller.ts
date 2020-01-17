@@ -12,10 +12,10 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger'
 import { ReqUser } from 'src/common/decorators/req-user.decorator'
-import { User } from 'src/users/class/user.class'
+import { User } from 'src/users/user.entity'
 
 import { DnsCheck } from './class/dns.class'
-import { Domain } from './class/domain.class'
+import { Domain } from './domain.entity'
 import { DomainsService } from './domains.service'
 import { DomainDto } from './dto/domain.dto'
 import { DomainParams } from './params/domain.params'

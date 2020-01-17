@@ -9,7 +9,7 @@ import {
 import { AxiosResponse } from 'axios'
 import { AccountsService } from 'src/accounts/accounts.service'
 import { wildDuckApiToken, wildDuckApiUrl } from 'src/constants'
-import { User } from 'src/users/class/user.class'
+import { User } from 'src/users/user.entity'
 
 import { FilterDetails } from './class/filter-details.class'
 import { FilterListItem } from './class/filter-list-item.class'

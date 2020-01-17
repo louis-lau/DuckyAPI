@@ -12,7 +12,7 @@ import {
 } from '@nestjs/swagger'
 import { ReqUser } from 'src/common/decorators/req-user.decorator'
 import { DomainParams } from 'src/domains/params/domain.params'
-import { User } from 'src/users/class/user.class'
+import { User } from 'src/users/user.entity'
 
 import { DkimKey } from './class/dkim-key.class'
 import { DkimService } from './dkim.service'

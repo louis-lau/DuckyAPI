@@ -1,5 +1,5 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
-import { MongooseModule } from '@nestjs/mongoose'
+import { TypeOrmModule } from '@nestjs/typeorm'
 import Arena from 'bull-arena'
 import BasicAuth from 'express-basic-auth'
 
@@ -12,15 +12,20 @@ import { DomainsModule } from './domains/domains.module'
 import { FiltersModule } from './filters/filters.module'
 import { ForwardersModule } from './forwarders/forwarders.module'
 import { TasksModule } from './tasks/tasks.module'
+import { User } from './users/user.entity'
 import { UsersModule } from './users/users.module'
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://mailserver.local/ducky-api', {
-      useCreateIndex: true,
+    TypeOrmModule.forRoot({
+      type: 'mongodb',
+      url: 'mongodb://mailserver.local:27017/ducky-api',
+      keepConnectionAlive: true,
+      entities: [User],
+      synchronize: true,
       useNewUrlParser: true,
-      useFindAndModify: false,
       useUnifiedTopology: true,
+      appname: 'ducky-api',
     }),
     AuthModule,
     AccountsModule,

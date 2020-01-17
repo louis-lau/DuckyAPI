@@ -13,7 +13,7 @@ import {
 } from '@nestjs/swagger'
 import { AccountIdParams } from 'src/accounts/params/account-id.params'
 import { ReqUser } from 'src/common/decorators/req-user.decorator'
-import { User } from 'src/users/class/user.class'
+import { User } from 'src/users/user.entity'
 
 import { FilterDetails } from './class/filter-details.class'
 import { FilterListItem } from './class/filter-list-item.class'

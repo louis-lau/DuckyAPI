@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common'
 import { AxiosResponse } from 'axios'
 import { allowForwarderWildcard, maxLimits, wildDuckApiToken, wildDuckApiUrl } from 'src/constants'
-import { User } from 'src/users/class/user.class'
+import { User } from 'src/users/user.entity'
 
 import { ForwarderDetails } from './class/forwarder-details.class'
 import { Forwarder } from './class/forwarder.class'

@@ -7,7 +7,10 @@ export class FilterListItem extends Filter {
   public id: string
 
   @ApiProperty({
-    example: [['from', '(John)'], ['to', '(John)']],
+    example: [
+      ['from', '(John)'],
+      ['to', '(John)'],
+    ],
     description: 'A list of query descriptions',
   })
   public query: string[][]
