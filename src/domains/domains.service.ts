@@ -267,8 +267,7 @@ export class DomainsService {
     if (user.domains.some((userdomain): boolean => userdomain.domain === domain)) {
       throw new BadRequestException(`Domain: ${domain} already added for user: ${user.username}`, 'DomainExistsError')
     }
-    const usersWithDomain = await this.usersService.findByDomain(domain)
-    if (usersWithDomain.length > 0) {
+    if ((await this.usersService.countByDomain(domain)) > 0) {
       throw new BadRequestException(`Domain: ${domain} already claimed by another user`, 'DomainClaimedError')
     }
     await this.usersService.pushDomain(user._id, { domain: domain, admin: true })

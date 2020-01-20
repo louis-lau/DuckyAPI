@@ -33,6 +33,7 @@ async function bootstrap(): Promise<void> {
     .addTag('Filters')
     .addTag('Forwarders')
     .addTag('Users')
+    .addTag('Packages')
     .build()
   const document = SwaggerModule.createDocument(app, options)
   SwaggerModule.setup('/swagger', app, document, {

@@ -11,6 +11,8 @@ import { DkimModule } from './dkim/dkim.module'
 import { DomainsModule } from './domains/domains.module'
 import { FiltersModule } from './filters/filters.module'
 import { ForwardersModule } from './forwarders/forwarders.module'
+import { Package } from './packages/package.entity'
+import { PackagesModule } from './packages/packages.module'
 import { TasksModule } from './tasks/tasks.module'
 import { User } from './users/user.entity'
 import { UsersModule } from './users/users.module'
@@ -21,7 +23,7 @@ import { UsersModule } from './users/users.module'
       type: 'mongodb',
       url: 'mongodb://mailserver.local:27017/ducky-api',
       keepConnectionAlive: true,
-      entities: [User],
+      entities: [User, Package],
       synchronize: true,
       useNewUrlParser: true,
       useUnifiedTopology: true,
@@ -35,6 +37,7 @@ import { UsersModule } from './users/users.module'
     DkimModule,
     ForwardersModule,
     TasksModule,
+    PackagesModule,
   ],
 })
 export class AppModule implements NestModule {

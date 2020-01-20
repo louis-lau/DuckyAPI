@@ -1,7 +1,17 @@
-import { BadRequestException, Injectable, InternalServerErrorException, Logger } from '@nestjs/common'
+import {
+  BadRequestException,
+  forwardRef,
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
+import { ObjectID, ObjectId } from 'mongodb'
 import Shortid from 'shortid'
 import { Domain } from 'src/domains/domain.entity'
+import { PackagesService } from 'src/packages/packages.service'
 import { MongoRepository } from 'typeorm'
 
 import { CreateUserDto } from './dto/create-user.dto'
@@ -13,6 +23,8 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: MongoRepository<User>,
+    @Inject(forwardRef(() => PackagesService))
+    private readonly packagesService: PackagesService,
   ) {}
   private readonly logger = new Logger(UsersService.name, true)
 
@@ -20,6 +32,22 @@ export class UsersService {
     username = username.toLowerCase()
     return this.userRepository.findOne({
       username: username,
+    })
+  }
+
+  public async findByPackage(packageId: string): Promise<User[]> {
+    return this.userRepository.find({
+      where: {
+        package: new ObjectId(packageId),
+      },
+    })
+  }
+
+  public async countByPackage(packageId: string): Promise<number> {
+    return this.userRepository.count({
+      where: {
+        package: new ObjectId(packageId),
+      },
     })
   }
 
@@ -35,6 +63,14 @@ export class UsersService {
 
   public async findByDomain(domain: string): Promise<User[] | undefined> {
     return this.userRepository.find({
+      where: {
+        'domains.domain': domain,
+      },
+    })
+  }
+
+  public async countByDomain(domain: string): Promise<number> {
+    return this.userRepository.count({
       where: {
         'domains.domain': domain,
       },
@@ -93,7 +129,20 @@ export class UsersService {
 
   public async createUser(createUserDto: CreateUserDto): Promise<User> {
     createUserDto.username = createUserDto.username.toLowerCase()
-    const createdUser = this.userRepository.create(createUserDto)
+
+    const userPackage = await this.packagesService.getPackageById(createUserDto.packageId)
+    if (!userPackage) {
+      throw new BadRequestException(`No package found with id ${createUserDto.packageId}`, 'PackageNotFoundError')
+    }
+
+    const newUser: Partial<User> = {
+      package: new ObjectId(createUserDto.packageId),
+      quota: userPackage.quota,
+    }
+    Object.assign(newUser, createUserDto)
+
+    const createdUser = this.userRepository.create(newUser)
+
     try {
       return await this.userRepository.save(createdUser)
     } catch (error) {
@@ -107,8 +156,11 @@ export class UsersService {
     }
   }
 
-  public async updateUser(userId: string, updateuserDto: UpdateUserDto): Promise<User> {
+  public async updateUsernameOrPassword(userId: string, updateuserDto: UpdateUserDto): Promise<User> {
     const user = await this.findByIdNoPassword(userId)
+    if (!user) {
+      throw new NotFoundException(`No user found with id: ${userId}`)
+    }
     const userEntity = new User()
     Object.assign(userEntity, user)
 
@@ -131,5 +183,37 @@ export class UsersService {
           throw new InternalServerErrorException('Unknown error')
       }
     }
+  }
+
+  public async updatePackage(userId: string, packageId: string): Promise<User> {
+    const userPackage = await this.packagesService.getPackageById(packageId)
+    if (!userPackage) {
+      throw new BadRequestException(`No package found with id ${packageId}`, 'PackageNotFoundError')
+    }
+
+    const user = await this.findByIdNoPassword(userId)
+    if (!user) {
+      throw new NotFoundException(`No user found with id: ${userId}`)
+    }
+
+    const userEntity = new User()
+    Object.assign(userEntity, user)
+
+    userEntity.package = new ObjectId(packageId)
+    userEntity.quota = userPackage.quota
+
+    return this.userRepository.save(userEntity)
+  }
+
+  public async replaceQuotasForPackage(packageId: string, oldQuota: number, newQuota: number): Promise<void> {
+    this.userRepository.update(
+      {
+        package: new ObjectID(packageId),
+        quota: oldQuota,
+      },
+      {
+        quota: newQuota,
+      },
+    )
   }
 }

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsAscii, IsNotEmpty, IsString, NotContains } from 'class-validator'
+import { IsAscii, IsMongoId, IsNotEmpty, IsString, NotContains } from 'class-validator'
 
 export class CreateUserDto {
   @ApiProperty({
@@ -19,4 +19,11 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsString()
   public password: string
+
+  @ApiProperty({
+    example: '5d49e11f600a423ffc0b1297',
+    description: 'Package id to assign to this user',
+  })
+  @IsMongoId()
+  public packageId: string
 }

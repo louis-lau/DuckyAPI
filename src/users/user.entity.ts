@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import Bcrypt from 'bcrypt'
-import { IsAscii, IsNotEmpty, IsString, NotContains } from 'class-validator'
+import { ObjectId } from 'mongodb'
 import { Domain } from 'src/domains/domain.entity'
 import { BeforeInsert, BeforeUpdate, Column, Entity, Index, ObjectIdColumn } from 'typeorm'
 
@@ -21,10 +21,6 @@ export class User {
   })
   @Column()
   @ApiProperty({ example: 'johndoe', description: 'The username for this user' })
-  @IsNotEmpty()
-  @IsString()
-  @IsAscii()
-  @NotContains(' ', { message: 'username must not contain spaces' })
   public username: string
 
   @Column()
@@ -33,8 +29,6 @@ export class User {
     description: 'The password for this user',
     writeOnly: true,
   })
-  @IsNotEmpty()
-  @IsString()
   public password?: string
 
   @Column()
@@ -54,6 +48,17 @@ export class User {
   })
   public domains: Domain[]
 
+  @Column()
+  public package: ObjectId
+
+  @Column()
+  @ApiProperty({
+    example: 1073741824,
+    description: 'Storage quota in bytes',
+    readOnly: true,
+  })
+  public quota: number
+
   @BeforeInsert()
   @BeforeUpdate()
   private async hashPassword(): Promise<void> {
@@ -63,12 +68,8 @@ export class User {
   }
 
   @BeforeInsert()
-  private async setMinTokenDate(): Promise<void> {
+  private async setDefaultInsertValues(): Promise<void> {
     this.minTokenDate = new Date()
-  }
-
-  @BeforeInsert()
-  private async setEmptyDomainArray(): Promise<void> {
     if (!this.domains) {
       this.domains = []
     }
