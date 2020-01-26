@@ -29,7 +29,7 @@ $ npm install
 ```
 
 ## Configuration
-Copy `config/example.env` to `config/production.env` or `config/develop.env` depending on your environment. You must change the configuration for the application to start. If you've misconfigured something the application should tell you on start.
+Copy `config/example.env` to `config/production.env` or `config/development.env` depending on your environment. You must change the configuration for the application to start. If you've misconfigured something the application should tell you on start.
 
 ## Usage
 ```bash
