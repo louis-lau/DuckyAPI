@@ -1,11 +1,11 @@
-const merge = require("webpack-merge")
-const baseConfig = require("./webpack.config.base.js")
-const nodeExternals = require("webpack-node-externals")
+const merge = require('webpack-merge')
+const baseConfig = require('./webpack.config.base.js')
+const nodeExternals = require('webpack-node-externals')
 
 module.exports = merge(baseConfig, {
-  mode: "production",
+  mode: 'production',
   optimization: {
-    minimize: false
+    minimize: false,
   },
-  externals: [nodeExternals()]
+  externals: [nodeExternals()],
 })
