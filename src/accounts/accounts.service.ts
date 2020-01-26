@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common'
 import { AxiosResponse } from 'axios'
 import Shortid from 'shortid'
-import { allowUnsafePasswords, maxLimits, wildDuckApiToken, wildDuckApiUrl } from 'src/constants'
+import { ConfigService } from 'src/config/config.service'
 import { User } from 'src/users/user.entity'
 
 import { AccountDetails } from './class/account-details.class'
@@ -20,7 +20,7 @@ import { UpdateAccountDto } from './dto/update-account.dto'
 export class AccountsService {
   private readonly logger = new Logger(AccountsService.name, true)
 
-  public constructor(private readonly httpService: HttpService) {}
+  public constructor(private readonly httpService: HttpService, private readonly config: ConfigService) {}
 
   public async getAccounts(user: User, domain?: string): Promise<AccountListItem[]> {
     if (user.domains.length === 0) {
@@ -49,9 +49,9 @@ export class AccountsService {
       let apiResponse: AxiosResponse<any>
       try {
         apiResponse = await this.httpService
-          .get(`${wildDuckApiUrl}/users`, {
+          .get(`${this.config.get<string>('WILDDUCK_API_URL')}/users`, {
             headers: {
-              'X-Access-Token': wildDuckApiToken,
+              'X-Access-Token': this.config.get<string>('WILDDUCK_API_TOKEN'),
             },
             params: {
               tags: domainTags,
@@ -99,9 +99,9 @@ export class AccountsService {
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
-        .get(`${wildDuckApiUrl}/users/${accountId}`, {
+        .get(`${this.config.get<string>('WILDDUCK_API_URL')}/users/${accountId}`, {
           headers: {
-            'X-Access-Token': wildDuckApiToken,
+            'X-Access-Token': this.config.get<string>('WILDDUCK_API_TOKEN'),
           },
         })
         .toPromise()
@@ -172,24 +172,24 @@ export class AccountsService {
     try {
       apiResponse = await this.httpService
         .post(
-          `${wildDuckApiUrl}/users`,
+          `${this.config.get<string>('WILDDUCK_API_URL')}/users`,
           {
             username: Shortid.generate(),
             address: createAccountDto.address,
             name: createAccountDto.name,
             password: createAccountDto.password,
             spamLevel: createAccountDto.spamLevel,
-            quota: createAccountDto.limits.quota || maxLimits.quota,
-            recipients: createAccountDto.limits.send || maxLimits.send,
-            receivedMax: createAccountDto.limits.receive || maxLimits.receive,
-            forwards: createAccountDto.limits.forward || maxLimits.forward,
+            quota: createAccountDto.limits.quota || this.config.get<number>('MAX_QUOTA'),
+            recipients: createAccountDto.limits.send || this.config.get<number>('MAX_SEND'),
+            receivedMax: createAccountDto.limits.receive || this.config.get<number>('MAX_RECEIVE'),
+            forwards: createAccountDto.limits.forward || this.config.get<number>('MAX_FORWARD'),
             disabledScopes: createAccountDto.disabledScopes,
-            allowUnsafe: allowUnsafePasswords,
+            allowUnsafe: this.config.get('ALLOW_UNSAFE_ACCOUNT_PASSWORDS'),
             tags: [`domain:${addressDomain}`],
           },
           {
             headers: {
-              'X-Access-Token': wildDuckApiToken,
+              'X-Access-Token': this.config.get<string>('WILDDUCK_API_TOKEN'),
             },
           },
         )
@@ -226,7 +226,7 @@ export class AccountsService {
     try {
       apiResponse = await this.httpService
         .put(
-          `${wildDuckApiUrl}/users/${accountId}`,
+          `${this.config.get<string>('WILDDUCK_API_URL')}/users/${accountId}`,
           {
             name: updateAccountDto.name,
             password: updateAccountDto.password,
@@ -236,12 +236,12 @@ export class AccountsService {
             receivedMax: updateAccountDto.limits.receive,
             forwards: updateAccountDto.limits.forward,
             disabledScopes: updateAccountDto.disabledScopes,
-            allowUnsafe: allowUnsafePasswords,
+            allowUnsafe: this.config.get('ALLOW_UNSAFE_ACCOUNT_PASSWORDS'),
             disabled: updateAccountDto.disabled,
           },
           {
             headers: {
-              'X-Access-Token': wildDuckApiToken,
+              'X-Access-Token': this.config.get<string>('WILDDUCK_API_TOKEN'),
             },
           },
         )
@@ -273,9 +273,9 @@ export class AccountsService {
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
-        .delete(`${wildDuckApiUrl}/users/${accountId}`, {
+        .delete(`${this.config.get<string>('WILDDUCK_API_URL')}/users/${accountId}`, {
           headers: {
-            'X-Access-Token': wildDuckApiToken,
+            'X-Access-Token': this.config.get<string>('WILDDUCK_API_TOKEN'),
           },
         })
         .toPromise()

@@ -1,6 +1,6 @@
 import { HttpService, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common'
 import { AxiosResponse } from 'axios'
-import { wildDuckApiToken, wildDuckApiUrl } from 'src/constants'
+import { ConfigService } from 'src/config/config.service'
 import { User } from 'src/users/user.entity'
 
 import { DkimKey } from './class/dkim-key.class'
@@ -10,15 +10,15 @@ import { AddDkimDto } from './dto/add-dkim.dto'
 export class DkimService {
   private readonly logger = new Logger(DkimService.name, true)
 
-  public constructor(private readonly httpService: HttpService) {}
+  public constructor(private readonly httpService: HttpService, private readonly config: ConfigService) {}
 
   public async resolveDkimId(domain: string): Promise<string> {
     let ApiResponse: AxiosResponse<any>
     try {
       ApiResponse = await this.httpService
-        .get(`${wildDuckApiUrl}/dkim/resolve/${domain}`, {
+        .get(`${this.config.get<string>('WILDDUCK_API_URL')}/dkim/resolve/${domain}`, {
           headers: {
-            'X-Access-Token': wildDuckApiToken,
+            'X-Access-Token': this.config.get<string>('WILDDUCK_API_TOKEN'),
           },
         })
         .toPromise()
@@ -51,9 +51,9 @@ export class DkimService {
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
-        .delete(`${wildDuckApiUrl}/dkim/${dkimId}`, {
+        .delete(`${this.config.get<string>('WILDDUCK_API_URL')}/dkim/${dkimId}`, {
           headers: {
-            'X-Access-Token': wildDuckApiToken,
+            'X-Access-Token': this.config.get<string>('WILDDUCK_API_TOKEN'),
           },
         })
         .toPromise()
@@ -84,9 +84,9 @@ export class DkimService {
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
-        .get(`${wildDuckApiUrl}/dkim/${dkimId}`, {
+        .get(`${this.config.get<string>('WILDDUCK_API_URL')}/dkim/${dkimId}`, {
           headers: {
-            'X-Access-Token': wildDuckApiToken,
+            'X-Access-Token': this.config.get<string>('WILDDUCK_API_TOKEN'),
           },
         })
         .toPromise()
@@ -129,7 +129,7 @@ export class DkimService {
     try {
       apiResponse = await this.httpService
         .post(
-          `${wildDuckApiUrl}/dkim`,
+          `${this.config.get<string>('WILDDUCK_API_URL')}/dkim`,
           {
             domain: domain,
             selector: addDkimDto.selector,
@@ -137,7 +137,7 @@ export class DkimService {
           },
           {
             headers: {
-              'X-Access-Token': wildDuckApiToken,
+              'X-Access-Token': this.config.get<string>('WILDDUCK_API_TOKEN'),
             },
           },
         )

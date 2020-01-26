@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Column, Entity, Index, ObjectIdColumn, PrimaryColumn } from 'typeorm'
+import { Column, Index } from 'typeorm'
 
 export class Domain {
   @Column()

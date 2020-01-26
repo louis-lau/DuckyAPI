@@ -1,6 +1,6 @@
+import { OnQueueActive, OnQueueCompleted, OnQueueError, OnQueueFailed, Process, Processor } from '@nestjs/bull'
 import { Logger } from '@nestjs/common'
 import { Job } from 'bull'
-import { BullQueueEvents, OnQueueActive, OnQueueEvent, Process, Processor } from 'nest-bull'
 import { AccountsService } from 'src/accounts/accounts.service'
 import { AccountListItem } from 'src/accounts/class/account-list-item.class'
 import { Forwarder } from 'src/forwarders/class/forwarder.class'
@@ -8,7 +8,7 @@ import { ForwardersService } from 'src/forwarders/forwarders.service'
 
 import { DeleteForDomain } from './tasks.interfaces'
 
-@Processor({ name: 'tasks' })
+@Processor('tasks')
 export class TasksProcessor {
   public constructor(
     private readonly accountsService: AccountsService,
@@ -99,17 +99,17 @@ export class TasksProcessor {
     }
   }
 
-  @OnQueueEvent(BullQueueEvents.COMPLETED)
+  @OnQueueCompleted()
   private onCompleted(job: Job): void {
     this.logger.log(`Completed job ${job.id} (${job.name}) successfully`)
   }
 
-  @OnQueueEvent(BullQueueEvents.ERROR)
+  @OnQueueError()
   private onError(job: Job): void {
     this.logger.error(`Error for job ${job.id} (${job.name}): ${job.stacktrace}`)
   }
 
-  @OnQueueEvent(BullQueueEvents.FAILED)
+  @OnQueueFailed()
   private onFailed(job: Job): void {
     this.logger.error(`Job ${job.id} (${job.name}) failed!: ${job.stacktrace}`)
   }

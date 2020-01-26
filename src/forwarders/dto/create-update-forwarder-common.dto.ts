@@ -1,3 +1,4 @@
+import { Inject } from '@nestjs/common'
 import { ApiProperty } from '@nestjs/swagger'
 import { Type } from 'class-transformer'
 import {
@@ -6,21 +7,18 @@ import {
   IsNotEmpty,
   IsNumber,
   IsOptional,
+  IsPositive,
   IsString,
-  Max,
-  Min,
   Validate,
   ValidateNested,
 } from 'class-validator'
 import { EachIsEmailOrHttpOrSmtp } from 'src/common/is-email-or-url.validator'
-import { maxLimits } from 'src/constants'
 
 class CreateUpdateForwarderCommonDtoLimits {
   @ApiProperty({ example: 600, description: 'How many messages can be forwarded per period', required: false })
   @IsOptional()
   @IsNumber()
-  @Min(maxLimits.forward ? 1 : 0)
-  @Max(maxLimits.forward ? maxLimits.forward : Infinity)
+  @IsPositive()
   public forward?: number
 }
 

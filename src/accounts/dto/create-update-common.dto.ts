@@ -5,13 +5,13 @@ import {
   IsArray,
   IsNumber,
   IsOptional,
+  IsPositive,
   IsString,
   Matches,
   Max,
   Min,
   ValidateNested,
 } from 'class-validator'
-import { maxLimits } from 'src/constants'
 
 class CreateUpdateAccountLimits {
   @ApiProperty({
@@ -21,8 +21,7 @@ class CreateUpdateAccountLimits {
   })
   @IsOptional()
   @IsNumber()
-  @Min(maxLimits.quota ? 1 : 0) // If limit is defined don't allow 0, as that means no limit for WildDuck
-  @Max(maxLimits.quota ? maxLimits.quota : Infinity) // If limit is defined set max, else no max
+  @IsPositive()
   public quota?: number
 
   @ApiProperty({
@@ -32,8 +31,7 @@ class CreateUpdateAccountLimits {
   })
   @IsOptional()
   @IsNumber()
-  @Min(maxLimits.send ? 1 : 0)
-  @Max(maxLimits.send ? maxLimits.send : Infinity)
+  @IsPositive()
   public send?: number
 
   @ApiProperty({
@@ -43,8 +41,7 @@ class CreateUpdateAccountLimits {
   })
   @IsOptional()
   @IsNumber()
-  @Min(maxLimits.receive ? 1 : 0)
-  @Max(maxLimits.receive ? maxLimits.receive : Infinity)
+  @IsPositive()
   public receive?: number
 
   @ApiProperty({
@@ -54,8 +51,7 @@ class CreateUpdateAccountLimits {
   })
   @IsOptional()
   @IsNumber()
-  @Min(maxLimits.forward ? 1 : 0)
-  @Max(maxLimits.forward ? maxLimits.forward : Infinity)
+  @IsPositive()
   public forward?: number
 }
 

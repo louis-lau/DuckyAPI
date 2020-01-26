@@ -1,16 +1,16 @@
-import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common'
+import { InjectQueue } from '@nestjs/bull'
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
 import { Queue } from 'bull'
 import { MxRecord, promises as dns } from 'dns'
-import { InjectQueue } from 'nest-bull'
 import { AccountsService } from 'src/accounts/accounts.service'
-import { DnsConfig } from 'src/constants'
+import { ConfigService } from 'src/config/config.service'
 import { DkimKey } from 'src/dkim/class/dkim-key.class'
 import { DkimService } from 'src/dkim/dkim.service'
 import { ForwardersService } from 'src/forwarders/forwarders.service'
 import { User } from 'src/users/user.entity'
 import { UsersService } from 'src/users/users.service'
 
-import { DnsCheck } from './class/dns.class'
+import { DnsCheck, DnsCheckMxRecord } from './class/dns.class'
 import { Domain } from './domain.entity'
 
 @Injectable()
@@ -20,6 +20,7 @@ export class DomainsService {
     private readonly accountsService: AccountsService,
     private readonly forwardersService: ForwardersService,
     private readonly dkimService: DkimService,
+    private readonly config: ConfigService,
     @InjectQueue('tasks') readonly taskQueue: Queue,
   ) {}
 
@@ -63,8 +64,8 @@ export class DomainsService {
 
     const dnsCheck: DnsCheck = {
       correctValues: {
-        mx: DnsConfig.mx.records,
-        spf: DnsConfig.spf.correctValue,
+        mx: this.config.get<DnsCheckMxRecord[]>('MX_RECORDS'),
+        spf: this.config.get<string>('SPF_CORRECT_VALUE'),
         dkim: undefined,
       },
       currentValues: {
@@ -194,7 +195,7 @@ export class DomainsService {
             return
           }
 
-          for (const correctMxRecord of DnsConfig.mx.records) {
+          for (const correctMxRecord of this.config.get<DnsCheckMxRecord[]>('MX_RECORDS')) {
             // if mxRecords doesn't include this correct mx record
             if (!mxRecords.some((mxRecord): boolean => mxRecord.exchange === correctMxRecord.exchange)) {
               dnsCheck.errors.push({
@@ -248,7 +249,10 @@ export class DomainsService {
               })
             }
 
-            if (!DnsConfig.spf.regex.test(spfTxtRecords[0])) {
+            if (
+              this.config.get<string>('SPF_REGEX') &&
+              new RegExp(this.config.get<string>('SPF_REGEX')).test(spfTxtRecords[0])
+            ) {
               dnsCheck.errors.push({
                 type: 'spf',
                 error: 'SpfInvalid',

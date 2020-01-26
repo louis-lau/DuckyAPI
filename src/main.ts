@@ -4,11 +4,16 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import Helmet from 'helmet'
 
 import { AppModule } from './app.module'
+import { ConfigService } from './config/config.service'
 
 declare const module: any
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule)
+  const config: ConfigService = app.get('ConfigService')
+
+  app.setGlobalPrefix(config.get<string>('BASE_URL'))
+
   app.enableCors()
   app.useGlobalPipes(
     new ValidationPipe({
@@ -36,7 +41,7 @@ async function bootstrap(): Promise<void> {
     .addTag('Packages')
     .build()
   const document = SwaggerModule.createDocument(app, options)
-  SwaggerModule.setup('/swagger', app, document, {
+  SwaggerModule.setup(`${config.get<string>('BASE_URL')}/swagger`, app, document, {
     swaggerOptions: {
       defaultModelsExpandDepth: 0,
       operationsSorter: 'method',
@@ -44,7 +49,7 @@ async function bootstrap(): Promise<void> {
     },
   })
 
-  await app.listen(3000)
+  await app.listen(config.get<number>('PORT'))
 
   if (module.hot) {
     module.hot.accept()

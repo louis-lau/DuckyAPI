@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common'
 import { JwtModule } from '@nestjs/jwt'
 import { PassportModule } from '@nestjs/passport'
-import { jwtConstants } from 'src/constants'
+import { ConfigModule } from 'src/config/config.module'
+import { ConfigService } from 'src/config/config.service'
 import { UsersModule } from 'src/users/users.module'
 
 import { AuthController } from './auth.controller'
@@ -13,8 +14,12 @@ import { LocalStrategy } from './local.strategy'
   imports: [
     UsersModule,
     PassportModule,
-    JwtModule.register({
-      secret: jwtConstants.secret,
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        secret: config.get<string>('TOKEN_SECRET'),
+      }),
     }),
   ],
   controllers: [AuthController],

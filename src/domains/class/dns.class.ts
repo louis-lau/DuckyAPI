@@ -1,11 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { DnsConfig } from 'src/constants'
 
-class DnsCheckMxRecord {
-  @ApiProperty({ example: DnsConfig.mx.records[0].exchange, description: 'MX record server' })
+export class DnsCheckMxRecord {
+  @ApiProperty({ example: 'mx.example.com', description: 'MX record server' })
   public exchange: string
 
-  @ApiProperty({ example: DnsConfig.mx.records[0].priority, description: 'MX record priority' })
+  @ApiProperty({ example: 1, description: 'MX record priority' })
   public priority: number
 }
 
@@ -25,7 +24,7 @@ class DnsCheckCurrentValues {
   @ApiProperty({ description: 'List of DNS records', type: DnsCheckMxRecord, isArray: true })
   public mx: DnsCheckMxRecord[]
 
-  @ApiProperty({ example: DnsConfig.spf.correctValue, description: 'Value of the SPF record' })
+  @ApiProperty({ example: 'v=spf1 include:example.com -all', description: 'Value of the SPF record' })
   public spf: string
 
   @ApiProperty({ description: 'DKIM record selector and value', required: false })

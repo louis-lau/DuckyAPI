@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common'
 import { AxiosResponse } from 'axios'
 import { AccountsService } from 'src/accounts/accounts.service'
-import { wildDuckApiToken, wildDuckApiUrl } from 'src/constants'
+import { ConfigService } from 'src/config/config.service'
 import { User } from 'src/users/user.entity'
 
 import { FilterDetails } from './class/filter-details.class'
@@ -19,7 +19,11 @@ import { CreateUpdateFilterDto } from './dto/create-update-filter.dto'
 export class FiltersService {
   private readonly logger = new Logger(FiltersService.name, true)
 
-  public constructor(private readonly httpService: HttpService, private readonly accountsService: AccountsService) {}
+  public constructor(
+    private readonly httpService: HttpService,
+    private readonly accountsService: AccountsService,
+    private readonly config: ConfigService,
+  ) {}
 
   public async deleteFilter(user: User, accountId: string, filterId: string): Promise<void> {
     // Run get accountdetails to make sure account exists and user has permission, we don't do anything with it because it will throw an exception if needed
@@ -28,9 +32,9 @@ export class FiltersService {
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
-        .delete(`${wildDuckApiUrl}/users/${accountId}/filters/${filterId}`, {
+        .delete(`${this.config.get<string>('WILDDUCK_API_URL')}/users/${accountId}/filters/${filterId}`, {
           headers: {
-            'X-Access-Token': wildDuckApiToken,
+            'X-Access-Token': this.config.get<string>('WILDDUCK_API_TOKEN'),
           },
         })
         .toPromise()
@@ -62,9 +66,9 @@ export class FiltersService {
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
-        .get(`${wildDuckApiUrl}/users/${accountId}/filters`, {
+        .get(`${this.config.get<string>('WILDDUCK_API_URL')}/users/${accountId}/filters`, {
           headers: {
-            'X-Access-Token': wildDuckApiToken,
+            'X-Access-Token': this.config.get<string>('WILDDUCK_API_TOKEN'),
           },
         })
         .toPromise()
@@ -106,9 +110,9 @@ export class FiltersService {
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
-        .get(`${wildDuckApiUrl}/users/${accountId}/filters/${filterId}`, {
+        .get(`${this.config.get<string>('WILDDUCK_API_URL')}/users/${accountId}/filters/${filterId}`, {
           headers: {
-            'X-Access-Token': wildDuckApiToken,
+            'X-Access-Token': this.config.get<string>('WILDDUCK_API_TOKEN'),
           },
         })
         .toPromise()
@@ -151,9 +155,9 @@ export class FiltersService {
     try {
       // Pass createUpdateFilterDto directly as it's exactly what the WildDuck API requires
       apiResponse = await this.httpService
-        .post(`${wildDuckApiUrl}/users/${accountId}/filters`, createUpdateFilterDto, {
+        .post(`${this.config.get<string>('WILDDUCK_API_URL')}/users/${accountId}/filters`, createUpdateFilterDto, {
           headers: {
-            'X-Access-Token': wildDuckApiToken,
+            'X-Access-Token': this.config.get<string>('WILDDUCK_API_TOKEN'),
           },
         })
         .toPromise()
@@ -190,11 +194,15 @@ export class FiltersService {
     try {
       // Pass createUpdateFilterDto directly as it's exactly what the WildDuck API requires
       apiResponse = await this.httpService
-        .put(`${wildDuckApiUrl}/users/${accountId}/filters/${filterId}`, createUpdateFilterDto, {
-          headers: {
-            'X-Access-Token': wildDuckApiToken,
+        .put(
+          `${this.config.get<string>('WILDDUCK_API_URL')}/users/${accountId}/filters/${filterId}`,
+          createUpdateFilterDto,
+          {
+            headers: {
+              'X-Access-Token': this.config.get<string>('WILDDUCK_API_TOKEN'),
+            },
           },
-        })
+        )
         .toPromise()
     } catch (error) {
       this.logger.error(error.message)

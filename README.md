@@ -11,7 +11,7 @@ API that interacts with the [WildDuck](https://github.com/nodemailer/wildduck) A
 In WildDuck a user is a single Email Account, using the api as an end-user you can add address aliases to that inbox. You can not add extra email accounts or manage domain level functionality like DKIM. The aim of DuckyAPI is to offer an end-user API that allows complete management of domains and email accounts within those domains.
 
 ## How?
-DuckyAPI stores it users in MongoDB, this can be the same instance that you're already using for WildDuck. Each user owns a list of domains, granting permission to manage dkim or add/edit email accounts under that domain.
+DuckyAPI stores its users in MongoDB, this can be the same instance that you're already using for WildDuck. Each user owns a list of domains, granting permission to manage dkim or add/edit email accounts under that domain.
 
 Authentication is accomplished using JSON web tokens. For each user a date can be set which invalidates all tokens generated before that date. No sessions are used, this application is stateless.
 
@@ -29,7 +29,7 @@ $ npm install
 ```
 
 ## Configuration
-Proper configuration support will be added, for now you can edit the values in `src/constants.ts` before building. The default configuration is not secure, so make sure you do this.
+Copy `config/example.env` to `config/production.env` or `config/develop.env` depending on your environment. You must change the configuration for the application to start. If you've misconfigured something the application should tell you on start.
 
 ## Usage
 ```bash

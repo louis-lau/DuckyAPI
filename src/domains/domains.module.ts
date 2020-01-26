@@ -1,7 +1,8 @@
+import { BullModule } from '@nestjs/bull'
 import { Module } from '@nestjs/common'
-import { BullModule } from 'nest-bull'
 import { AccountsModule } from 'src/accounts/accounts.module'
-import { redisOptions } from 'src/constants'
+import { ConfigModule } from 'src/config/config.module'
+import { ConfigService } from 'src/config/config.service'
 import { DkimModule } from 'src/dkim/dkim.module'
 import { ForwardersModule } from 'src/forwarders/forwarders.module'
 import { UsersModule } from 'src/users/users.module'
@@ -15,11 +16,13 @@ import { DomainsService } from './domains.service'
     AccountsModule,
     DkimModule,
     ForwardersModule,
-    BullModule.register({
+    BullModule.registerQueueAsync({
       name: 'tasks',
-      options: {
-        redis: redisOptions,
-      },
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        redis: config.get('REDIS_URL'),
+      }),
     }),
   ],
   controllers: [DomainsController],

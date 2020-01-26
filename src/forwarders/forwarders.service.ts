@@ -7,7 +7,7 @@ import {
   NotFoundException,
 } from '@nestjs/common'
 import { AxiosResponse } from 'axios'
-import { allowForwarderWildcard, maxLimits, wildDuckApiToken, wildDuckApiUrl } from 'src/constants'
+import { ConfigService } from 'src/config/config.service'
 import { User } from 'src/users/user.entity'
 
 import { ForwarderDetails } from './class/forwarder-details.class'
@@ -19,7 +19,7 @@ import { UpdateForwarderDto } from './dto/update-forwarder.dto'
 export class ForwardersService {
   private readonly logger = new Logger(ForwardersService.name, true)
 
-  public constructor(private readonly httpService: HttpService) {}
+  public constructor(private readonly httpService: HttpService, private readonly config: ConfigService) {}
 
   public async getForwarders(user: User, domain?: string): Promise<Forwarder[]> {
     if (user.domains.length === 0) {
@@ -47,9 +47,9 @@ export class ForwardersService {
       let apiResponse: AxiosResponse<any>
       try {
         apiResponse = await this.httpService
-          .get(`${wildDuckApiUrl}/addresses`, {
+          .get(`${this.config.get<string>('WILDDUCK_API_URL')}/addresses`, {
             headers: {
-              'X-Access-Token': wildDuckApiToken,
+              'X-Access-Token': this.config.get<string>('WILDDUCK_API_TOKEN'),
             },
             params: {
               tags: domainTags,
@@ -92,9 +92,9 @@ export class ForwardersService {
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
-        .get(`${wildDuckApiUrl}/addresses/forwarded/${forwarderId}`, {
+        .get(`${this.config.get<string>('WILDDUCK_API_URL')}/addresses/forwarded/${forwarderId}`, {
           headers: {
-            'X-Access-Token': wildDuckApiToken,
+            'X-Access-Token': this.config.get<string>('WILDDUCK_API_TOKEN'),
           },
         })
         .toPromise()
@@ -156,18 +156,18 @@ export class ForwardersService {
     try {
       apiResponse = await this.httpService
         .post(
-          `${wildDuckApiUrl}/addresses/forwarded`,
+          `${this.config.get<string>('WILDDUCK_API_URL')}/addresses/forwarded`,
           {
             address: createForwarderDto.address,
             name: createForwarderDto.name,
             targets: createForwarderDto.targets,
-            forwards: createForwarderDto.limits.forward || maxLimits.forward,
-            allowWildcard: allowForwarderWildcard,
+            forwards: createForwarderDto.limits.forward || this.config.get<number>('MAX_FORWARD'),
+            allowWildcard: this.config.get<boolean>('ALLOW_FORWARDER_WILDCARD'),
             tags: [`domain:${addressDomain}`, 'forwarder'],
           },
           {
             headers: {
-              'X-Access-Token': wildDuckApiToken,
+              'X-Access-Token': this.config.get<string>('WILDDUCK_API_TOKEN'),
             },
           },
         )
@@ -209,7 +209,7 @@ export class ForwardersService {
     try {
       apiResponse = await this.httpService
         .put(
-          `${wildDuckApiUrl}/addresses/forwarded/${forwarderId}`,
+          `${this.config.get<string>('WILDDUCK_API_URL')}/addresses/forwarded/${forwarderId}`,
           {
             address: updateForwarderDto.address,
             name: updateForwarderDto.name,
@@ -219,7 +219,7 @@ export class ForwardersService {
           },
           {
             headers: {
-              'X-Access-Token': wildDuckApiToken,
+              'X-Access-Token': this.config.get<string>('WILDDUCK_API_TOKEN'),
             },
           },
         )
@@ -254,9 +254,9 @@ export class ForwardersService {
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
-        .delete(`${wildDuckApiUrl}/addresses/forwarded/${forwarderId}`, {
+        .delete(`${this.config.get<string>('WILDDUCK_API_URL')}/addresses/forwarded/${forwarderId}`, {
           headers: {
-            'X-Access-Token': wildDuckApiToken,
+            'X-Access-Token': this.config.get<string>('WILDDUCK_API_TOKEN'),
           },
         })
         .toPromise()
