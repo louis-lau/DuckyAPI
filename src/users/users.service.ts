@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { ObjectID, ObjectId } from 'mongodb'
-import Shortid from 'shortid'
+import NanoId from 'nanoid'
 import { Domain } from 'src/domains/domain.entity'
 import { PackagesService } from 'src/packages/packages.service'
 import { MongoRepository } from 'typeorm'
@@ -88,7 +88,7 @@ export class UsersService {
       return await this.userRepository.save(userEntity)
     } catch (error) {
       // TODO: add custom exception handler for unknown errors that basically does the following:
-      const errorId = Shortid.generate()
+      const errorId = NanoId()
       this.logger.error(`${errorId}: ${error.message}`)
       throw new InternalServerErrorException(`Unknown error: ${errorId}`)
     }
@@ -121,7 +121,7 @@ export class UsersService {
       return this.userRepository.save(userEntity)
     } catch (error) {
       // TODO: add custom exception handler for unknown errors that basically does the following:
-      const errorId = Shortid.generate()
+      const errorId = NanoId()
       this.logger.error(`${errorId}: ${error.message}`)
       throw new InternalServerErrorException(`Unknown error: ${errorId}`)
     }

@@ -7,7 +7,7 @@ import {
   NotFoundException,
 } from '@nestjs/common'
 import { AxiosResponse } from 'axios'
-import Shortid from 'shortid'
+import NanoId from 'nanoid'
 import { ConfigService } from 'src/config/config.service'
 import { User } from 'src/users/user.entity'
 
@@ -174,7 +174,7 @@ export class AccountsService {
         .post(
           `${this.config.get<string>('WILDDUCK_API_URL')}/users`,
           {
-            username: Shortid.generate(),
+            username: NanoId(),
             address: createAccountDto.address,
             name: createAccountDto.name,
             password: createAccountDto.password,
