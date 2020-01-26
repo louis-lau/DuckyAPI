@@ -4,6 +4,7 @@ import Arena from 'bull-arena'
 import BasicAuth from 'express-basic-auth'
 
 import { AccountsModule } from './accounts/accounts.module'
+import { ApiKey } from './auth/api-key.entity'
 import { AuthModule } from './auth/auth.module'
 import { ConfigModule } from './config/config.module'
 import { ConfigService } from './config/config.service'
@@ -25,7 +26,7 @@ import { UsersModule } from './users/users.module'
         type: 'mongodb',
         url: config.get<string>('MONGODB_URL'),
         keepConnectionAlive: true,
-        entities: [User, Package],
+        entities: [User, Package, ApiKey],
         synchronize: true,
         useNewUrlParser: true,
         useUnifiedTopology: true,

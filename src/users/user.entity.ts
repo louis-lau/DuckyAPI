@@ -4,9 +4,7 @@ import { ObjectId } from 'mongodb'
 import { Domain } from 'src/domains/domain.entity'
 import { BeforeInsert, BeforeUpdate, Column, Entity, Index, ObjectIdColumn } from 'typeorm'
 
-@Entity({
-  name: 'users',
-})
+@Entity('users')
 export class User {
   @ObjectIdColumn()
   @ApiProperty({

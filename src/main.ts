@@ -44,7 +44,6 @@ async function bootstrap(): Promise<void> {
   SwaggerModule.setup(`${config.get<string>('BASE_URL')}/swagger`, app, document, {
     swaggerOptions: {
       defaultModelsExpandDepth: 0,
-      operationsSorter: 'method',
       displayRequestDuration: true,
     },
   })
