@@ -4,7 +4,6 @@ import Arena from 'bull-arena'
 import BasicAuth from 'express-basic-auth'
 
 import { AccountsModule } from './accounts/accounts.module'
-import { ApiKey } from './auth/api-key.entity'
 import { AuthModule } from './auth/auth.module'
 import { ConfigModule } from './config/config.module'
 import { ConfigService } from './config/config.service'
@@ -12,11 +11,12 @@ import { DkimModule } from './dkim/dkim.module'
 import { DomainsModule } from './domains/domains.module'
 import { FiltersModule } from './filters/filters.module'
 import { ForwardersModule } from './forwarders/forwarders.module'
-import { Package } from './packages/package.entity'
 import { PackagesModule } from './packages/packages.module'
 import { TasksModule } from './tasks/tasks.module'
-import { User } from './users/user.entity'
 import { UsersModule } from './users/users.module'
+
+const entityContext = require.context('.', true, /\.entity\.ts$/)
+const migrationContext = require.context('.', true, /migrations\/\d*-.*\.ts$/)
 
 @Module({
   imports: [
@@ -26,8 +26,22 @@ import { UsersModule } from './users/users.module'
         type: 'mongodb',
         url: config.get<string>('MONGODB_URL'),
         keepConnectionAlive: true,
-        entities: [User, Package, ApiKey],
-        synchronize: true,
+        entities: [
+          ...entityContext.keys().map(id => {
+            const entityModule = entityContext(id)
+            const [entity] = Object.values(entityModule)
+            return entity
+          }),
+        ],
+        migrations: [
+          ...migrationContext.keys().map(id => {
+            const migrationModule = migrationContext(id)
+            const [migration] = Object.values(migrationModule)
+            return migration
+          }),
+        ],
+        migrationsTransactionMode: 'each',
+        migrationsRun: true,
         useNewUrlParser: true,
         useUnifiedTopology: true,
         appname: 'ducky-api',
@@ -76,7 +90,6 @@ export class AppModule implements NestModule {
               ],
             },
             {
-              // basePath: "/tasks",
               disableListen: true,
             },
           ),

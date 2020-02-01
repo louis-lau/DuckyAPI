@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger'
 import Bcrypt from 'bcrypt'
 import { ObjectId } from 'mongodb'
 import { Domain } from 'src/domains/domain.entity'
-import { BeforeInsert, BeforeUpdate, Column, Entity, Index, ObjectIdColumn } from 'typeorm'
+import { BeforeInsert, BeforeUpdate, Column, Entity, ObjectIdColumn } from 'typeorm'
 
 @Entity('users')
 export class User {
@@ -14,9 +14,6 @@ export class User {
   })
   public _id?: string
 
-  @Index({
-    unique: true,
-  })
   @Column()
   @ApiProperty({ example: 'johndoe', description: 'The username for this user' })
   public username: string

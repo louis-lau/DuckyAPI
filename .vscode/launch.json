@@ -11,7 +11,8 @@
       "preLaunchTask": "npm: buildstart:debug",
       "port": 9229,
       "restart": true,
-      "timeout": 60000
+      "timeout": 60000,
+      "smartStep": true
     }
   ]
 }

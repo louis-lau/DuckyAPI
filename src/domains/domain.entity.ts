@@ -1,11 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Column, Index } from 'typeorm'
+import { Column } from 'typeorm'
 
 export class Domain {
   @Column()
-  @Index({
-    unique: true,
-  })
   @ApiProperty({ example: 'example.com', description: 'The domain name' })
   public domain: string
 
