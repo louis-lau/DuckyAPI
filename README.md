@@ -1,4 +1,4 @@
-__NOTE:__ This project is still a work in progress. You can already check it out if you're curious, but I can't guarantee it will work out for you. For example, the API endpoint for creating new API users currently isn't protected.
+__NOTE:__ This project is still a work in progress. You can already check it out if you're curious. The API may change in the future.
 
 # DuckyAPI
 

@@ -1,6 +1,20 @@
-import { Body, Controller, Delete, forwardRef, Get, Inject, NotFoundException, Param, Post, Put } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Delete,
+  forwardRef,
+  Get,
+  Inject,
+  NotFoundException,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common'
+import { AuthGuard } from '@nestjs/passport'
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
@@ -8,6 +22,8 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger'
+import { Roles } from 'src/common/decorators/roles.decorator'
+import { RolesGuard } from 'src/common/guards/roles.guard'
 import { UsersService } from 'src/users/users.service'
 
 import { PackageIdParams } from './dto/package-id.params'
@@ -16,6 +32,9 @@ import { PackagesService } from './packages.service'
 
 @Controller('packages')
 @ApiTags('Packages')
+@UseGuards(AuthGuard('jwt'), RolesGuard)
+@Roles('admin')
+@ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: 'Invalid or expired token' })
 @ApiBadRequestResponse({ description: 'Error that is resolvable user side' })
 @ApiInternalServerErrorResponse({ description: 'Server error that is not resolvable user side' })
@@ -61,8 +80,7 @@ export class PackagesController {
   @Delete(':id')
   @ApiOperation({ summary: '[Admin only] Delete package' })
   @ApiOkResponse({ description: 'Successfully deleted package', type: Package })
-  public async deletePackage(@Body() packaget: Package, @Param() packageIdParams: PackageIdParams): Promise<Package> {
-    packaget._id = packageIdParams.id
-    return this.packagesService.savePackage(packaget)
+  public async deletePackage(@Param() packageIdParams: PackageIdParams): Promise<void> {
+    return this.packagesService.deletePackage(packageIdParams.id)
   }
 }

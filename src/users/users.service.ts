@@ -127,7 +127,7 @@ export class UsersService {
     }
   }
 
-  public async createUser(createUserDto: CreateUserDto): Promise<User> {
+  public async createUser(createUserDto: CreateUserDto, admin = false): Promise<User> {
     createUserDto.username = createUserDto.username.toLowerCase()
 
     const userPackage = await this.packagesService.getPackageById(createUserDto.packageId)
@@ -138,6 +138,7 @@ export class UsersService {
     const newUser: Partial<User> = {
       package: new ObjectId(createUserDto.packageId),
       quota: userPackage.quota,
+      roles: admin ? ['admin'] : ['user'],
     }
     Object.assign(newUser, createUserDto)
 

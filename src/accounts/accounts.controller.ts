@@ -12,6 +12,8 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger'
 import { ReqUser } from 'src/common/decorators/req-user.decorator'
+import { Roles } from 'src/common/decorators/roles.decorator'
+import { RolesGuard } from 'src/common/guards/roles.guard'
 import { User } from 'src/users/user.entity'
 
 import { AccountsService } from './accounts.service'
@@ -23,7 +25,8 @@ import { AccountIdParams } from './params/account-id.params'
 
 @Controller('accounts')
 @ApiTags('Email Accounts')
-@UseGuards(AuthGuard('jwt'))
+@UseGuards(AuthGuard('jwt'), RolesGuard)
+@Roles('user')
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: 'Invalid or expired token' })
 @ApiBadRequestResponse({ description: 'Error that is resolvable user side' })

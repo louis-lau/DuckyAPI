@@ -12,6 +12,8 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger'
 import { ReqUser } from 'src/common/decorators/req-user.decorator'
+import { Roles } from 'src/common/decorators/roles.decorator'
+import { RolesGuard } from 'src/common/guards/roles.guard'
 import { User } from 'src/users/user.entity'
 
 import { ForwarderDetails } from './class/forwarder-details.class'
@@ -23,7 +25,8 @@ import { ForwarderIdParams } from './params/forwarder-id.params'
 
 @Controller('forwarders')
 @ApiTags('Forwarders')
-@UseGuards(AuthGuard('jwt'))
+@UseGuards(AuthGuard('jwt'), RolesGuard)
+@Roles('user')
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: 'Invalid or expired token' })
 @ApiBadRequestResponse({ description: 'Error that is resolvable user side' })

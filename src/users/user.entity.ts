@@ -54,6 +54,14 @@ export class User {
   })
   public quota: number
 
+  @Column()
+  @ApiProperty({
+    example: ['user'],
+    description: 'User roles',
+    readOnly: true,
+  })
+  public roles: string[]
+
   @BeforeInsert()
   @BeforeUpdate()
   private async hashPassword(): Promise<void> {

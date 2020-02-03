@@ -13,6 +13,8 @@ import {
 } from '@nestjs/swagger'
 import { AccountIdParams } from 'src/accounts/params/account-id.params'
 import { ReqUser } from 'src/common/decorators/req-user.decorator'
+import { Roles } from 'src/common/decorators/roles.decorator'
+import { RolesGuard } from 'src/common/guards/roles.guard'
 import { User } from 'src/users/user.entity'
 
 import { FilterDetails } from './class/filter-details.class'
@@ -23,7 +25,8 @@ import { FilterIdParams } from './params/filter-id.params'
 
 @Controller('accounts/:accountId/filters')
 @ApiTags('Filters')
-@UseGuards(AuthGuard('jwt'))
+@UseGuards(AuthGuard('jwt'), RolesGuard)
+@Roles('user')
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: 'Invalid or expired token' })
 @ApiBadRequestResponse({ description: 'Error that is resolvable user side' })

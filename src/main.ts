@@ -37,6 +37,7 @@ async function bootstrap(): Promise<void> {
     .addTag('Email Accounts')
     .addTag('Filters')
     .addTag('Forwarders')
+    .addTag('Profile')
     .addTag('Users')
     .addTag('Packages')
     .build()
@@ -45,6 +46,7 @@ async function bootstrap(): Promise<void> {
     swaggerOptions: {
       defaultModelsExpandDepth: 0,
       displayRequestDuration: true,
+      displayOperationId: true,
     },
   })
 
