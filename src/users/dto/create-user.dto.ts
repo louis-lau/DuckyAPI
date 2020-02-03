@@ -23,7 +23,8 @@ export class CreateUserDto {
   @ApiProperty({
     example: '5d49e11f600a423ffc0b1297',
     description: 'Package id to assign to this user',
+    required: true,
   })
   @IsMongoId()
-  public packageId: string
+  public packageId?: string
 }

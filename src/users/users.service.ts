@@ -11,6 +11,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { ObjectID, ObjectId } from 'mongodb'
 import NanoId from 'nanoid'
 import { Domain } from 'src/domains/domain.entity'
+import { Package } from 'src/packages/package.entity'
 import { PackagesService } from 'src/packages/packages.service'
 import { MongoRepository } from 'typeorm'
 
@@ -130,14 +131,17 @@ export class UsersService {
   public async createUser(createUserDto: CreateUserDto, admin = false): Promise<User> {
     createUserDto.username = createUserDto.username.toLowerCase()
 
-    const userPackage = await this.packagesService.getPackageById(createUserDto.packageId)
-    if (!userPackage) {
-      throw new BadRequestException(`No package found with id ${createUserDto.packageId}`, 'PackageNotFoundError')
+    let userPackage: Package
+    if (!admin) {
+      userPackage = await this.packagesService.getPackageById(createUserDto.packageId)
+      if (!userPackage) {
+        throw new BadRequestException(`No package found with id ${createUserDto.packageId}`, 'PackageNotFoundError')
+      }
     }
 
     const newUser: Partial<User> = {
-      package: new ObjectId(createUserDto.packageId),
-      quota: userPackage.quota,
+      package: !admin ? new ObjectId(createUserDto.packageId) : undefined,
+      quota: !admin ? userPackage.quota : undefined,
       roles: admin ? ['admin'] : ['user'],
     }
     Object.assign(newUser, createUserDto)

@@ -6,7 +6,15 @@ export class AddIndexes1580519162771 implements MigrationInterface {
     const mongoRunner = queryRunner as MongoQueryRunner
     mongoRunner.createCollectionIndex('api-keys', 'userId')
     mongoRunner.createCollectionIndex('users', 'username', { unique: true })
-    mongoRunner.createCollectionIndex('users', 'domains.domain', { unique: true })
+    mongoRunner.createCollectionIndexes('users', [
+      {
+        key: {
+          'domains.domain': 1,
+        },
+        unique: true,
+        partialFilterExpression: { 'domains.domain': { $exists: true } },
+      },
+    ])
   }
 
   public async down(queryRunner: QueryRunner): Promise<any> {

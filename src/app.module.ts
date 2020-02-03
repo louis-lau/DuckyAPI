@@ -2,6 +2,7 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import Arena from 'bull-arena'
 import BasicAuth from 'express-basic-auth'
+import { ConsoleModule } from 'nestjs-console'
 
 import { AccountsModule } from './accounts/accounts.module'
 import { AuthModule } from './auth/auth.module'
@@ -58,6 +59,7 @@ const migrationContext = require.context('.', true, /migrations\/\d*-.*\.ts$/)
     ForwardersModule,
     TasksModule,
     PackagesModule,
+    ConsoleModule,
   ],
 })
 export class AppModule implements NestModule {

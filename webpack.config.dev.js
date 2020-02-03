@@ -4,7 +4,10 @@ const nodeExternals = require('webpack-node-externals')
 const webpack = require('webpack')
 
 module.exports = merge(baseConfig, {
-  entry: ['webpack/hot/poll?100'],
+  entry: {
+    main: ['webpack/hot/poll?100', './src/main.ts'],
+    cli: './src/cli.ts',
+  },
   mode: 'development',
   watch: true,
   externals: [
