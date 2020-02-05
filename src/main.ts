@@ -32,6 +32,7 @@ async function bootstrap(): Promise<void> {
     .setVersion('1.0')
     .addBearerAuth()
     .addTag('Authentication')
+    .addTag('Api Keys')
     .addTag('Domains')
     .addTag('Dkim')
     .addTag('Email Accounts')

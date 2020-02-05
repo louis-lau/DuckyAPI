@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common'
+import { Body, Controller, Delete, Post, UseGuards } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 import {
   ApiBadRequestResponse,
@@ -16,13 +16,10 @@ import { ForbidApiKeyGuard } from 'src/common/guards/forbid-api-key.guard'
 import { RolesGuard } from 'src/common/guards/roles.guard'
 import { User } from 'src/users/user.entity'
 
-import { ApiKey } from './api-key.entity'
-import { ApiKeyService } from './api-key.service'
+import { ApiKeysService } from '../api-keys/api-keys.service'
 import { AuthService } from './auth.service'
 import { AccessToken } from './class/access-token.class'
-import { ApiKeyAcessToken } from './class/api-key-access-token'
 import { LoginDto } from './dto/login.dto'
-import { ApiKeyIdParams } from './params/api-key-id.params'
 
 @Controller('authentication')
 @ApiTags('Authentication')
@@ -30,7 +27,7 @@ import { ApiKeyIdParams } from './params/api-key-id.params'
 @ApiInternalServerErrorResponse({ description: 'Server error that is not resolvable user side' })
 @ApiUnauthorizedResponse({ description: 'Invalid or expired token' })
 export class AuthController {
-  public constructor(private readonly authService: AuthService, private readonly apiKeyService: ApiKeyService) {}
+  public constructor(private readonly authService: AuthService, private readonly apiKeysService: ApiKeysService) {}
 
   @Delete()
   @ApiOperation({
@@ -52,40 +49,5 @@ export class AuthController {
   @ApiUnauthorizedResponse({ description: 'Invalid username or password' })
   public async getAccessToken(@ReqUser() user: User, @Body() loginDto: LoginDto): Promise<AccessToken> {
     return this.authService.getAccessToken(user, loginDto.rememberMe)
-  }
-
-  @Post('apikeys')
-  @ApiOperation({
-    summary: 'Create an API key',
-    description: 'Note: This resource is forbidden when using an API key as authorization. Use an access token.',
-  })
-  @UseGuards(AuthGuard('jwt'), ForbidApiKeyGuard, RolesGuard)
-  @Roles('user')
-  @ApiBearerAuth()
-  @ApiCreatedResponse({ description: 'API key', type: ApiKeyAcessToken })
-  public async createApiKey(@ReqUser() user: User, @Body() apiKey: ApiKey): Promise<ApiKeyAcessToken> {
-    return this.authService.createApiKey(user, apiKey.name)
-  }
-
-  @Get('apikeys')
-  @ApiOperation({ summary: 'List active api keys' })
-  @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth()
-  @ApiOkResponse({ description: 'List of active api keys', type: ApiKey, isArray: true })
-  public async getApiKeys(@ReqUser() user: User): Promise<ApiKey[]> {
-    return this.apiKeyService.getKeysForUser(user._id)
-  }
-
-  @Delete('apikeys/:id')
-  @ApiOperation({
-    summary: 'Revoke api key',
-    description: 'Note: This resource is forbidden when using an API key as authorization. Use an access token.',
-  })
-  @UseGuards(AuthGuard('jwt'), ForbidApiKeyGuard, RolesGuard)
-  @Roles('user')
-  @ApiBearerAuth()
-  @ApiOkResponse({ description: 'Api key revoked' })
-  public async revokeApiKey(@ReqUser() user: User, @Param() apiKeyIdParams: ApiKeyIdParams): Promise<void> {
-    return this.apiKeyService.revokeKey(user._id, apiKeyIdParams.id)
   }
 }

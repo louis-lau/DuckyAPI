@@ -64,6 +64,7 @@ export class UsersController {
   public async getMe(@ReqUser() user: User): Promise<User> {
     delete user.password
     delete user.package
+    delete user.minTokenDate
     return user
   }
 

@@ -1,10 +1,11 @@
 import { Command, Console, createSpinner } from 'nestjs-console'
-import { AuthService } from 'src/auth/auth.service'
 import { UsersService } from 'src/users/users.service'
 
+import { ApiKeysService } from './api-keys.service'
+
 @Console()
-export class AuthCli {
-  public constructor(private readonly usersService: UsersService, private readonly authService: AuthService) {}
+export class ApiKeysCli {
+  public constructor(private readonly usersService: UsersService, private readonly apiKeysService: ApiKeysService) {}
 
   @Command({
     command: 'create-apikey <username> <keyName>',
@@ -23,7 +24,7 @@ export class AuthCli {
     }
 
     spinner.start('Creating api key')
-    const apiKey = await this.authService.createApiKey(user, keyName)
+    const apiKey = await this.apiKeysService.generateApiKey(user, keyName)
     spinner.succeed('Created api key, dumping details:')
     console.log(apiKey)
     process.exit(0)

@@ -27,11 +27,6 @@ export class User {
   public password?: string
 
   @Column()
-  @ApiProperty({
-    example: '2012-04-23T18:25:43.511Z',
-    description: 'The date after which we should consider a jwt token valid for this user',
-    readOnly: true,
-  })
   public minTokenDate: Date
 
   @Column(() => Domain)

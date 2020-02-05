@@ -4,14 +4,14 @@ import { ExtractJwt, Strategy } from 'passport-jwt'
 import { ConfigService } from 'src/config/config.service'
 import { UsersService } from 'src/users/users.service'
 
-import { ApiKeyService } from './api-key.service'
+import { ApiKeysService } from '../api-keys/api-keys.service'
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   public constructor(
     private readonly usersService: UsersService,
     private readonly config: ConfigService,
-    private readonly apiKeyService: ApiKeyService,
+    private readonly apiKeysService: ApiKeysService,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -35,7 +35,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         return null
 
       case 'api_key':
-        if (await this.apiKeyService.getKey(payload.sub, payload.jti)) {
+        if (await this.apiKeysService.getKey(payload.sub, payload.jti)) {
           // If api key exists in database
           const user = await this.usersService.findById(payload.sub)
           if (user) {

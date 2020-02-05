@@ -5,6 +5,7 @@ import BasicAuth from 'express-basic-auth'
 import { ConsoleModule } from 'nestjs-console'
 
 import { AccountsModule } from './accounts/accounts.module'
+import { ApiKeysModule } from './api-keys/api-keys.module'
 import { AuthModule } from './auth/auth.module'
 import { ConfigModule } from './config/config.module'
 import { ConfigService } from './config/config.service'
@@ -60,6 +61,7 @@ const migrationContext = require.context('.', true, /migrations\/\d*-.*\.ts$/)
     TasksModule,
     PackagesModule,
     ConsoleModule,
+    ApiKeysModule,
   ],
 })
 export class AppModule implements NestModule {
