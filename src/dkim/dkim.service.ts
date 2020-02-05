@@ -43,7 +43,7 @@ export class DkimService {
 
   public async deleteDkim(user: User, domain: string): Promise<void> {
     if (!user.domains.some((userDomain): boolean => userDomain.domain === domain)) {
-      throw new NotFoundException(`Domain: ${domain} doesn't exist on user: ${user.username}`, 'DomainNotFoundError')
+      throw new NotFoundException(`Domain: ${domain} doesn't exist in your account`, 'DomainNotFoundError')
     }
 
     const dkimId = await this.resolveDkimId(domain)
@@ -76,7 +76,7 @@ export class DkimService {
 
   public async getDKIM(user: User, domain: string): Promise<DkimKey> {
     if (!user.domains.some((userDomain): boolean => userDomain.domain === domain)) {
-      throw new NotFoundException(`Domain: ${domain} doesn't exist on user: ${user.username}`, 'DomainNotFoundError')
+      throw new NotFoundException(`Domain: ${domain} doesn't exist in your account`, 'DomainNotFoundError')
     }
 
     const dkimId = await this.resolveDkimId(domain)
@@ -122,7 +122,7 @@ export class DkimService {
 
   public async updateDkim(user: User, addDkimDto: AddDkimDto, domain: string): Promise<DkimKey> {
     if (!user.domains.some((userDomain): boolean => userDomain.domain === domain)) {
-      throw new NotFoundException(`Domain: ${domain} doesn't exist on user: ${user.username}`, 'DomainNotFoundError')
+      throw new NotFoundException(`Domain: ${domain} doesn't exist in your account`, 'DomainNotFoundError')
     }
 
     let apiResponse: AxiosResponse<any>

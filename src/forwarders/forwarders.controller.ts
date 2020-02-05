@@ -45,7 +45,6 @@ export class ForwardersController {
   @Get()
   @ApiOperation({ summary: 'List forwarders' })
   @ApiOkResponse({ description: 'A list of forwarders', type: Forwarder, isArray: true })
-  @ApiNotFoundResponse({ description: 'No forwarders found' })
   private async getForwarders(@ReqUser() user: User): Promise<Forwarder[]> {
     return this.forwardersService.getForwarders(user)
   }

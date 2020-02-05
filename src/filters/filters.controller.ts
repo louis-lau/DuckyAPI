@@ -45,7 +45,7 @@ export class FiltersController {
   @Get()
   @ApiOperation({ summary: 'List filters' })
   @ApiOkResponse({ description: 'A list of filters', type: FilterListItem, isArray: true })
-  @ApiNotFoundResponse({ description: 'No account found with this id or no filters found on this account' })
+  @ApiNotFoundResponse({ description: 'No account found with this id' })
   public async getFilters(@ReqUser() user: User, @Param() accountIdParams: AccountIdParams): Promise<FilterListItem[]> {
     return this.filtersService.getFilters(user, accountIdParams.accountId)
   }

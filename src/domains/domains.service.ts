@@ -28,7 +28,7 @@ export class DomainsService {
     const domains = user.domains
 
     if (domains.length === 0) {
-      throw new NotFoundException(`No domains found for user: ${user.username}`, 'DomainNotFoundError')
+      return []
     }
 
     const dkimKeyPromises: Promise<DkimKey | void>[] = []
@@ -59,7 +59,7 @@ export class DomainsService {
 
   public async checkDns(user: User, domain: string): Promise<DnsCheck> {
     if (!user.domains.some((userDomain): boolean => userDomain.domain === domain)) {
-      throw new NotFoundException(`Domain: ${domain} doesn't exist on user: ${user.username}`, 'DomainNotFoundError')
+      throw new NotFoundException(`Domain: ${domain} doesn't exist in your account`, 'DomainNotFoundError')
     }
 
     const dnsCheck: DnsCheck = {
@@ -269,7 +269,7 @@ export class DomainsService {
 
   public async addDomain(user: User, domain: string): Promise<void> {
     if (user.domains.some((userdomain): boolean => userdomain.domain === domain)) {
-      throw new BadRequestException(`Domain: ${domain} already added for user: ${user.username}`, 'DomainExistsError')
+      throw new BadRequestException(`Domain: ${domain} already added to your account`, 'DomainExistsError')
     }
     if ((await this.usersService.countByDomain(domain)) > 0) {
       throw new BadRequestException(`Domain: ${domain} already claimed by another user`, 'DomainClaimedError')
@@ -279,7 +279,7 @@ export class DomainsService {
 
   public async deleteDomain(user: User, domain: string): Promise<void> {
     if (!user.domains.some((userDomain): boolean => userDomain.domain === domain)) {
-      throw new NotFoundException(`Domain: ${domain} doesn't exist on user: ${user.username}`, 'DomainNotFoundError')
+      throw new NotFoundException(`Domain: ${domain} doesn't exist in your account`, 'DomainNotFoundError')
     }
 
     try {

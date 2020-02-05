@@ -47,7 +47,6 @@ export class DomainsController {
   @Get()
   @ApiOperation({ summary: 'List domains' })
   @ApiOkResponse({ description: 'A list of domains', type: Domain, isArray: true })
-  @ApiNotFoundResponse({ description: 'No domains found' })
   private async getDomains(@ReqUser() user: User): Promise<Domain[]> {
     return this.domainsService.getDomains(user)
   }

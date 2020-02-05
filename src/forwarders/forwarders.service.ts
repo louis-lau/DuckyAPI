@@ -23,16 +23,13 @@ export class ForwardersService {
 
   public async getForwarders(user: User, domain?: string): Promise<Forwarder[]> {
     if (user.domains.length === 0) {
-      throw new NotFoundException(`No forwarders found for user: ${user.username}`, 'ForwarderNotFoundError')
+      return []
     }
 
     let domainTags: string
     if (domain) {
       if (!user.domains.some((userDomain): boolean => userDomain.domain === domain)) {
-        throw new BadRequestException(
-          `Domain: ${domain} doesn't exist on user: ${user.username}`,
-          'DomainNotFoundError',
-        )
+        throw new BadRequestException(`Domain: ${domain} doesn't exist in your account`, 'DomainNotFoundError')
       }
       domainTags = `domain:${domain}`
     } else {
@@ -64,7 +61,7 @@ export class ForwardersService {
         throw new InternalServerErrorException('Backend service not reachable', 'WildduckApiError')
       }
       if (apiResponse.data.results.length === 0) {
-        throw new NotFoundException(`No forwarders found for user: ${user.username}`, 'ForwarderNotFoundError')
+        return []
       }
 
       // Add results of this page to the results array

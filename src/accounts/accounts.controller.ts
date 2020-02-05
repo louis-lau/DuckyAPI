@@ -45,7 +45,6 @@ export class AccountsController {
   @Get()
   @ApiOperation({ summary: 'List email accounts' })
   @ApiOkResponse({ description: 'A list of accounts', type: AccountListItem, isArray: true })
-  @ApiNotFoundResponse({ description: 'No accounts found' })
   private async getAccounts(@ReqUser() user: User): Promise<AccountListItem[]> {
     return this.accountsService.getAccounts(user)
   }

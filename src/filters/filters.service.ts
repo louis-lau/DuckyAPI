@@ -86,7 +86,7 @@ export class FiltersService {
     }
 
     if (apiResponse.data.results.length === 0) {
-      throw new NotFoundException(`No filters found for account: ${accountId}`, 'FilterNotFoundError')
+      return []
     }
 
     const filters: FilterListItem[] = []

@@ -24,16 +24,13 @@ export class AccountsService {
 
   public async getAccounts(user: User, domain?: string): Promise<AccountListItem[]> {
     if (user.domains.length === 0) {
-      throw new NotFoundException(`No accounts found for user: ${user.username}`, 'AccountNotFoundError')
+      return []
     }
 
     let domainTags: string
     if (domain) {
       if (!user.domains.some((userDomain): boolean => userDomain.domain === domain)) {
-        throw new BadRequestException(
-          `Domain: ${domain} doesn't exist on user: ${user.username}`,
-          'DomainNotFoundError',
-        )
+        throw new BadRequestException(`Domain: ${domain} doesn't exist in your account`, 'DomainNotFoundError')
       }
       domainTags = `domain:${domain}`
     } else {
@@ -65,7 +62,7 @@ export class AccountsService {
         throw new InternalServerErrorException('Backend service not reachable', 'WildduckApiError')
       }
       if (apiResponse.data.results.length === 0) {
-        throw new NotFoundException(`No accounts found for user: ${user.username}`, 'AccountNotFoundError')
+        return []
       }
 
       // Add results of this page to the results array
