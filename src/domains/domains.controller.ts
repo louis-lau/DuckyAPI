@@ -17,9 +17,9 @@ import { RolesGuard } from 'src/common/guards/roles.guard'
 import { User } from 'src/users/user.entity'
 
 import { DnsCheck } from './class/dns.class'
-import { Domain } from './domain.entity'
+import { Domain, DomainAlias } from './domain.entity'
 import { DomainsService } from './domains.service'
-import { DomainDto } from './dto/domain.dto'
+import { AliasParams } from './params/alias.params'
 import { DomainParams } from './params/domain.params'
 
 @Controller('domains')
@@ -34,11 +34,11 @@ export class DomainsController {
   public constructor(private readonly domainsService: DomainsService) {}
   @Delete(':domain')
   @ApiOperation({
-    summary: 'Remove domain',
+    summary: 'Delete a domain',
     description:
-      'WARNING: This will also remove any email accounts, forwarders, and DKIM keys associated with this domain',
+      'WARNING: This will also delete any email accounts, forwarders, and DKIM keys associated with this domain',
   })
-  @ApiOkResponse({ description: 'Domain successfully removed' })
+  @ApiOkResponse({ description: 'Domain successfully deleted' })
   @ApiNotFoundResponse({ description: 'Domain not found on account' })
   private async deleteDomain(@ReqUser() user: User, @Param() domainParams: DomainParams): Promise<void> {
     return this.domainsService.deleteDomain(user, domainParams.domain)
@@ -51,6 +51,13 @@ export class DomainsController {
     return this.domainsService.getDomains(user)
   }
 
+  @Post()
+  @ApiOperation({ summary: 'Add a domain' })
+  @ApiCreatedResponse({ description: 'Domain successfully added' })
+  private async addDomain(@ReqUser() user: User, @Body() domainDto: Domain): Promise<void> {
+    return this.domainsService.addDomain(user, domainDto.domain)
+  }
+
   @Get(':domain/DNS')
   @ApiOperation({ summary: 'Get and check DNS records' })
   @ApiOkResponse({ description: 'The current and the correct DNS records for this domain', type: DnsCheck })
@@ -59,10 +66,23 @@ export class DomainsController {
     return this.domainsService.checkDns(user, domainParams.domain)
   }
 
-  @Post()
-  @ApiOperation({ summary: 'Add domain' })
-  @ApiCreatedResponse({ description: 'Domain successfully added' })
-  private async addDomain(@ReqUser() user: User, @Body() domainDto: DomainDto): Promise<void> {
-    return this.domainsService.addDomain(user, domainDto.domain)
+  @Post(':domain/aliases')
+  @ApiOperation({ summary: 'Add a domain alias' })
+  @ApiCreatedResponse({ description: 'Alias successfully added' })
+  @ApiNotFoundResponse({ description: 'Domain not found on account' })
+  private async addAlias(
+    @ReqUser() user: User,
+    @Param() domainParams: DomainParams,
+    @Body() domainAlias: DomainAlias,
+  ): Promise<void> {
+    await this.domainsService.addAlias(user, domainParams.domain, domainAlias.domain)
+  }
+
+  @Delete(':domain/aliases/:alias')
+  @ApiOperation({ summary: 'Delete a domain alias' })
+  @ApiCreatedResponse({ description: 'Alias successfully deleted' })
+  @ApiNotFoundResponse({ description: 'Domain not found on account' })
+  private async deleteAlias(@ReqUser() user: User, @Param() aliasParams: AliasParams): Promise<void> {
+    await this.domainsService.deleteAlias(user, aliasParams.domain, aliasParams.alias)
   }
 }

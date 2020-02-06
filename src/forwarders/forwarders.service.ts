@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common'
 import { AxiosResponse } from 'axios'
 import { ConfigService } from 'src/config/config.service'
+import { DomainsService } from 'src/domains/domains.service'
 import { User } from 'src/users/user.entity'
 
 import { ForwarderDetails } from './class/forwarder-details.class'
@@ -19,7 +20,11 @@ import { UpdateForwarderDto } from './dto/update-forwarder.dto'
 export class ForwardersService {
   private readonly logger = new Logger(ForwardersService.name, true)
 
-  public constructor(private readonly httpService: HttpService, private readonly config: ConfigService) {}
+  public constructor(
+    private readonly httpService: HttpService,
+    private readonly config: ConfigService,
+    private readonly domainsService: DomainsService,
+  ) {}
 
   public async getForwarders(user: User, domain?: string): Promise<Forwarder[]> {
     if (user.domains.length === 0) {
@@ -28,9 +33,7 @@ export class ForwardersService {
 
     let domainTags: string
     if (domain) {
-      if (!user.domains.some((userDomain): boolean => userDomain.domain === domain)) {
-        throw new BadRequestException(`Domain: ${domain} doesn't exist in your account`, 'DomainNotFoundError')
-      }
+      await this.domainsService.checkIfDomainIsAddedToUser(user, domain)
       domainTags = `domain:${domain}`
     } else {
       // Comma delimited list of domains with "domain:" prefix to match the tags added to forwarders
@@ -176,7 +179,7 @@ export class ForwardersService {
 
     if (apiResponse.data.error || !apiResponse.data.success) {
       switch (apiResponse.data.code) {
-        case 'AddressExists':
+        case 'AddressExistsError':
           throw new BadRequestException(`Address: ${createForwarderDto.address} already exists`, 'AddressExistsError')
 
         default:

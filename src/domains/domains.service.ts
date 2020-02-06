@@ -1,12 +1,20 @@
 import { InjectQueue } from '@nestjs/bull'
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
+import {
+  BadRequestException,
+  forwardRef,
+  HttpService,
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common'
+import { AxiosResponse } from 'axios'
 import { Queue } from 'bull'
 import { MxRecord, promises as dns } from 'dns'
-import { AccountsService } from 'src/accounts/accounts.service'
 import { ConfigService } from 'src/config/config.service'
 import { DkimKey } from 'src/dkim/class/dkim-key.class'
 import { DkimService } from 'src/dkim/dkim.service'
-import { ForwardersService } from 'src/forwarders/forwarders.service'
 import { User } from 'src/users/user.entity'
 import { UsersService } from 'src/users/users.service'
 
@@ -15,12 +23,14 @@ import { Domain } from './domain.entity'
 
 @Injectable()
 export class DomainsService {
+  private readonly logger = new Logger(DomainsService.name, true)
+
   public constructor(
     private readonly usersService: UsersService,
-    private readonly accountsService: AccountsService,
-    private readonly forwardersService: ForwardersService,
+    @Inject(forwardRef(() => DkimService))
     private readonly dkimService: DkimService,
     private readonly config: ConfigService,
+    private readonly httpService: HttpService,
     @InjectQueue('tasks') readonly taskQueue: Queue,
   ) {}
 
@@ -32,7 +42,7 @@ export class DomainsService {
     }
 
     const dkimKeyPromises: Promise<DkimKey | void>[] = []
-    for (const [i, domain] of domains.entries()) {
+    for (const [domainIndex, domain] of domains.entries()) {
       dkimKeyPromises.push(
         this.dkimService
           .resolveDkimId(domain.domain)
@@ -45,12 +55,34 @@ export class DomainsService {
           .then((dkimId): void => {
             if (dkimId) {
               // DKIM key exists for this domain
-              domains[i].dkim = true
+              domains[domainIndex].dkim = true
             } else {
-              domains[i].dkim = false
+              domains[domainIndex].dkim = false
             }
           }),
       )
+      if (domain.aliases) {
+        for (const [aliasIndex, alias] of domain.aliases.entries()) {
+          dkimKeyPromises.push(
+            this.dkimService
+              .resolveDkimId(alias.domain)
+              .catch((error): void => {
+                // Don't throw error if no DKIM key is found
+                if (error.response.error !== 'DkimNotFoundError') {
+                  throw error
+                }
+              })
+              .then((dkimId): void => {
+                if (dkimId) {
+                  // DKIM key exists for this domain
+                  domains[domainIndex].aliases[aliasIndex].dkim = true
+                } else {
+                  domains[domainIndex].aliases[aliasIndex].dkim = false
+                }
+              }),
+          )
+        }
+      }
     }
     await Promise.all(dkimKeyPromises)
 
@@ -58,9 +90,7 @@ export class DomainsService {
   }
 
   public async checkDns(user: User, domain: string): Promise<DnsCheck> {
-    if (!user.domains.some((userDomain): boolean => userDomain.domain === domain)) {
-      throw new NotFoundException(`Domain: ${domain} doesn't exist in your account`, 'DomainNotFoundError')
-    }
+    await this.checkIfDomainIsAddedToUser(user, domain, true)
 
     const dnsCheck: DnsCheck = {
       correctValues: {
@@ -267,20 +297,45 @@ export class DomainsService {
     return dnsCheck
   }
 
-  public async addDomain(user: User, domain: string): Promise<void> {
+  public async checkIfDomainAlreadyExists(user: User, domain: string): Promise<void> {
     if (user.domains.some((userdomain): boolean => userdomain.domain === domain)) {
-      throw new BadRequestException(`Domain: ${domain} already added to your account`, 'DomainExistsError')
+      throw new BadRequestException(`Domain: ${domain} is already added to your account`, 'DomainExistsError')
+    }
+    if (
+      user.domains.some(
+        (userdomain): boolean => userdomain.aliases && userdomain.aliases.some(alias => alias.domain === domain),
+      )
+    ) {
+      throw new BadRequestException(
+        `Domain: ${domain} is already added to your account as an alias`,
+        'DomainExistsError',
+      )
     }
     if ((await this.usersService.countByDomain(domain)) > 0) {
-      throw new BadRequestException(`Domain: ${domain} already claimed by another user`, 'DomainClaimedError')
+      throw new BadRequestException(`Domain: ${domain} is already claimed by another user`, 'DomainClaimedError')
     }
+  }
+
+  public async checkIfDomainIsAddedToUser(user: User, domain: string, includeAliases = false): Promise<void> {
+    if (!user.domains.some((userDomain): boolean => userDomain.domain === domain)) {
+      if (
+        !includeAliases ||
+        !user.domains.some(
+          (userdomain): boolean => userdomain.aliases && userdomain.aliases.some(alias => alias.domain === domain),
+        )
+      ) {
+        throw new NotFoundException(`Domain: ${domain} doesn't exist in your account`, 'DomainNotFoundError')
+      }
+    }
+  }
+
+  public async addDomain(user: User, domain: string): Promise<void> {
+    await this.checkIfDomainAlreadyExists(user, domain)
     await this.usersService.pushDomain(user._id, { domain: domain, admin: true })
   }
 
   public async deleteDomain(user: User, domain: string): Promise<void> {
-    if (!user.domains.some((userDomain): boolean => userDomain.domain === domain)) {
-      throw new NotFoundException(`Domain: ${domain} doesn't exist in your account`, 'DomainNotFoundError')
-    }
+    await this.checkIfDomainIsAddedToUser(user, domain)
 
     try {
       await this.dkimService.deleteDkim(user, domain)
@@ -322,5 +377,101 @@ export class DomainsService {
     )
 
     await this.usersService.pullDomain(user._id, domain)
+  }
+
+  public async addAlias(user: User, domain: string, alias: string): Promise<void> {
+    await this.checkIfDomainIsAddedToUser(user, domain)
+    await this.checkIfDomainAlreadyExists(user, alias)
+    let apiResponse: AxiosResponse<any>
+    try {
+      apiResponse = await this.httpService
+        .post(
+          `${this.config.get<string>('WILDDUCK_API_URL')}/domainaliases`,
+          {
+            domain: domain,
+            alias: alias,
+          },
+          {
+            headers: {
+              'X-Access-Token': this.config.get<string>('WILDDUCK_API_TOKEN'),
+            },
+          },
+        )
+        .toPromise()
+    } catch (error) {
+      this.logger.error(error.message)
+      throw new InternalServerErrorException('Backend service not reachable', 'WildduckApiError')
+    }
+    if (apiResponse.data.error || !apiResponse.data.success) {
+      switch (apiResponse.data.code) {
+        case 'AliasExists':
+          throw new BadRequestException(`Alias already exists`, 'AliasExistsError')
+
+        default:
+          this.logger.error(apiResponse.data)
+          throw new InternalServerErrorException('Unknown error')
+      }
+    }
+    this.usersService.pushAlias(user._id, domain, { domain: alias })
+  }
+
+  public async deleteAlias(user: User, domain: string, alias: string): Promise<void> {
+    await this.checkIfDomainIsAddedToUser(user, domain)
+    await this.checkIfDomainIsAddedToUser(user, alias, true)
+    let resolveResponse: AxiosResponse<any>
+    try {
+      resolveResponse = await this.httpService
+        .get(`${this.config.get<string>('WILDDUCK_API_URL')}/domainaliases/resolve/${alias}`, {
+          headers: {
+            'X-Access-Token': this.config.get<string>('WILDDUCK_API_TOKEN'),
+          },
+        })
+        .toPromise()
+    } catch (error) {
+      this.logger.error(error.message)
+      throw new InternalServerErrorException('Backend service not reachable', 'WildduckApiError')
+    }
+    if (resolveResponse.data.error || !resolveResponse.data.success) {
+      switch (resolveResponse.data.code) {
+        case 'AliasNotFound':
+          throw new NotFoundException(`No such alias found`, 'AliasNotFoundError')
+
+        default:
+          this.logger.error(resolveResponse.data)
+          throw new InternalServerErrorException('Unknown error')
+      }
+    }
+
+    let deleteResponse: AxiosResponse<any>
+    try {
+      deleteResponse = await this.httpService
+        .delete(`${this.config.get<string>('WILDDUCK_API_URL')}/domainaliases/${resolveResponse.data.id}`, {
+          headers: {
+            'X-Access-Token': this.config.get<string>('WILDDUCK_API_TOKEN'),
+          },
+        })
+        .toPromise()
+    } catch (error) {
+      this.logger.error(error.message)
+      throw new InternalServerErrorException('Backend service not reachable', 'WildduckApiError')
+    }
+    if (deleteResponse.data.error || !deleteResponse.data.success) {
+      switch (deleteResponse.data.code) {
+        default:
+          this.logger.error(deleteResponse.data)
+          throw new InternalServerErrorException('Unknown error')
+      }
+    }
+
+    try {
+      await this.dkimService.deleteDkim(user, alias)
+    } catch (error) {
+      // Don't throw error if no DKIM key is found
+      if (error.response.error !== 'DkimNotFoundError') {
+        throw error
+      }
+    }
+
+    this.usersService.pullAlias(user._id, alias)
   }
 }

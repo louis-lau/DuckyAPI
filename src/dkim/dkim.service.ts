@@ -1,6 +1,7 @@
 import { HttpService, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common'
 import { AxiosResponse } from 'axios'
 import { ConfigService } from 'src/config/config.service'
+import { DomainsService } from 'src/domains/domains.service'
 import { User } from 'src/users/user.entity'
 
 import { DkimKey } from './class/dkim-key.class'
@@ -10,7 +11,11 @@ import { AddDkimDto } from './dto/add-dkim.dto'
 export class DkimService {
   private readonly logger = new Logger(DkimService.name, true)
 
-  public constructor(private readonly httpService: HttpService, private readonly config: ConfigService) {}
+  public constructor(
+    private readonly httpService: HttpService,
+    private readonly config: ConfigService,
+    private readonly domainsService: DomainsService,
+  ) {}
 
   public async resolveDkimId(domain: string): Promise<string> {
     let ApiResponse: AxiosResponse<any>
@@ -42,9 +47,7 @@ export class DkimService {
   }
 
   public async deleteDkim(user: User, domain: string): Promise<void> {
-    if (!user.domains.some((userDomain): boolean => userDomain.domain === domain)) {
-      throw new NotFoundException(`Domain: ${domain} doesn't exist in your account`, 'DomainNotFoundError')
-    }
+    await this.domainsService.checkIfDomainIsAddedToUser(user, domain, true)
 
     const dkimId = await this.resolveDkimId(domain)
 
@@ -75,9 +78,7 @@ export class DkimService {
   }
 
   public async getDKIM(user: User, domain: string): Promise<DkimKey> {
-    if (!user.domains.some((userDomain): boolean => userDomain.domain === domain)) {
-      throw new NotFoundException(`Domain: ${domain} doesn't exist in your account`, 'DomainNotFoundError')
-    }
+    await this.domainsService.checkIfDomainIsAddedToUser(user, domain, true)
 
     const dkimId = await this.resolveDkimId(domain)
 
@@ -121,9 +122,7 @@ export class DkimService {
   }
 
   public async updateDkim(user: User, addDkimDto: AddDkimDto, domain: string): Promise<DkimKey> {
-    if (!user.domains.some((userDomain): boolean => userDomain.domain === domain)) {
-      throw new NotFoundException(`Domain: ${domain} doesn't exist in your account`, 'DomainNotFoundError')
-    }
+    await this.domainsService.checkIfDomainIsAddedToUser(user, domain, true)
 
     let apiResponse: AxiosResponse<any>
     try {

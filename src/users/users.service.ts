@@ -10,7 +10,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm'
 import { ObjectID, ObjectId } from 'mongodb'
 import NanoId from 'nanoid'
-import { Domain } from 'src/domains/domain.entity'
+import { Domain, DomainAlias } from 'src/domains/domain.entity'
 import { Package } from 'src/packages/package.entity'
 import { PackagesService } from 'src/packages/packages.service'
 import { MongoRepository } from 'typeorm'
@@ -65,16 +65,28 @@ export class UsersService {
   public async findByDomain(domain: string): Promise<User[] | undefined> {
     return this.userRepository.find({
       where: {
-        'domains.domain': domain,
+        $or: [
+          {
+            'domains.domain': domain,
+          },
+          {
+            'domains.aliases': domain,
+          },
+        ],
       },
     })
   }
 
   public async countByDomain(domain: string): Promise<number> {
     return this.userRepository.count({
-      where: {
-        'domains.domain': domain,
-      },
+      $or: [
+        {
+          'domains.domain': domain,
+        },
+        {
+          'domains.aliases': domain,
+        },
+      ],
     })
   }
 
@@ -95,21 +107,6 @@ export class UsersService {
     }
   }
 
-  public async updateMinTokenDate(userId: string, date = new Date()): Promise<User | undefined> {
-    const user = await this.findByIdNoPassword(userId)
-    const userEntity = new User()
-    Object.assign(userEntity, user)
-
-    userEntity.minTokenDate = date
-
-    try {
-      return await this.userRepository.save(userEntity)
-    } catch (error) {
-      this.logger.error(error.message)
-      throw new InternalServerErrorException('Unknown error')
-    }
-  }
-
   public async pullDomain(userId: string, domain: string): Promise<User> {
     const user = await this.findByIdNoPassword(userId)
     const userEntity = new User()
@@ -125,6 +122,68 @@ export class UsersService {
       const errorId = NanoId()
       this.logger.error(`${errorId}: ${error.message}`)
       throw new InternalServerErrorException(`Unknown error: ${errorId}`)
+    }
+  }
+
+  public async pushAlias(userId: string, domain: string, alias: DomainAlias): Promise<User | undefined> {
+    const user = await this.findByIdNoPassword(userId)
+    const userEntity = new User()
+    Object.assign(userEntity, user)
+
+    userEntity.domains = userEntity.domains.map(userDomain => {
+      if (userDomain.domain === domain) {
+        if (!userDomain.aliases) {
+          userDomain.aliases = []
+        }
+        userDomain.aliases.push(alias)
+      }
+      return userDomain
+    })
+
+    try {
+      return await this.userRepository.save(userEntity)
+    } catch (error) {
+      const errorId = NanoId()
+      this.logger.error(`${errorId}: ${error.message}`)
+      throw new InternalServerErrorException(`Unknown error: ${errorId}`)
+    }
+  }
+
+  public async pullAlias(userId: string, alias: string): Promise<User> {
+    const user = await this.findByIdNoPassword(userId)
+    const userEntity = new User()
+    Object.assign(userEntity, user)
+
+    userEntity.domains = userEntity.domains.map(userDomain => {
+      if (userDomain.aliases) {
+        // New array of only aliases that don't match alias.
+        userDomain.aliases = userDomain.aliases.filter(domainAlias => domainAlias.domain !== alias)
+      }
+      return userDomain
+    })
+
+    try {
+      return this.userRepository.save(userEntity)
+    } catch (error) {
+      // TODO: add custom exception handler for unknown errors that basically does the following:
+      const errorId = NanoId()
+      this.logger.error(`${errorId}: ${error.message}`)
+      throw new InternalServerErrorException(`Unknown error: ${errorId}`)
+    }
+  }
+
+  public async updateMinTokenDate(userId: string, date = new Date()): Promise<User | undefined> {
+    const user = await this.findByIdNoPassword(userId)
+    const userEntity = new User()
+    Object.assign(userEntity, user)
+
+    userEntity.minTokenDate = date
+
+    try {
+      return await this.userRepository.save(userEntity)
+    } catch (error) {
+      this.logger.error(error.message)
+      throw new InternalServerErrorException('Unknown error')
     }
   }
 

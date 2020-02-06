@@ -9,6 +9,7 @@ import {
 import { AxiosResponse } from 'axios'
 import NanoId from 'nanoid'
 import { ConfigService } from 'src/config/config.service'
+import { DomainsService } from 'src/domains/domains.service'
 import { User } from 'src/users/user.entity'
 
 import { AccountDetails } from './class/account-details.class'
@@ -20,7 +21,11 @@ import { UpdateAccountDto } from './dto/update-account.dto'
 export class AccountsService {
   private readonly logger = new Logger(AccountsService.name, true)
 
-  public constructor(private readonly httpService: HttpService, private readonly config: ConfigService) {}
+  public constructor(
+    private readonly httpService: HttpService,
+    private readonly config: ConfigService,
+    private readonly domainsService: DomainsService,
+  ) {}
 
   public async getAccounts(user: User, domain?: string): Promise<AccountListItem[]> {
     if (user.domains.length === 0) {
@@ -29,9 +34,7 @@ export class AccountsService {
 
     let domainTags: string
     if (domain) {
-      if (!user.domains.some((userDomain): boolean => userDomain.domain === domain)) {
-        throw new BadRequestException(`Domain: ${domain} doesn't exist in your account`, 'DomainNotFoundError')
-      }
+      await this.domainsService.checkIfDomainIsAddedToUser(user, domain)
       domainTags = `domain:${domain}`
     } else {
       // Comma delimited list of domains with "domain:" prefix to match the tags added to accounts
