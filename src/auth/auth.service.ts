@@ -5,7 +5,6 @@ import NanoId from 'nanoid'
 import { User } from 'src/users/user.entity'
 import { UsersService } from 'src/users/users.service'
 
-import { ApiKeysService } from '../api-keys/api-keys.service'
 import { AccessToken } from './class/access-token.class'
 
 @Injectable()

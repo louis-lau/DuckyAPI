@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { IsFQDN, IsNotEmpty } from 'class-validator'
 import { Column } from 'typeorm'
 
@@ -9,13 +9,13 @@ export class DomainAlias {
   @IsFQDN()
   public domain: string
 
-  @ApiProperty({ example: false, readOnly: true, description: 'If DKIM is active for this domain' })
+  @ApiPropertyOptional({ example: false, readOnly: true, description: 'If DKIM is active for this domain' })
   public dkim?: boolean
 }
 
 export class Domain extends DomainAlias {
   @Column()
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: true,
     readOnly: true,
     description: 'If this user is the domain admin, this currently serves no function',
@@ -23,7 +23,7 @@ export class Domain extends DomainAlias {
   public admin?: boolean
 
   @Column(() => DomainAlias)
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: 'Domains aliased to this domain',
     readOnly: true,
     type: DomainAlias,

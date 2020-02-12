@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { IsNotEmpty, IsNumber, IsPositive, IsString } from 'class-validator'
 import { ObjectId } from 'mongodb'
 import { Column, Entity, ObjectIdColumn } from 'typeorm'
@@ -8,7 +8,7 @@ import { Column, Entity, ObjectIdColumn } from 'typeorm'
 })
 export class Package {
   @ObjectIdColumn()
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: '5d49e11f600a423ffc0b1297',
     description: 'Unique id for this package',
     readOnly: true,

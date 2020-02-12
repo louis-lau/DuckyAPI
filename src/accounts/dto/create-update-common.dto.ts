@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { Type } from 'class-transformer'
 import {
   ArrayUnique,
@@ -14,40 +14,36 @@ import {
 } from 'class-validator'
 
 class CreateUpdateAccountLimits {
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: 1073741824,
     description: 'How many bytes the account is allowed to use',
-    required: false,
   })
   @IsOptional()
   @IsNumber()
   @IsPositive()
   public quota?: number
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: 200,
     description: 'How many emails the account can send in a period',
-    required: false,
   })
   @IsOptional()
   @IsNumber()
   @IsPositive()
   public send?: number
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: 1000,
     description: 'How many emails the account can receive in a period',
-    required: false,
   })
   @IsOptional()
   @IsNumber()
   @IsPositive()
   public receive?: number
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: 100,
     description: 'How many emails the account can forward in a period',
-    required: false,
   })
   @IsOptional()
   @IsNumber()
@@ -56,15 +52,14 @@ class CreateUpdateAccountLimits {
 }
 
 export class CreateUpdateAccountCommonDto {
-  @ApiProperty({ example: 'John Doe', description: 'The name of the email account', required: false })
+  @ApiPropertyOptional({ example: 'John Doe', description: 'The name of the email account' })
   @IsOptional()
   @IsString()
   public name?: string
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: 50,
     description: 'Relative scale for detecting spam. 0 means that everything is spam, 100 means that nothing is spam',
-    required: false,
   })
   @IsOptional()
   @IsNumber()
@@ -78,10 +73,9 @@ export class CreateUpdateAccountCommonDto {
   @Type((): typeof CreateUpdateAccountLimits => CreateUpdateAccountLimits)
   public limits?: CreateUpdateAccountLimits = {}
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: ['imap', 'pop3'],
     description: 'List of scopes that are disabled for this user',
-    required: false,
   })
   @IsOptional()
   @IsArray()

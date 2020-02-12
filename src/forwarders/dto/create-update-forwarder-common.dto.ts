@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { Type } from 'class-transformer'
 import {
   ArrayUnique,
@@ -14,7 +14,7 @@ import {
 import { EachIsEmailOrHttpOrSmtp } from 'src/common/is-email-or-url.validator'
 
 class CreateUpdateForwarderCommonDtoLimits {
-  @ApiProperty({ example: 600, description: 'How many messages can be forwarded per period', required: false })
+  @ApiPropertyOptional({ example: 600, description: 'How many messages can be forwarded per period' })
   @IsOptional()
   @IsNumber()
   @IsPositive()
@@ -22,18 +22,17 @@ class CreateUpdateForwarderCommonDtoLimits {
 }
 
 export class CreateUpdateForwarderCommonDto {
-  @ApiProperty({ example: 'John Doe', description: 'Identity name', required: false })
+  @ApiPropertyOptional({ example: 'John Doe', description: 'Identity name' })
   @IsOptional()
   @IsNotEmpty()
   @IsString()
   public name?: string
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: ['johndoe@example.com', 'smtp://mx.example.com:25', 'https://example.com'],
     description:
       'An array of forwarding targets. The value could either be an email address or a relay url to next MX server ("smtp://mx2.zone.eu:25") or an URL where mail contents are POSTed to',
     type: [String],
-    required: false,
   })
   @IsOptional()
   @IsArray()

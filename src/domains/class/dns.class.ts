@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 
 export class DnsCheckMxRecord {
   @ApiProperty({ example: 'mx.example.com', description: 'MX record server' })
@@ -27,7 +27,7 @@ class DnsCheckCurrentValues {
   @ApiProperty({ example: 'v=spf1 include:example.com -all', description: 'Value of the SPF record' })
   public spf: string
 
-  @ApiProperty({ description: 'DKIM record selector and value', required: false })
+  @ApiPropertyOptional({ description: 'DKIM record selector and value' })
   public dkim?: DnsCheckDkimRecord
 }
 

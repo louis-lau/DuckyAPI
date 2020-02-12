@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { IsNotEmpty, IsString } from 'class-validator'
 import { ObjectID } from 'mongodb'
 import { Column, Entity, ObjectIdColumn } from 'typeorm'
@@ -6,12 +6,12 @@ import { Column, Entity, ObjectIdColumn } from 'typeorm'
 @Entity('api-keys')
 export class ApiKey {
   @ObjectIdColumn()
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: 'pnx97h6p64t4gau6vbub-',
     description: 'Unique id for this api key',
     readOnly: true,
   })
-  public _id: string
+  public _id?: string
 
   @Column()
   public userId?: ObjectID
@@ -25,11 +25,11 @@ export class ApiKey {
   @Column()
   public name: string
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: '2019-09-01T22:12:08.882Z',
     description: 'Date the api key was issued',
     readOnly: true,
   })
   @Column()
-  public issuedAt: Date
+  public issuedAt?: Date
 }

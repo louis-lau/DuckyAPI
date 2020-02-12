@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import Bcrypt from 'bcrypt'
 import { ObjectId } from 'mongodb'
 import { Domain } from 'src/domains/domain.entity'
@@ -7,7 +7,7 @@ import { BeforeInsert, BeforeUpdate, Column, Entity, ObjectIdColumn } from 'type
 @Entity('users')
 export class User {
   @ObjectIdColumn()
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: '5d49e11f600a423ffc0b1297',
     description: 'Unique id for this user',
     readOnly: true,
@@ -30,7 +30,7 @@ export class User {
   public minTokenDate: Date
 
   @Column(() => Domain)
-  @ApiProperty({
+  @ApiPropertyOptional({
     type: Domain,
     isArray: true,
     description: 'Domains this user can manage',
@@ -42,7 +42,7 @@ export class User {
   public package: ObjectId
 
   @Column()
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: 1073741824,
     description: 'Storage quota in bytes',
     readOnly: true,
