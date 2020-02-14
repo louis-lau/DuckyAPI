@@ -3,6 +3,8 @@ import { Logger } from '@nestjs/common'
 import { Job } from 'bull'
 import { AccountsService } from 'src/accounts/accounts.service'
 import { AccountListItem } from 'src/accounts/class/account-list-item.class'
+import { DomainAlias } from 'src/domains/domain.entity'
+import { DomainsService } from 'src/domains/domains.service'
 import { Forwarder } from 'src/forwarders/class/forwarder.class'
 import { ForwardersService } from 'src/forwarders/forwarders.service'
 
@@ -13,6 +15,7 @@ export class TasksProcessor {
   public constructor(
     private readonly accountsService: AccountsService,
     private readonly forwardersService: ForwardersService,
+    private readonly domainsService: DomainsService,
   ) {}
 
   private readonly logger = new Logger(TasksProcessor.name, true)
@@ -83,11 +86,38 @@ export class TasksProcessor {
     job.progress(100)
   }
 
+  @Process({ name: 'deleteAliases' })
+  private async processDeleteAliases(job: Job<DeleteForDomain>): Promise<void> {
+    const aliases = job.data.user.domains.find(domain => domain.domain === job.data.domain).aliases
+    if (!aliases || aliases.length === 0) {
+      return
+    }
+
+    const aliasChunks: DomainAlias[][] = []
+    const chunkSize = 10
+    for (let i = 0; i < aliases.length; i += chunkSize) {
+      aliasChunks.push(aliases.slice(i, i + chunkSize))
+    }
+
+    let promises: Promise<void>[] = []
+    for (const [i, aliasChunk] of aliasChunks.entries()) {
+      job.progress(Math.round((i / aliasChunks.length) * 100))
+
+      promises = []
+      for (const alias of aliasChunk) {
+        promises.push(this.domainsService.deleteAlias(job.data.user, job.data.domain, alias.domain))
+      }
+      await Promise.all(promises)
+    }
+    job.progress(100)
+  }
+
   @OnQueueActive()
   private onActive(job: Job): void {
     switch (job.name) {
       case 'deleteAccounts':
       case 'deleteForwarders':
+      case 'deleteAliases':
         this.logger.log(
           `Processing job ${job.id} (${job.name}) for user ${job.data.user._id} and domain ${job.data.domain}`,
         )

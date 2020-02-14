@@ -24,6 +24,7 @@ import { DomainsService } from './domains.service'
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
+        name: 'tasks',
         redis: config.get('REDIS_URL'),
       }),
     }),
