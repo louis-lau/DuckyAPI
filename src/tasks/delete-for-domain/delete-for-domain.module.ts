@@ -3,10 +3,10 @@ import { AccountsModule } from 'src/accounts/accounts.module'
 import { DomainsModule } from 'src/domains/domains.module'
 import { ForwardersModule } from 'src/forwarders/forwarders.module'
 
-import { TasksProcessor } from './tasks.processor'
+import { DeleteForDomainProcessor } from './delete-for-domain.processor'
 
 @Module({
   imports: [AccountsModule, ForwardersModule, DomainsModule],
-  providers: [TasksProcessor],
+  providers: [DeleteForDomainProcessor],
 })
 export class TasksModule {}

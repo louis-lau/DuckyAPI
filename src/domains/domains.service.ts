@@ -15,7 +15,7 @@ import { MxRecord, promises as dns } from 'dns'
 import { ConfigService } from 'src/config/config.service'
 import { DkimKey } from 'src/dkim/class/dkim-key.class'
 import { DkimService } from 'src/dkim/dkim.service'
-import { DeleteForDomain } from 'src/tasks/tasks.interfaces'
+import { DeleteForDomainData } from 'src/tasks/delete-for-domain/delete-for-domain.interfaces'
 import { User } from 'src/users/user.entity'
 import { UsersService } from 'src/users/users.service'
 
@@ -32,7 +32,8 @@ export class DomainsService {
     private readonly dkimService: DkimService,
     private readonly config: ConfigService,
     private readonly httpService: HttpService,
-    @InjectQueue('tasks') readonly taskQueue: Queue<DeleteForDomain>,
+    @InjectQueue('deleteForDomain')
+    readonly taskQueue: Queue<DeleteForDomainData>,
   ) {}
 
   public async getDomains(user: User): Promise<Domain[]> {

@@ -20,11 +20,11 @@ import { DomainsService } from './domains.service'
     forwardRef(() => DkimModule),
     ForwardersModule,
     BullModule.registerQueueAsync({
-      name: 'tasks',
+      name: 'deleteForDomain',
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
-        name: 'tasks',
+        name: 'deleteForDomain',
         redis: config.get('REDIS_URL'),
       }),
     }),

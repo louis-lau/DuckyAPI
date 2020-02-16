@@ -8,20 +8,20 @@ import { DomainsService } from 'src/domains/domains.service'
 import { Forwarder } from 'src/forwarders/class/forwarder.class'
 import { ForwardersService } from 'src/forwarders/forwarders.service'
 
-import { DeleteForDomain } from './tasks.interfaces'
+import { DeleteForDomainData } from './delete-for-domain.interfaces'
 
-@Processor('tasks')
-export class TasksProcessor {
+@Processor('deleteForDomain')
+export class DeleteForDomainProcessor {
   public constructor(
     private readonly accountsService: AccountsService,
     private readonly forwardersService: ForwardersService,
     private readonly domainsService: DomainsService,
   ) {}
 
-  private readonly logger = new Logger(TasksProcessor.name, true)
+  private readonly logger = new Logger(DeleteForDomainProcessor.name, true)
 
   @Process({ name: 'deleteAccounts' })
-  private async processDeleteAccounts(job: Job<DeleteForDomain>): Promise<void> {
+  private async processDeleteAccounts(job: Job<DeleteForDomainData>): Promise<void> {
     let accounts: AccountListItem[] = []
     try {
       accounts = await this.accountsService.getAccounts(job.data.user, job.data.domain)
@@ -54,7 +54,7 @@ export class TasksProcessor {
   }
 
   @Process({ name: 'deleteForwarders' })
-  private async processDeleteForwarders(job: Job<DeleteForDomain>): Promise<void> {
+  private async processDeleteForwarders(job: Job<DeleteForDomainData>): Promise<void> {
     let forwarders: Forwarder[] = []
     try {
       forwarders = await this.forwardersService.getForwarders(job.data.user, job.data.domain)
@@ -87,7 +87,7 @@ export class TasksProcessor {
   }
 
   @Process({ name: 'deleteAliases' })
-  private async processDeleteAliases(job: Job<DeleteForDomain>): Promise<void> {
+  private async processDeleteAliases(job: Job<DeleteForDomainData>): Promise<void> {
     const aliases = job.data.user.domains.find(domain => domain.domain === job.data.domain).aliases
     if (!aliases || aliases.length === 0) {
       return
@@ -114,19 +114,9 @@ export class TasksProcessor {
 
   @OnQueueActive()
   private onActive(job: Job): void {
-    switch (job.name) {
-      case 'deleteAccounts':
-      case 'deleteForwarders':
-      case 'deleteAliases':
-        this.logger.log(
-          `Processing job ${job.id} (${job.name}) for user ${job.data.user._id} and domain ${job.data.domain}`,
-        )
-        break
-
-      default:
-        this.logger.log(`Processing job ${job.id} (${job.name})`)
-        break
-    }
+    this.logger.log(
+      `Processing job ${job.id} (${job.name}) for user ${job.data.user._id} and domain ${job.data.domain}`,
+    )
   }
 
   @OnQueueCompleted()

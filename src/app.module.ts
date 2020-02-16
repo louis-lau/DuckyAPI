@@ -14,7 +14,7 @@ import { DomainsModule } from './domains/domains.module'
 import { FiltersModule } from './filters/filters.module'
 import { ForwardersModule } from './forwarders/forwarders.module'
 import { PackagesModule } from './packages/packages.module'
-import { TasksModule } from './tasks/tasks.module'
+import { TasksModule } from './tasks/delete-for-domain/delete-for-domain.module'
 import { UsersModule } from './users/users.module'
 
 const entityContext = require.context('.', true, /\.entity\.ts$/)
@@ -87,7 +87,7 @@ export class AppModule implements NestModule {
             {
               queues: [
                 {
-                  name: 'tasks',
+                  name: 'deleteForDomain',
                   hostId: 'DuckyAPI',
                   redis: this.config.get<string>('REDIS_URL'),
                 },
