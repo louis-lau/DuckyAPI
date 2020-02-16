@@ -348,50 +348,20 @@ export class DomainsService {
       }
     }
 
-    await this.taskQueue.add(
-      'deleteAccounts',
-      {
-        user: user,
-        domain: domain,
-      },
-      {
-        attempts: 5,
-        backoff: {
-          delay: 6000,
-          type: 'exponential',
-        },
-      },
-    )
+    await this.taskQueue.add('deleteAccounts', {
+      user: user,
+      domain: domain,
+    })
 
-    await this.taskQueue.add(
-      'deleteForwarders',
-      {
-        user: user,
-        domain: domain,
-      },
-      {
-        attempts: 5,
-        backoff: {
-          delay: 6000,
-          type: 'exponential',
-        },
-      },
-    )
+    await this.taskQueue.add('deleteForwarders', {
+      user: user,
+      domain: domain,
+    })
 
-    await this.taskQueue.add(
-      'deleteAliases',
-      {
-        user: user,
-        domain: domain,
-      },
-      {
-        attempts: 5,
-        backoff: {
-          delay: 6000,
-          type: 'exponential',
-        },
-      },
-    )
+    await this.taskQueue.add('deleteAliases', {
+      user: user,
+      domain: domain,
+    })
 
     await this.usersService.pullDomain(user._id, domain)
   }

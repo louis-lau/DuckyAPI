@@ -25,6 +25,14 @@ import { DomainsService } from './domains.service'
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         name: 'deleteForDomain',
+        defaultJobOptions: {
+          attempts: 5,
+          backoff: {
+            delay: 6000,
+            type: 'exponential',
+          },
+          removeOnComplete: 1000,
+        },
         redis: config.get('REDIS_URL'),
       }),
     }),
