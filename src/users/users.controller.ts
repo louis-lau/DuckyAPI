@@ -39,23 +39,6 @@ export class UsersController {
     await this.usersService.createUser(createUserDto)
   }
 
-  @Put(':id')
-  @Roles('admin')
-  @ApiTags('Users')
-  @ApiOperation({ summary: '[Admin only] Update API user' })
-  @ApiOkResponse()
-  public async updateUser(
-    @Body() updateUserAdminDto: UpdateUserAdminDto,
-    @Param() userIdParams: UserIdParams,
-  ): Promise<void> {
-    if (updateUserAdminDto.username || updateUserAdminDto.password) {
-      this.usersService.updateUsernameOrPassword(userIdParams.id, updateUserAdminDto)
-    }
-    if (updateUserAdminDto.packageId) {
-      this.usersService.updatePackage(userIdParams.id, updateUserAdminDto.packageId)
-    }
-  }
-
   @Get('me')
   @Roles('user')
   @ApiTags('Profile')
@@ -75,5 +58,22 @@ export class UsersController {
   @ApiOkResponse({ description: 'User updated successfully' })
   public async updateMe(@ReqUser() user: User, @Body() updateUserDto: UpdateUserDto): Promise<void> {
     await this.usersService.updateUsernameOrPassword(user._id, updateUserDto)
+  }
+
+  @Put(':id')
+  @Roles('admin')
+  @ApiTags('Users')
+  @ApiOperation({ summary: '[Admin only] Update API user' })
+  @ApiOkResponse()
+  public async updateUser(
+    @Body() updateUserAdminDto: UpdateUserAdminDto,
+    @Param() userIdParams: UserIdParams,
+  ): Promise<void> {
+    if (updateUserAdminDto.username || updateUserAdminDto.password) {
+      this.usersService.updateUsernameOrPassword(userIdParams.id, updateUserAdminDto)
+    }
+    if (updateUserAdminDto.packageId) {
+      this.usersService.updatePackage(userIdParams.id, updateUserAdminDto.packageId)
+    }
   }
 }
