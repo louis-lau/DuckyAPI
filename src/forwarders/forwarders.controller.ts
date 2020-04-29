@@ -11,8 +11,10 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger'
+import { IsNotSuspended } from 'src/common/decorators/is-not-suspended.decorator'
 import { ReqUser } from 'src/common/decorators/req-user.decorator'
 import { Roles } from 'src/common/decorators/roles.decorator'
+import { IsNotSuspendedGuard } from 'src/common/guards/is-not-suspended.guard'
 import { RolesGuard } from 'src/common/guards/roles.guard'
 import { User } from 'src/users/user.entity'
 
@@ -25,7 +27,7 @@ import { ForwarderIdParams } from './params/forwarder-id.params'
 
 @Controller('forwarders')
 @ApiTags('Forwarders')
-@UseGuards(AuthGuard('jwt'), RolesGuard)
+@UseGuards(AuthGuard('jwt'), RolesGuard, IsNotSuspendedGuard)
 @Roles('user')
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: 'Invalid or expired token' })
@@ -61,6 +63,7 @@ export class ForwardersController {
   }
 
   @Post()
+  @IsNotSuspended()
   @ApiOperation({ summary: 'Create a new forwarder' })
   @ApiCreatedResponse({ description: 'Forwarder created successfully' })
   private async createForwarder(@ReqUser() user: User, @Body() createForwarderDto: CreateForwarderDto): Promise<void> {

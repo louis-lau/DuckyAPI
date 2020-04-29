@@ -1,3 +1,4 @@
+import { InjectQueue } from '@nestjs/bull'
 import {
   BadRequestException,
   forwardRef,
@@ -8,11 +9,13 @@ import {
   NotFoundException,
 } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
+import { Queue } from 'bull'
 import { ObjectID, ObjectId } from 'mongodb'
 import NanoId from 'nanoid'
 import { Domain, DomainAlias } from 'src/domains/domain.entity'
 import { Package } from 'src/packages/package.entity'
 import { PackagesService } from 'src/packages/packages.service'
+import { SuspensionData } from 'src/tasks/suspension/suspension.interfaces'
 import { MongoRepository } from 'typeorm'
 
 import { CreateUserDto } from './dto/create-user.dto'
@@ -26,6 +29,8 @@ export class UsersService {
     private readonly userRepository: MongoRepository<User>,
     @Inject(forwardRef(() => PackagesService))
     private readonly packagesService: PackagesService,
+    @InjectQueue('suspension')
+    readonly suspensionQueue: Queue<SuspensionData>,
   ) {}
   private readonly logger = new Logger(UsersService.name, true)
 
@@ -279,5 +284,22 @@ export class UsersService {
         quota: newQuota,
       },
     )
+  }
+
+  public async suspend(userId: string, suspend = true): Promise<void> {
+    const user = await this.findByIdNoPassword(userId)
+    if (!user) {
+      throw new NotFoundException(`No user found with id: ${userId}`)
+    }
+    const userEntity = new User()
+    Object.assign(userEntity, user)
+
+    userEntity.suspended = suspend
+
+    this.userRepository.save(userEntity)
+
+    this.suspensionQueue.add(suspend ? 'suspendAccounts' : 'unsuspendAccounts', {
+      user: userEntity,
+    })
   }
 }

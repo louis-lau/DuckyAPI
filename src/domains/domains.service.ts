@@ -33,7 +33,7 @@ export class DomainsService {
     private readonly config: ConfigService,
     private readonly httpService: HttpService,
     @InjectQueue('deleteForDomain')
-    readonly taskQueue: Queue<DeleteForDomainData>,
+    readonly deleteForDomainQueue: Queue<DeleteForDomainData>,
   ) {}
 
   public async getDomains(user: User): Promise<Domain[]> {
@@ -348,17 +348,17 @@ export class DomainsService {
       }
     }
 
-    await this.taskQueue.add('deleteAccounts', {
+    await this.deleteForDomainQueue.add('deleteAccounts', {
       user: user,
       domain: domain,
     })
 
-    await this.taskQueue.add('deleteForwarders', {
+    await this.deleteForDomainQueue.add('deleteForwarders', {
       user: user,
       domain: domain,
     })
 
-    await this.taskQueue.add('deleteAliases', {
+    await this.deleteForDomainQueue.add('deleteAliases', {
       user: user,
       domain: domain,
     })

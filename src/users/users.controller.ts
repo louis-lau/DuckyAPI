@@ -75,5 +75,8 @@ export class UsersController {
     if (updateUserAdminDto.packageId) {
       this.usersService.updatePackage(userIdParams.id, updateUserAdminDto.packageId)
     }
+    if (updateUserAdminDto.suspended !== undefined) {
+      this.usersService.suspend(userIdParams.id, updateUserAdminDto.suspended)
+    }
   }
 }

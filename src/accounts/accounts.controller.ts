@@ -11,8 +11,10 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger'
+import { IsNotSuspended } from 'src/common/decorators/is-not-suspended.decorator'
 import { ReqUser } from 'src/common/decorators/req-user.decorator'
 import { Roles } from 'src/common/decorators/roles.decorator'
+import { IsNotSuspendedGuard } from 'src/common/guards/is-not-suspended.guard'
 import { RolesGuard } from 'src/common/guards/roles.guard'
 import { User } from 'src/users/user.entity'
 
@@ -25,7 +27,7 @@ import { AccountIdParams } from './params/account-id.params'
 
 @Controller('accounts')
 @ApiTags('Email Accounts')
-@UseGuards(AuthGuard('jwt'), RolesGuard)
+@UseGuards(AuthGuard('jwt'), RolesGuard, IsNotSuspendedGuard)
 @Roles('user')
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: 'Invalid or expired token' })
@@ -61,6 +63,7 @@ export class AccountsController {
   }
 
   @Post()
+  @IsNotSuspended()
   @ApiOperation({ summary: 'Create a new email account' })
   @ApiCreatedResponse({ description: 'Account created successfully' })
   private async createAccount(@ReqUser() user: User, @Body() createAccountDto: CreateAccountDto): Promise<void> {

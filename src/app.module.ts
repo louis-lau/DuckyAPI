@@ -1,3 +1,4 @@
+import { BullModule } from '@nestjs/bull'
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import Arena from 'bull-arena'
@@ -15,6 +16,7 @@ import { FiltersModule } from './filters/filters.module'
 import { ForwardersModule } from './forwarders/forwarders.module'
 import { PackagesModule } from './packages/packages.module'
 import { TasksModule } from './tasks/delete-for-domain/delete-for-domain.module'
+import { SuspensionModule } from './tasks/suspension/suspension.module'
 import { UsersModule } from './users/users.module'
 
 const entityContext = require.context('.', true, /\.entity\.ts$/)
@@ -24,6 +26,7 @@ const migrationContext = require.context('.', true, /migrations\/\d*-.*\.ts$/)
   imports: [
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
+      inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         type: 'mongodb',
         url: config.get<string>('MONGODB_URL'),
@@ -31,14 +34,14 @@ const migrationContext = require.context('.', true, /migrations\/\d*-.*\.ts$/)
         entities: [
           ...entityContext.keys().map(id => {
             const entityModule = entityContext(id)
-            const [entity] = Object.values(entityModule)
+            const [entity] = Object.values<any>(entityModule)
             return entity
           }),
         ],
         migrations: [
           ...migrationContext.keys().map(id => {
             const migrationModule = migrationContext(id)
-            const [migration] = Object.values(migrationModule)
+            const [migration] = Object.values<any>(migrationModule)
             return migration
           }),
         ],
@@ -48,7 +51,40 @@ const migrationContext = require.context('.', true, /migrations\/\d*-.*\.ts$/)
         useUnifiedTopology: true,
         appname: 'ducky-api',
       }),
+    }),
+    BullModule.registerQueueAsync({
+      name: 'deleteForDomain',
+      imports: [ConfigModule],
       inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        name: 'deleteForDomain',
+        defaultJobOptions: {
+          attempts: 5,
+          backoff: {
+            delay: 6000,
+            type: 'exponential',
+          },
+          removeOnComplete: 1000,
+        },
+        redis: config.get('REDIS_URL'),
+      }),
+    }),
+    BullModule.registerQueueAsync({
+      name: 'suspension',
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        name: 'suspension',
+        defaultJobOptions: {
+          attempts: 5,
+          backoff: {
+            delay: 6000,
+            type: 'exponential',
+          },
+          removeOnComplete: 1000,
+        },
+        redis: config.get('REDIS_URL'),
+      }),
     }),
     ConfigModule,
     AuthModule,
@@ -62,6 +98,7 @@ const migrationContext = require.context('.', true, /migrations\/\d*-.*\.ts$/)
     PackagesModule,
     ConsoleModule,
     ApiKeysModule,
+    SuspensionModule,
   ],
 })
 export class AppModule implements NestModule {
@@ -88,6 +125,11 @@ export class AppModule implements NestModule {
               queues: [
                 {
                   name: 'deleteForDomain',
+                  hostId: 'DuckyAPI',
+                  redis: this.config.get<string>('REDIS_URL'),
+                },
+                {
+                  name: 'suspension',
                   hostId: 'DuckyAPI',
                   redis: this.config.get<string>('REDIS_URL'),
                 },

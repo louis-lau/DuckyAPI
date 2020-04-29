@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsMongoId, IsOptional } from 'class-validator'
+import { IsBoolean, IsMongoId, IsOptional } from 'class-validator'
 
 import { UpdateUserDto } from './update-user.dto'
 
@@ -11,4 +11,13 @@ export class UpdateUserAdminDto extends UpdateUserDto {
   @IsOptional()
   @IsMongoId()
   public packageId?: string
+
+  @ApiProperty({
+    example: false,
+    description:
+      "A suspended user doesn't have access to most api methods, and all accounts and forwarders are suspended",
+  })
+  @IsOptional()
+  @IsBoolean()
+  public suspended?: boolean
 }

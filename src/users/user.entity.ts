@@ -1,4 +1,4 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
+import { ApiProperty } from '@nestjs/swagger'
 import Bcrypt from 'bcrypt'
 import { ObjectId } from 'mongodb'
 import { Domain } from 'src/domains/domain.entity'
@@ -7,10 +7,9 @@ import { BeforeInsert, BeforeUpdate, Column, Entity, ObjectIdColumn } from 'type
 @Entity('users')
 export class User {
   @ObjectIdColumn()
-  @ApiPropertyOptional({
+  @ApiProperty({
     example: '5d49e11f600a423ffc0b1297',
     description: 'Unique id for this user',
-    readOnly: true,
   })
   public _id?: string
 
@@ -19,22 +18,16 @@ export class User {
   public username: string
 
   @Column()
-  @ApiProperty({
-    example: 'supersecret',
-    description: 'The password for this user',
-    writeOnly: true,
-  })
   public password?: string
 
   @Column()
   public minTokenDate: Date
 
   @Column(() => Domain)
-  @ApiPropertyOptional({
+  @ApiProperty({
     type: Domain,
     isArray: true,
     description: 'Domains this user can manage',
-    readOnly: true,
   })
   public domains: Domain[]
 
@@ -42,18 +35,24 @@ export class User {
   public package: ObjectId
 
   @Column()
-  @ApiPropertyOptional({
+  @ApiProperty({
     example: 1073741824,
     description: 'Storage quota in bytes',
-    readOnly: true,
   })
   public quota: number
 
   @Column()
   @ApiProperty({
+    example: false,
+    description:
+      "A suspended user doesn't have access to most api methods, and all accounts and forwarders are suspended",
+  })
+  public suspended: boolean
+
+  @Column()
+  @ApiProperty({
     example: ['user'],
     description: 'User roles',
-    readOnly: true,
   })
   public roles: string[]
 

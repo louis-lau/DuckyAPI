@@ -266,6 +266,39 @@ export class AccountsService {
     }
   }
 
+  public async suspend(accountId: string, suspend = true): Promise<void> {
+    let apiResponse: AxiosResponse<any>
+    try {
+      apiResponse = await this.httpService
+        .put(
+          `${this.config.get<string>('WILDDUCK_API_URL')}/users/${accountId}`,
+          {
+            suspended: suspend,
+          },
+          {
+            headers: {
+              'X-Access-Token': this.config.get<string>('WILDDUCK_API_TOKEN'),
+            },
+          },
+        )
+        .toPromise()
+    } catch (error) {
+      this.logger.error(error.message)
+      throw new InternalServerErrorException('Backend service not reachable', 'WildduckApiError')
+    }
+
+    if (apiResponse.data.error || !apiResponse.data.success) {
+      switch (apiResponse.data.code) {
+        case 'UserNotFound':
+          break
+
+        default:
+          this.logger.error(apiResponse.data)
+          throw new InternalServerErrorException('Unknown error')
+      }
+    }
+  }
+
   public async deleteAccount(user: User, accountId: string): Promise<void> {
     // Run get accountdetails to make sure account exists and user has permission, we don't do anything with it because it will throw an exception if needed
     await this.getAccountDetails(user, accountId)

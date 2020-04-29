@@ -11,8 +11,10 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger'
+import { IsNotSuspended } from 'src/common/decorators/is-not-suspended.decorator'
 import { ReqUser } from 'src/common/decorators/req-user.decorator'
 import { Roles } from 'src/common/decorators/roles.decorator'
+import { IsNotSuspendedGuard } from 'src/common/guards/is-not-suspended.guard'
 import { RolesGuard } from 'src/common/guards/roles.guard'
 import { User } from 'src/users/user.entity'
 
@@ -24,7 +26,7 @@ import { DomainParams } from './params/domain.params'
 
 @Controller('domains')
 @ApiTags('Domains')
-@UseGuards(AuthGuard('jwt'), RolesGuard)
+@UseGuards(AuthGuard('jwt'), RolesGuard, IsNotSuspendedGuard)
 @Roles('user')
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: 'Invalid or expired token' })
@@ -52,6 +54,7 @@ export class DomainsController {
   }
 
   @Post()
+  @IsNotSuspended()
   @ApiOperation({ summary: 'Add a domain' })
   @ApiCreatedResponse({ description: 'Domain successfully added' })
   private async addDomain(@ReqUser() user: User, @Body() domainDto: Domain): Promise<void> {
@@ -67,6 +70,7 @@ export class DomainsController {
   }
 
   @Post(':domain/aliases')
+  @IsNotSuspended()
   @ApiOperation({ summary: 'Add a domain alias' })
   @ApiCreatedResponse({ description: 'Alias successfully added' })
   @ApiNotFoundResponse({ description: 'Domain not found on account' })

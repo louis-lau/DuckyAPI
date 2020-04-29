@@ -113,24 +113,24 @@ export class DeleteForDomainProcessor {
   }
 
   @OnQueueActive()
-  private onActive(job: Job): void {
+  private onActive(job: Job<DeleteForDomainData>): void {
     this.logger.log(
       `Processing job ${job.id} (${job.name}) for user ${job.data.user._id} and domain ${job.data.domain}`,
     )
   }
 
   @OnQueueCompleted()
-  private onCompleted(job: Job): void {
+  private onCompleted(job: Job<DeleteForDomainData>): void {
     this.logger.log(`Completed job ${job.id} (${job.name}) successfully`)
   }
 
   @OnQueueError()
-  private onError(job: Job): void {
+  private onError(job: Job<DeleteForDomainData>): void {
     this.logger.error(`Error for job ${job.id} (${job.name}): ${job.stacktrace}`)
   }
 
   @OnQueueFailed()
-  private onFailed(job: Job): void {
+  private onFailed(job: Job<DeleteForDomainData>): void {
     this.logger.error(`Job ${job.id} (${job.name}) failed!: ${job.stacktrace}`)
   }
 }
