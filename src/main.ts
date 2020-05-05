@@ -12,7 +12,7 @@ async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule)
   const config: ConfigService = app.get('ConfigService')
 
-  app.setGlobalPrefix(config.get<string>('BASE_URL'))
+  app.setGlobalPrefix(config.BASE_URL)
 
   app.enableCors()
   app.useGlobalPipes(
@@ -43,7 +43,7 @@ async function bootstrap(): Promise<void> {
     .addTag('Packages')
     .build()
   const document = SwaggerModule.createDocument(app, options)
-  SwaggerModule.setup(`${config.get<string>('BASE_URL')}/swagger`, app, document, {
+  SwaggerModule.setup(`${config.BASE_URL}/swagger`, app, document, {
     swaggerOptions: {
       defaultModelsExpandDepth: 0,
       displayRequestDuration: true,
@@ -51,7 +51,7 @@ async function bootstrap(): Promise<void> {
     },
   })
 
-  await app.listen(config.get<number>('PORT'))
+  await app.listen(config.PORT)
 
   if (module.hot) {
     module.hot.accept()

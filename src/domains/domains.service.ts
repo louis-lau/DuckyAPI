@@ -19,7 +19,7 @@ import { DeleteForDomainData } from 'src/tasks/delete-for-domain/delete-for-doma
 import { User } from 'src/users/user.entity'
 import { UsersService } from 'src/users/users.service'
 
-import { DnsCheck, DnsCheckMxRecord } from './class/dns.class'
+import { DnsCheck } from './class/dns.class'
 import { Domain } from './domain.entity'
 
 @Injectable()
@@ -96,8 +96,8 @@ export class DomainsService {
 
     const dnsCheck: DnsCheck = {
       correctValues: {
-        mx: this.config.get<DnsCheckMxRecord[]>('MX_RECORDS'),
-        spf: this.config.get<string>('SPF_CORRECT_VALUE'),
+        mx: this.config.MX_RECORDS,
+        spf: this.config.SPF_CORRECT_VALUE,
         dkim: undefined,
       },
       currentValues: {
@@ -227,7 +227,7 @@ export class DomainsService {
             return
           }
 
-          for (const correctMxRecord of this.config.get<DnsCheckMxRecord[]>('MX_RECORDS')) {
+          for (const correctMxRecord of this.config.MX_RECORDS) {
             // if mxRecords doesn't include this correct mx record
             if (!mxRecords.some((mxRecord): boolean => mxRecord.exchange === correctMxRecord.exchange)) {
               dnsCheck.errors.push({
@@ -281,10 +281,7 @@ export class DomainsService {
               })
             }
 
-            if (
-              this.config.get<string>('SPF_REGEX') &&
-              new RegExp(this.config.get<string>('SPF_REGEX')).test(spfTxtRecords[0])
-            ) {
+            if (this.config.SPF_REGEX && new RegExp(this.config.SPF_REGEX).test(spfTxtRecords[0])) {
               dnsCheck.errors.push({
                 type: 'spf',
                 error: 'SpfInvalid',
@@ -373,14 +370,14 @@ export class DomainsService {
     try {
       apiResponse = await this.httpService
         .post(
-          `${this.config.get<string>('WILDDUCK_API_URL')}/domainaliases`,
+          `${this.config.WILDDUCK_API_URL}/domainaliases`,
           {
             domain: domain,
             alias: alias,
           },
           {
             headers: {
-              'X-Access-Token': this.config.get<string>('WILDDUCK_API_TOKEN'),
+              'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
             },
           },
         )
@@ -408,9 +405,9 @@ export class DomainsService {
     let resolveResponse: AxiosResponse<any>
     try {
       resolveResponse = await this.httpService
-        .get(`${this.config.get<string>('WILDDUCK_API_URL')}/domainaliases/resolve/${alias}`, {
+        .get(`${this.config.WILDDUCK_API_URL}/domainaliases/resolve/${alias}`, {
           headers: {
-            'X-Access-Token': this.config.get<string>('WILDDUCK_API_TOKEN'),
+            'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
           },
         })
         .toPromise()
@@ -432,9 +429,9 @@ export class DomainsService {
     let deleteResponse: AxiosResponse<any>
     try {
       deleteResponse = await this.httpService
-        .delete(`${this.config.get<string>('WILDDUCK_API_URL')}/domainaliases/${resolveResponse.data.id}`, {
+        .delete(`${this.config.WILDDUCK_API_URL}/domainaliases/${resolveResponse.data.id}`, {
           headers: {
-            'X-Access-Token': this.config.get<string>('WILDDUCK_API_TOKEN'),
+            'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
           },
         })
         .toPromise()

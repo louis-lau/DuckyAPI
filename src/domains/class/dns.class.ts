@@ -1,10 +1,15 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
+import { IsNotEmpty, IsNumber, IsString, Min } from 'class-validator'
 
 export class DnsCheckMxRecord {
   @ApiProperty({ example: 'mx.example.com', description: 'MX record server' })
+  @IsString()
+  @IsNotEmpty()
   public exchange: string
 
   @ApiProperty({ example: 1, description: 'MX record priority' })
+  @IsNumber()
+  @Min(0)
   public priority: number
 }
 

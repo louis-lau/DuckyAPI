@@ -29,7 +29,7 @@ const migrationContext = require.context('.', true, /migrations\/\d*-.*\.ts$/)
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         type: 'mongodb',
-        url: config.get<string>('MONGODB_URL'),
+        url: config.MONGODB_URL,
         keepConnectionAlive: true,
         entities: [
           ...entityContext.keys().map(id => {
@@ -66,7 +66,7 @@ const migrationContext = require.context('.', true, /migrations\/\d*-.*\.ts$/)
           },
           removeOnComplete: 1000,
         },
-        redis: config.get('REDIS_URL'),
+        redis: config.REDIS_URL,
       }),
     }),
     BullModule.registerQueueAsync({
@@ -83,7 +83,7 @@ const migrationContext = require.context('.', true, /migrations\/\d*-.*\.ts$/)
           },
           removeOnComplete: 1000,
         },
-        redis: config.get('REDIS_URL'),
+        redis: config.REDIS_URL,
       }),
     }),
     ConfigModule,
@@ -104,14 +104,14 @@ const migrationContext = require.context('.', true, /migrations\/\d*-.*\.ts$/)
 export class AppModule implements NestModule {
   constructor(private readonly config: ConfigService) {}
   public configure(consumer: MiddlewareConsumer): void {
-    if (this.config.get<boolean>('ARENA_ENABLED')) {
-      if (this.config.get<string>('ARENA_USER')) {
+    if (this.config.ARENA_ENABLED) {
+      if (this.config.ARENA_USER) {
         consumer
           .apply(
             BasicAuth({
               challenge: true,
               users: {
-                [this.config.get<string>('ARENA_USER')]: this.config.get<string>('ARENA_PASSWORD'),
+                [this.config.ARENA_USER]: this.config.ARENA_PASSWORD,
               },
             }),
           )
@@ -126,12 +126,12 @@ export class AppModule implements NestModule {
                 {
                   name: 'deleteForDomain',
                   hostId: 'DuckyAPI',
-                  redis: this.config.get<string>('REDIS_URL'),
+                  redis: this.config.REDIS_URL,
                 },
                 {
                   name: 'suspension',
                   hostId: 'DuckyAPI',
-                  redis: this.config.get<string>('REDIS_URL'),
+                  redis: this.config.REDIS_URL,
                 },
               ],
             },

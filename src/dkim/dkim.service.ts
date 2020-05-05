@@ -21,9 +21,9 @@ export class DkimService {
     let ApiResponse: AxiosResponse<any>
     try {
       ApiResponse = await this.httpService
-        .get(`${this.config.get<string>('WILDDUCK_API_URL')}/dkim/resolve/${domain}`, {
+        .get(`${this.config.WILDDUCK_API_URL}/dkim/resolve/${domain}`, {
           headers: {
-            'X-Access-Token': this.config.get<string>('WILDDUCK_API_TOKEN'),
+            'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
           },
         })
         .toPromise()
@@ -54,9 +54,9 @@ export class DkimService {
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
-        .delete(`${this.config.get<string>('WILDDUCK_API_URL')}/dkim/${dkimId}`, {
+        .delete(`${this.config.WILDDUCK_API_URL}/dkim/${dkimId}`, {
           headers: {
-            'X-Access-Token': this.config.get<string>('WILDDUCK_API_TOKEN'),
+            'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
           },
         })
         .toPromise()
@@ -85,9 +85,9 @@ export class DkimService {
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
-        .get(`${this.config.get<string>('WILDDUCK_API_URL')}/dkim/${dkimId}`, {
+        .get(`${this.config.WILDDUCK_API_URL}/dkim/${dkimId}`, {
           headers: {
-            'X-Access-Token': this.config.get<string>('WILDDUCK_API_TOKEN'),
+            'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
           },
         })
         .toPromise()
@@ -128,7 +128,7 @@ export class DkimService {
     try {
       apiResponse = await this.httpService
         .post(
-          `${this.config.get<string>('WILDDUCK_API_URL')}/dkim`,
+          `${this.config.WILDDUCK_API_URL}/dkim`,
           {
             domain: domain,
             selector: addDkimDto.selector,
@@ -136,7 +136,7 @@ export class DkimService {
           },
           {
             headers: {
-              'X-Access-Token': this.config.get<string>('WILDDUCK_API_TOKEN'),
+              'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
             },
           },
         )

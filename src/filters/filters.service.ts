@@ -32,9 +32,9 @@ export class FiltersService {
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
-        .delete(`${this.config.get<string>('WILDDUCK_API_URL')}/users/${accountId}/filters/${filterId}`, {
+        .delete(`${this.config.WILDDUCK_API_URL}/users/${accountId}/filters/${filterId}`, {
           headers: {
-            'X-Access-Token': this.config.get<string>('WILDDUCK_API_TOKEN'),
+            'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
           },
         })
         .toPromise()
@@ -66,9 +66,9 @@ export class FiltersService {
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
-        .get(`${this.config.get<string>('WILDDUCK_API_URL')}/users/${accountId}/filters`, {
+        .get(`${this.config.WILDDUCK_API_URL}/users/${accountId}/filters`, {
           headers: {
-            'X-Access-Token': this.config.get<string>('WILDDUCK_API_TOKEN'),
+            'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
           },
         })
         .toPromise()
@@ -110,9 +110,9 @@ export class FiltersService {
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
-        .get(`${this.config.get<string>('WILDDUCK_API_URL')}/users/${accountId}/filters/${filterId}`, {
+        .get(`${this.config.WILDDUCK_API_URL}/users/${accountId}/filters/${filterId}`, {
           headers: {
-            'X-Access-Token': this.config.get<string>('WILDDUCK_API_TOKEN'),
+            'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
           },
         })
         .toPromise()
@@ -155,9 +155,9 @@ export class FiltersService {
     try {
       // Pass createUpdateFilterDto directly as it's exactly what the WildDuck API requires
       apiResponse = await this.httpService
-        .post(`${this.config.get<string>('WILDDUCK_API_URL')}/users/${accountId}/filters`, createUpdateFilterDto, {
+        .post(`${this.config.WILDDUCK_API_URL}/users/${accountId}/filters`, createUpdateFilterDto, {
           headers: {
-            'X-Access-Token': this.config.get<string>('WILDDUCK_API_TOKEN'),
+            'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
           },
         })
         .toPromise()
@@ -194,15 +194,11 @@ export class FiltersService {
     try {
       // Pass createUpdateFilterDto directly as it's exactly what the WildDuck API requires
       apiResponse = await this.httpService
-        .put(
-          `${this.config.get<string>('WILDDUCK_API_URL')}/users/${accountId}/filters/${filterId}`,
-          createUpdateFilterDto,
-          {
-            headers: {
-              'X-Access-Token': this.config.get<string>('WILDDUCK_API_TOKEN'),
-            },
+        .put(`${this.config.WILDDUCK_API_URL}/users/${accountId}/filters/${filterId}`, createUpdateFilterDto, {
+          headers: {
+            'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
           },
-        )
+        })
         .toPromise()
     } catch (error) {
       this.logger.error(error.message)

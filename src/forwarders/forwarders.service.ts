@@ -47,9 +47,9 @@ export class ForwardersService {
       let apiResponse: AxiosResponse<any>
       try {
         apiResponse = await this.httpService
-          .get(`${this.config.get<string>('WILDDUCK_API_URL')}/addresses`, {
+          .get(`${this.config.WILDDUCK_API_URL}/addresses`, {
             headers: {
-              'X-Access-Token': this.config.get<string>('WILDDUCK_API_TOKEN'),
+              'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
             },
             params: {
               tags: domainTags,
@@ -92,9 +92,9 @@ export class ForwardersService {
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
-        .get(`${this.config.get<string>('WILDDUCK_API_URL')}/addresses/forwarded/${forwarderId}`, {
+        .get(`${this.config.WILDDUCK_API_URL}/addresses/forwarded/${forwarderId}`, {
           headers: {
-            'X-Access-Token': this.config.get<string>('WILDDUCK_API_TOKEN'),
+            'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
           },
         })
         .toPromise()
@@ -156,18 +156,18 @@ export class ForwardersService {
     try {
       apiResponse = await this.httpService
         .post(
-          `${this.config.get<string>('WILDDUCK_API_URL')}/addresses/forwarded`,
+          `${this.config.WILDDUCK_API_URL}/addresses/forwarded`,
           {
             address: createForwarderDto.address,
             name: createForwarderDto.name,
             targets: createForwarderDto.targets,
-            forwards: createForwarderDto.limits.forward || this.config.get<number>('MAX_FORWARD'),
-            allowWildcard: this.config.get<boolean>('ALLOW_FORWARDER_WILDCARD'),
+            forwards: createForwarderDto.limits.forward || this.config.MAX_FORWARD,
+            allowWildcard: this.config.ALLOW_FORWARDER_WILDCARD,
             tags: [`domain:${addressDomain}`, 'forwarder'],
           },
           {
             headers: {
-              'X-Access-Token': this.config.get<string>('WILDDUCK_API_TOKEN'),
+              'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
             },
           },
         )
@@ -209,7 +209,7 @@ export class ForwardersService {
     try {
       apiResponse = await this.httpService
         .put(
-          `${this.config.get<string>('WILDDUCK_API_URL')}/addresses/forwarded/${forwarderId}`,
+          `${this.config.WILDDUCK_API_URL}/addresses/forwarded/${forwarderId}`,
           {
             address: updateForwarderDto.address,
             name: updateForwarderDto.name,
@@ -219,7 +219,7 @@ export class ForwardersService {
           },
           {
             headers: {
-              'X-Access-Token': this.config.get<string>('WILDDUCK_API_TOKEN'),
+              'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
             },
           },
         )
@@ -254,9 +254,9 @@ export class ForwardersService {
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
-        .delete(`${this.config.get<string>('WILDDUCK_API_URL')}/addresses/forwarded/${forwarderId}`, {
+        .delete(`${this.config.WILDDUCK_API_URL}/addresses/forwarded/${forwarderId}`, {
           headers: {
-            'X-Access-Token': this.config.get<string>('WILDDUCK_API_TOKEN'),
+            'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
           },
         })
         .toPromise()

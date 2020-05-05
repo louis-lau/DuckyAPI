@@ -20,7 +20,7 @@ import { ApiKeysService } from './api-keys.service'
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
-        secret: config.get<string>('TOKEN_SECRET'),
+        secret: config.TOKEN_SECRET,
       }),
     }),
   ],
