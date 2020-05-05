@@ -122,4 +122,10 @@ export class DuckyApiConfig {
   @IsOptional()
   @IsString()
   SPF_REGEX: string
+
+  @Transform(jsonParse, { toClassOnly: true })
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  DELAY: number
 }
