@@ -11,7 +11,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm'
 import { Queue } from 'bull'
 import { ObjectID, ObjectId } from 'mongodb'
-import NanoId from 'nanoid'
+import { nanoid as NanoId } from 'nanoid'
 import { Domain, DomainAlias } from 'src/domains/domain.entity'
 import { Package } from 'src/packages/package.entity'
 import { PackagesService } from 'src/packages/packages.service'
@@ -118,7 +118,7 @@ export class UsersService {
     Object.assign(userEntity, user)
 
     // New array of only domains that don't match domain.
-    userEntity.domains = userEntity.domains.filter(domainObject => domainObject.domain !== domain)
+    userEntity.domains = userEntity.domains.filter((domainObject) => domainObject.domain !== domain)
 
     try {
       return this.userRepository.save(userEntity)
@@ -135,7 +135,7 @@ export class UsersService {
     const userEntity = new User()
     Object.assign(userEntity, user)
 
-    userEntity.domains = userEntity.domains.map(userDomain => {
+    userEntity.domains = userEntity.domains.map((userDomain) => {
       if (userDomain.domain === domain) {
         if (!userDomain.aliases) {
           userDomain.aliases = []
@@ -159,10 +159,10 @@ export class UsersService {
     const userEntity = new User()
     Object.assign(userEntity, user)
 
-    userEntity.domains = userEntity.domains.map(userDomain => {
+    userEntity.domains = userEntity.domains.map((userDomain) => {
       if (userDomain.aliases) {
         // New array of only aliases that don't match alias.
-        userDomain.aliases = userDomain.aliases.filter(domainAlias => domainAlias.domain !== alias)
+        userDomain.aliases = userDomain.aliases.filter((domainAlias) => domainAlias.domain !== alias)
       }
       return userDomain
     })

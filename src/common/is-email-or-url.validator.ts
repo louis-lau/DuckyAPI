@@ -1,15 +1,13 @@
-import { ValidationArguments, Validator, ValidatorConstraint, ValidatorConstraintInterface } from 'class-validator'
+import { isEmail, isURL, ValidationArguments, ValidatorConstraint, ValidatorConstraintInterface } from 'class-validator'
 
 @ValidatorConstraint({ async: true })
 export class EachIsEmailOrHttpOrSmtp implements ValidatorConstraintInterface {
-  private validator = new Validator()
-
   public async validate(input: string[]): Promise<boolean> {
     for (const item of input) {
       if (
         !(
-          this.validator.isEmail(item) ||
-          this.validator.isURL(item, {
+          isEmail(item) ||
+          isURL(item, {
             protocols: ['http', 'https', 'smtp', 'smtps'],
             // eslint-disable-next-line @typescript-eslint/camelcase
             require_protocol: true,

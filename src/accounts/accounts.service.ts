@@ -7,7 +7,7 @@ import {
   NotFoundException,
 } from '@nestjs/common'
 import { AxiosResponse } from 'axios'
-import NanoId from 'nanoid'
+import { nanoid as NanoId } from 'nanoid'
 import { ConfigService } from 'src/config/config.service'
 import { DomainsService } from 'src/domains/domains.service'
 import { User } from 'src/users/user.entity'

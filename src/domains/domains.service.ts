@@ -302,7 +302,7 @@ export class DomainsService {
     }
     if (
       user.domains.some(
-        (userdomain): boolean => userdomain.aliases && userdomain.aliases.some(alias => alias.domain === domain),
+        (userdomain): boolean => userdomain.aliases && userdomain.aliases.some((alias) => alias.domain === domain),
       )
     ) {
       throw new BadRequestException(
@@ -320,7 +320,7 @@ export class DomainsService {
       if (
         !includeAliases ||
         !user.domains.some(
-          (userdomain): boolean => userdomain.aliases && userdomain.aliases.some(alias => alias.domain === domain),
+          (userdomain): boolean => userdomain.aliases && userdomain.aliases.some((alias) => alias.domain === domain),
         )
       ) {
         throw new NotFoundException(`Domain: ${domain} doesn't exist in your account`, 'DomainNotFoundError')

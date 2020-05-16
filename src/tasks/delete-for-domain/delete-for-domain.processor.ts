@@ -88,7 +88,7 @@ export class DeleteForDomainProcessor {
 
   @Process({ name: 'deleteAliases' })
   private async processDeleteAliases(job: Job<DeleteForDomainData>): Promise<void> {
-    const aliases = job.data.user.domains.find(domain => domain.domain === job.data.domain).aliases
+    const aliases = job.data.user.domains.find((domain) => domain.domain === job.data.domain).aliases
     if (!aliases || aliases.length === 0) {
       return
     }

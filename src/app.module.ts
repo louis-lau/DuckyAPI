@@ -1,4 +1,3 @@
-import { BullModule } from '@nestjs/bull'
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import Arena from 'bull-arena'
@@ -32,14 +31,14 @@ const migrationContext = require.context('.', true, /migrations\/\d*-.*\.ts$/)
         url: config.MONGODB_URL,
         keepConnectionAlive: true,
         entities: [
-          ...entityContext.keys().map(id => {
+          ...entityContext.keys().map((id) => {
             const entityModule = entityContext(id)
             const [entity] = Object.values<any>(entityModule)
             return entity
           }),
         ],
         migrations: [
-          ...migrationContext.keys().map(id => {
+          ...migrationContext.keys().map((id) => {
             const migrationModule = migrationContext(id)
             const [migration] = Object.values<any>(migrationModule)
             return migration
@@ -50,40 +49,6 @@ const migrationContext = require.context('.', true, /migrations\/\d*-.*\.ts$/)
         useNewUrlParser: true,
         useUnifiedTopology: true,
         appname: 'ducky-api',
-      }),
-    }),
-    BullModule.registerQueueAsync({
-      name: 'deleteForDomain',
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        name: 'deleteForDomain',
-        defaultJobOptions: {
-          attempts: 5,
-          backoff: {
-            delay: 6000,
-            type: 'exponential',
-          },
-          removeOnComplete: 1000,
-        },
-        redis: config.REDIS_URL,
-      }),
-    }),
-    BullModule.registerQueueAsync({
-      name: 'suspension',
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        name: 'suspension',
-        defaultJobOptions: {
-          attempts: 5,
-          backoff: {
-            delay: 6000,
-            type: 'exponential',
-          },
-          removeOnComplete: 1000,
-        },
-        redis: config.REDIS_URL,
       }),
     }),
     ConfigModule,

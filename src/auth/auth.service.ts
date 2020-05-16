@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import Bcrypt from 'bcrypt'
-import NanoId from 'nanoid'
+import { nanoid as NanoId } from 'nanoid'
 import { User } from 'src/users/user.entity'
 import { UsersService } from 'src/users/users.service'
 

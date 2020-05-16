@@ -15,7 +15,7 @@ async function bootstrap(): Promise<void> {
   app.setGlobalPrefix(config.BASE_URL)
 
   if (config.DELAY) {
-    app.use(function(req, res, next) {
+    app.use(function (req, res, next) {
       setTimeout(next, config.DELAY)
     })
   }

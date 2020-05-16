@@ -9,7 +9,7 @@ const bootstrap = new BootstrapConsole({
     logger: ['error'],
   },
 })
-bootstrap.init().then(async app => {
+bootstrap.init().then(async (app) => {
   try {
     // init the app
     await app.init()
