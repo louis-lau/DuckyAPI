@@ -58,9 +58,9 @@ export class DuckyApiConfig {
   @IsUrl({ require_tld: false }) // eslint-disable-line @typescript-eslint/camelcase
   WILDDUCK_API_URL: string
 
-  @IsNotEmpty()
   @IsString()
-  WILDDUCK_API_TOKEN: string
+  @IsOptional()
+  WILDDUCK_API_TOKEN = ''
 
   @Transform(jsonParse, { toClassOnly: true })
   @IsBoolean()
