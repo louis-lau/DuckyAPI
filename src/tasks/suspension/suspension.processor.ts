@@ -3,6 +3,7 @@ import { Logger } from '@nestjs/common'
 import { Job } from 'bull'
 import { AccountsService } from 'src/accounts/accounts.service'
 import { AccountListItem } from 'src/accounts/class/account-list-item.class'
+import { Forwarder } from 'src/forwarders/class/forwarder.class'
 import { ForwardersService } from 'src/forwarders/forwarders.service'
 
 import { SuspensionData } from './suspension.interfaces'
@@ -76,6 +77,71 @@ export class SuspensionProcessor {
       promises = []
       for (const account of accountChunk) {
         promises.push(this.accountsService.suspend(account.id, false))
+      }
+      await Promise.all(promises)
+    }
+    job.progress(100)
+  }
+
+  @Process({ name: 'suspendForwarders' })
+  private async processSuspendForwarders(job: Job<SuspensionData>): Promise<void> {
+    let forwarders: Forwarder[] = []
+    try {
+      forwarders = await this.forwardersService.getForwarders(job.data.user)
+    } catch (error) {
+      // Don't throw error if no accounts were found
+      if (error.response.error === 'ForwarderNotFoundError') {
+        return
+      } else {
+        throw error
+      }
+    }
+
+    const forwarderChunks: Forwarder[][] = []
+    const chunkSize = 10
+    for (let i = 0; i < forwarders.length; i += chunkSize) {
+      forwarderChunks.push(forwarders.slice(i, i + chunkSize))
+    }
+
+    let promises: Promise<void>[] = []
+    for (const [i, forwarderChunk] of forwarderChunks.entries()) {
+      job.progress(Math.round((i / forwarderChunks.length) * 100))
+
+      promises = []
+      for (const forwarder of forwarderChunk) {
+        promises.push(this.forwardersService.disable(forwarder.id, true))
+      }
+      await Promise.all(promises)
+    }
+    job.progress(100)
+  }
+  @Process({ name: 'unsuspendForwarders' })
+  private async processUnsuspendForwarders(job: Job<SuspensionData>): Promise<void> {
+    let forwarders: Forwarder[] = []
+    try {
+      forwarders = await this.forwardersService.getForwarders(job.data.user)
+    } catch (error) {
+      // Don't throw error if no accounts were found
+      if (error.response.error === 'ForwarderNotFoundError') {
+        return
+      } else {
+        throw error
+      }
+    }
+
+    const forwarderChunks: Forwarder[][] = []
+    const chunkSize = 10
+    for (let i = 0; i < forwarders.length; i += chunkSize) {
+      forwarderChunks.push(forwarders.slice(i, i + chunkSize))
+    }
+
+    let promises: Promise<void>[] = []
+    for (const [i, forwarderChunk] of forwarderChunks.entries()) {
+      job.progress(Math.round((i / forwarderChunks.length) * 100))
+
+      promises = []
+      for (const forwarder of forwarderChunk) {
+        promises.push(this.forwardersService.disable(forwarder.id, false))
       }
       await Promise.all(promises)
     }

@@ -247,6 +247,39 @@ export class ForwardersService {
     }
   }
 
+  public async disable(forwarderId: string, disable = true): Promise<void> {
+    let apiResponse: AxiosResponse<any>
+    try {
+      apiResponse = await this.httpService
+        .put(
+          `${this.config.WILDDUCK_API_URL}/addresses/forwarded/${forwarderId}`,
+          {
+            forwardedDisabled: disable,
+          },
+          {
+            headers: {
+              'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
+            },
+          },
+        )
+        .toPromise()
+    } catch (error) {
+      this.logger.error(error.message)
+      throw new InternalServerErrorException('Backend service not reachable', 'WildduckApiError')
+    }
+
+    if (apiResponse.data.error || !apiResponse.data.success) {
+      switch (apiResponse.data.code) {
+        case 'AddressNotFound':
+          break
+
+        default:
+          this.logger.error(apiResponse.data)
+          throw new InternalServerErrorException('Unknown error')
+      }
+    }
+  }
+
   public async deleteForwarder(user: User, forwarderId: string): Promise<void> {
     // Run get accountdetails to make sure account exists and user has permission, we don't do anything with it because it will throw an exception if needed
     await this.getForwarderDetails(user, forwarderId)
