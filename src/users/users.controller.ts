@@ -49,7 +49,7 @@ export class UsersController {
   }
 
   @Get('me')
-  @Roles('user')
+  @Roles('user', 'admin')
   @ApiTags('Profile')
   @ApiOperation({ operationId: 'getMe', summary: 'Get account info for current access token' })
   @ApiOkResponse({ description: 'User info', type: User })
@@ -61,7 +61,7 @@ export class UsersController {
   }
 
   @Put('me')
-  @Roles('user')
+  @Roles('user', 'admin')
   @ApiTags('Profile')
   @ApiOperation({ operationId: 'updateMe', summary: 'Update username/password' })
   @ApiOkResponse({ description: 'User updated successfully' })
