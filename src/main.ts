@@ -4,6 +4,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import Helmet from 'helmet'
 
 import { AppModule } from './app.module'
+import { UnauthorizedExceptionFilter } from './common/filters/unauthorized-exception.filter'
 import { ConfigService } from './config/config.service'
 
 declare const module: any
@@ -21,6 +22,7 @@ async function bootstrap(): Promise<void> {
   }
 
   app.enableCors()
+  app.useGlobalFilters(new UnauthorizedExceptionFilter())
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
