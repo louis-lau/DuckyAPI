@@ -34,6 +34,10 @@ export class UsersService {
   ) {}
   private readonly logger = new Logger(UsersService.name, true)
 
+  public async getUsers(): Promise<User[]> {
+    return this.userRepository.find()
+  }
+
   public async findByUsername(username: string): Promise<User | undefined> {
     username = username.toLowerCase()
     return this.userRepository.findOne({
@@ -299,6 +303,9 @@ export class UsersService {
     this.userRepository.save(userEntity)
 
     this.suspensionQueue.add(suspend ? 'suspendAccounts' : 'unsuspendAccounts', {
+      user: userEntity,
+    })
+    this.suspensionQueue.add(suspend ? 'suspendForwarders' : 'unsuspendForwarders', {
       user: userEntity,
     })
   }

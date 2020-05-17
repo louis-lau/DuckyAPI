@@ -30,6 +30,15 @@ import { UsersService } from './users.service'
 export class UsersController {
   public constructor(private readonly usersService: UsersService) {}
 
+  @Get()
+  @Roles('admin')
+  @ApiTags('Users')
+  @ApiOperation({ operationId: 'getUsers', summary: '[Admin only] List all users' })
+  @ApiCreatedResponse({ description: 'list of users', type: User, isArray: true })
+  public async getUsers(): Promise<User[]> {
+    return this.usersService.getUsers()
+  }
+
   @Post()
   @Roles('admin')
   @ApiTags('Users')
