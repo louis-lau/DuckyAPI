@@ -33,6 +33,7 @@ export class ApiKeysController {
 
   @Post()
   @ApiOperation({
+    operationId: 'createApiKey',
     summary: 'Create an API key',
     description: 'Note: This resource is forbidden when using an API key as authorization. Use an access token.',
   })
@@ -44,7 +45,7 @@ export class ApiKeysController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'List active api keys' })
+  @ApiOperation({ operationId: 'getApiKeys', summary: 'List active api keys' })
   @ApiOkResponse({ description: 'List of active api keys', type: ApiKey, isArray: true })
   public async getApiKeys(@ReqUser() user: User): Promise<ApiKey[]> {
     return this.apiKeysService.getKeysForUser(user._id)
@@ -52,6 +53,7 @@ export class ApiKeysController {
 
   @Delete(':id')
   @ApiOperation({
+    operationId: 'revokeApiKey',
     summary: 'Revoke api key',
     description: 'Note: This resource is forbidden when using an API key as authorization. Use an access token.',
   })

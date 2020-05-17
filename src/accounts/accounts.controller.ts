@@ -37,7 +37,7 @@ export class AccountsController {
   public constructor(private readonly accountsService: AccountsService) {}
 
   @Delete(':accountId')
-  @ApiOperation({ summary: 'Delete email account' })
+  @ApiOperation({ operationId: 'deleteAccount', summary: 'Delete email account' })
   @ApiOkResponse({ description: 'Account deleted successfully' })
   @ApiNotFoundResponse({ description: 'No account found with this id' })
   private async deleteAccount(@ReqUser() user: User, @Param() accountIdParams: AccountIdParams): Promise<void> {
@@ -45,14 +45,14 @@ export class AccountsController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'List email accounts' })
+  @ApiOperation({ operationId: 'getAccounts', summary: 'List email accounts' })
   @ApiOkResponse({ description: 'A list of accounts', type: AccountListItem, isArray: true })
   private async getAccounts(@ReqUser() user: User): Promise<AccountListItem[]> {
     return this.accountsService.getAccounts(user)
   }
 
   @Get(':accountId')
-  @ApiOperation({ summary: 'Get email account details' })
+  @ApiOperation({ operationId: 'getAccountDetails', summary: 'Get email account details' })
   @ApiOkResponse({ description: 'Account details', type: AccountDetails })
   @ApiNotFoundResponse({ description: 'No account found with this id' })
   private async getAccountDetails(
@@ -64,14 +64,14 @@ export class AccountsController {
 
   @Post()
   @IsNotSuspended()
-  @ApiOperation({ summary: 'Create a new email account' })
+  @ApiOperation({ operationId: 'createAccount', summary: 'Create a new email account' })
   @ApiCreatedResponse({ description: 'Account created successfully' })
   private async createAccount(@ReqUser() user: User, @Body() createAccountDto: CreateAccountDto): Promise<void> {
     return this.accountsService.createAccount(user, createAccountDto)
   }
 
   @Put(':accountId')
-  @ApiOperation({ summary: 'Update existing email account' })
+  @ApiOperation({ operationId: 'updateAccount', summary: 'Update existing email account' })
   @ApiOkResponse({ description: 'Account updated successfully' })
   @ApiNotFoundResponse({ description: 'No account found with this id' })
   private async updateAccount(

@@ -46,14 +46,14 @@ export class PackagesController {
   ) {}
 
   @Get()
-  @ApiOperation({ summary: '[Admin only] Get a list of packages' })
+  @ApiOperation({ operationId: 'getPackages', summary: '[Admin only] Get a list of packages' })
   @ApiOkResponse({ description: 'List of packages', type: Package, isArray: true })
   public async getPackages(): Promise<Package[]> {
     return this.packagesService.getPackages()
   }
 
   @Post()
-  @ApiOperation({ summary: '[Admin only] Create package' })
+  @ApiOperation({ operationId: 'createPackage', summary: '[Admin only] Create package' })
   @ApiCreatedResponse({ description: 'Successfully created package', type: Package })
   public async createPackage(@Body() packaget: Package): Promise<Package> {
     return this.packagesService.savePackage(packaget)
@@ -61,6 +61,7 @@ export class PackagesController {
 
   @Put(':id')
   @ApiOperation({
+    operationId: 'updatePackage',
     summary: '[Admin only] Update package',
     description: 'Will also update quota for existing users, except if you modified the users quota manually.',
   })
@@ -78,7 +79,7 @@ export class PackagesController {
   }
 
   @Delete(':id')
-  @ApiOperation({ summary: '[Admin only] Delete package' })
+  @ApiOperation({ operationId: 'deletePackage', summary: '[Admin only] Delete package' })
   @ApiOkResponse({ description: 'Successfully deleted package', type: Package })
   public async deletePackage(@Param() packageIdParams: PackageIdParams): Promise<void> {
     return this.packagesService.deletePackage(packageIdParams.id)

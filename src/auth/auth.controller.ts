@@ -31,6 +31,7 @@ export class AuthController {
 
   @Delete()
   @ApiOperation({
+    operationId: 'revokeAllAccessTokens',
     summary: 'Revoke previous access tokens',
     description: 'Note: This resource is forbidden when using an API key as authorization. Use an access token.',
   })
@@ -43,7 +44,7 @@ export class AuthController {
   }
 
   @Post()
-  @ApiOperation({ summary: 'Get an access token' })
+  @ApiOperation({ operationId: 'getAccessToken', summary: 'Get an access token' })
   @UseGuards(AuthGuard('local'))
   @ApiCreatedResponse({ description: 'Login successful', type: AccessToken })
   @ApiUnauthorizedResponse({ description: 'Invalid username or password' })

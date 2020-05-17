@@ -35,7 +35,7 @@ export class FiltersController {
   public constructor(private readonly filtersService: FiltersService) {}
 
   @Delete(':filterId')
-  @ApiOperation({ summary: 'Delete filter' })
+  @ApiOperation({ operationId: 'deleteFilter', summary: 'Delete filter' })
   @ApiOkResponse({ description: 'Filter deleted successfully' })
   @ApiNotFoundResponse({ description: 'No account or filter found with this id' })
   public async deleteFilter(@ReqUser() user: User, @Param() filterIdParams: FilterIdParams): Promise<void> {
@@ -43,7 +43,7 @@ export class FiltersController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'List filters' })
+  @ApiOperation({ operationId: 'getFilters', summary: 'List filters' })
   @ApiOkResponse({ description: 'A list of filters', type: FilterListItem, isArray: true })
   @ApiNotFoundResponse({ description: 'No account found with this id' })
   public async getFilters(@ReqUser() user: User, @Param() accountIdParams: AccountIdParams): Promise<FilterListItem[]> {
@@ -51,7 +51,7 @@ export class FiltersController {
   }
 
   @Get(':filterId')
-  @ApiOperation({ summary: 'Get filter details' })
+  @ApiOperation({ operationId: 'getFilterDetails', summary: 'Get filter details' })
   @ApiOkResponse({ description: 'Filter details', type: FilterDetails })
   @ApiNotFoundResponse({ description: 'No account or filter found with this id' })
   public async getFilterDetails(
@@ -62,7 +62,7 @@ export class FiltersController {
   }
 
   @Post()
-  @ApiOperation({ summary: 'Create a new filter' })
+  @ApiOperation({ operationId: 'createFilter', summary: 'Create a new filter' })
   @ApiCreatedResponse({ description: 'Filter created successfully' })
   @ApiNotFoundResponse({ description: 'No account found with this id' })
   public async createFilter(
@@ -74,7 +74,7 @@ export class FiltersController {
   }
 
   @Put(':filterId')
-  @ApiOperation({ summary: 'Update existing filter' })
+  @ApiOperation({ operationId: 'updateFilter', summary: 'Update existing filter' })
   @ApiOkResponse({ description: 'Account updated successfully' })
   @ApiNotFoundResponse({ description: 'No account or filter found with this id' })
   public async updateFilter(

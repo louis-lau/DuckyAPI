@@ -37,7 +37,7 @@ export class ForwardersController {
   public constructor(private readonly forwardersService: ForwardersService) {}
 
   @Delete(':forwarderId')
-  @ApiOperation({ summary: 'Delete forwarder' })
+  @ApiOperation({ operationId: 'deleteForwarder', summary: 'Delete forwarder' })
   @ApiOkResponse({ description: 'Forwarder deleted successfully' })
   @ApiNotFoundResponse({ description: 'No forwarder found with this id' })
   private async deleteForwarder(@ReqUser() user: User, @Param() forwarderIdParams: ForwarderIdParams): Promise<void> {
@@ -45,14 +45,14 @@ export class ForwardersController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'List forwarders' })
+  @ApiOperation({ operationId: 'getForwarders', summary: 'List forwarders' })
   @ApiOkResponse({ description: 'A list of forwarders', type: Forwarder, isArray: true })
   private async getForwarders(@ReqUser() user: User): Promise<Forwarder[]> {
     return this.forwardersService.getForwarders(user)
   }
 
   @Get(':forwarderId')
-  @ApiOperation({ summary: 'Get forwarder details' })
+  @ApiOperation({ operationId: 'getForwarderDetails', summary: 'Get forwarder details' })
   @ApiOkResponse({ description: 'Forwarder details', type: ForwarderDetails })
   @ApiNotFoundResponse({ description: 'No forwarder found with this id' })
   private async getForwarderDetails(
@@ -64,14 +64,14 @@ export class ForwardersController {
 
   @Post()
   @IsNotSuspended()
-  @ApiOperation({ summary: 'Create a new forwarder' })
+  @ApiOperation({ operationId: 'createForwarder', summary: 'Create a new forwarder' })
   @ApiCreatedResponse({ description: 'Forwarder created successfully' })
   private async createForwarder(@ReqUser() user: User, @Body() createForwarderDto: CreateForwarderDto): Promise<void> {
     return this.forwardersService.createForwarder(user, createForwarderDto)
   }
 
   @Put(':forwarderId')
-  @ApiOperation({ summary: 'Update existing forwarder' })
+  @ApiOperation({ operationId: 'updateForwarder', summary: 'Update existing forwarder' })
   @ApiOkResponse({ description: 'Forwarder updated successfully' })
   @ApiNotFoundResponse({ description: 'No forwarder found with this id' })
   private async updateForwarder(

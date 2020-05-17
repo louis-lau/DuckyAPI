@@ -33,21 +33,21 @@ export class DkimController {
   public constructor(private readonly dkimService: DkimService) {}
 
   @Delete()
-  @ApiOperation({ summary: 'Delete DKIM key for a domain' })
+  @ApiOperation({ operationId: 'deleteDkim', summary: 'Delete DKIM key for a domain' })
   @ApiOkResponse({ description: 'DKIM key successfully deleted' })
   public async deleteDkim(@ReqUser() user: User, @Param() dkimParams: DkimParams): Promise<void> {
     return this.dkimService.deleteDkim(user, dkimParams.domainOrAlias)
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get DKIM key info for a domain' })
+  @ApiOperation({ operationId: 'getDkim', summary: 'Get DKIM key info for a domain' })
   @ApiOkResponse({ description: 'DKIM key info', type: DkimKey })
   public async getDkim(@ReqUser() user: User, @Param() dkimParams: DkimParams): Promise<DkimKey> {
     return this.dkimService.getDKIM(user, dkimParams.domainOrAlias)
   }
 
   @Put()
-  @ApiOperation({ summary: 'Add or update DKIM key for a domain' })
+  @ApiOperation({ operationId: 'updateDkim', summary: 'Add or update DKIM key for a domain' })
   @ApiOkResponse({ description: 'DKIM key info', type: DkimKey })
   public async updateDkim(
     @ReqUser() user: User,

@@ -33,7 +33,7 @@ export class UsersController {
   @Post()
   @Roles('admin')
   @ApiTags('Users')
-  @ApiOperation({ summary: '[Admin only] Create new API user' })
+  @ApiOperation({ operationId: 'createUser', summary: '[Admin only] Create new API user' })
   @ApiCreatedResponse({ description: 'User successfully created' })
   public async createUser(@Body() createUserDto: CreateUserDto): Promise<void> {
     await this.usersService.createUser(createUserDto)
@@ -42,7 +42,7 @@ export class UsersController {
   @Get('me')
   @Roles('user')
   @ApiTags('Profile')
-  @ApiOperation({ summary: 'Get account info for current access token' })
+  @ApiOperation({ operationId: 'getMe', summary: 'Get account info for current access token' })
   @ApiOkResponse({ description: 'User info', type: User })
   public async getMe(@ReqUser() user: User): Promise<User> {
     delete user.password
@@ -54,7 +54,7 @@ export class UsersController {
   @Put('me')
   @Roles('user')
   @ApiTags('Profile')
-  @ApiOperation({ summary: 'Update username/password' })
+  @ApiOperation({ operationId: 'updateMe', summary: 'Update username/password' })
   @ApiOkResponse({ description: 'User updated successfully' })
   public async updateMe(@ReqUser() user: User, @Body() updateUserDto: UpdateUserDto): Promise<void> {
     await this.usersService.updateUsernameOrPassword(user._id, updateUserDto)
@@ -63,7 +63,7 @@ export class UsersController {
   @Put(':id')
   @Roles('admin')
   @ApiTags('Users')
-  @ApiOperation({ summary: '[Admin only] Update API user' })
+  @ApiOperation({ operationId: 'updateUser', summary: '[Admin only] Update API user' })
   @ApiOkResponse()
   public async updateUser(
     @Body() updateUserAdminDto: UpdateUserAdminDto,
