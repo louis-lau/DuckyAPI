@@ -41,7 +41,9 @@ $ npm start
 $ node dist/cli create-admin <username>
 # Create an api key for your admin user
 $ node dist/cli create-apikey <username> <keyName>
-
+```
+**Note:** The admin user created here (👆) is only meant for adding and updating users/packages. These endpoints are marked with [Admin only] in the documentation. 
+```
 # Add a package using the api, be sure to replace
 # the access token with the one you just got from create-apikey
 curl -X POST "http://localhost:3000/packages" \
@@ -56,6 +58,7 @@ curl -X POST "http://localhost:3000/users" \
 -H "Content-Type: application/json" \
 -d "{\"username\":\"johndoe\",\"password\":\"supersecret\",\"packageId\":\"5d49e11f600a423ffc0b1297\"}"
 ```
+**Note:** The normal user created here (👆) is what you would use for the rest of the endpoints, or to log in to DuckyPanel.
 
 Visit http://localhost:3000/swagger for the rest of the API documentation. You can also try it out live on swagger.
 If you want to do something cooler than staring at JSON you can now try configuring [DuckyPanel](https://github.com/louis-lau/DuckyPanel).
