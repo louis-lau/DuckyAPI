@@ -45,6 +45,7 @@ export class User {
   @ApiProperty({
     example: '5d49e11f600a423ffc0b1297',
     description: 'Package id for this user',
+    type: String,
   })
   public package?: ObjectId
 
