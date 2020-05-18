@@ -47,7 +47,7 @@ export class User {
     description: 'Package id for this user',
     type: String,
   })
-  public package?: ObjectId
+  public packageId?: ObjectId
 
   @Column()
   @ApiProperty({

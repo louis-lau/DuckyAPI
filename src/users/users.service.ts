@@ -48,7 +48,7 @@ export class UsersService {
   public async findByPackage(packageId: string): Promise<User[]> {
     return this.userRepository.find({
       where: {
-        package: new ObjectId(packageId),
+        packageId: new ObjectId(packageId),
       },
     })
   }
@@ -208,7 +208,7 @@ export class UsersService {
     }
 
     const newUser: Partial<User> = {
-      package: !admin ? new ObjectId(createUserDto.packageId) : undefined,
+      packageId: !admin ? new ObjectId(createUserDto.packageId) : undefined,
       quota: !admin ? userPackage.quota : undefined,
       maxSend: !admin ? userPackage.maxSend : undefined,
       maxReceive: !admin ? userPackage.maxReceive : undefined,
@@ -275,7 +275,7 @@ export class UsersService {
     const userEntity = new User()
     Object.assign(userEntity, user)
 
-    userEntity.package = new ObjectId(packageId)
+    userEntity.packageId = new ObjectId(packageId)
     userEntity.quota = userPackage.quota
     userEntity.maxForward = userPackage.maxForward
     userEntity.maxReceive = userPackage.maxReceive
@@ -292,7 +292,7 @@ export class UsersService {
   ): Promise<void> {
     this.userRepository.update(
       {
-        package: new ObjectID(packageId),
+        packageId: new ObjectID(packageId),
         [limit]: oldLimit,
       },
       {
