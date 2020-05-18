@@ -13,7 +13,7 @@ import {
   ValidateNested,
 } from 'class-validator'
 
-class CreateUpdateAccountLimits {
+export class CreateUpdateAccountLimits {
   @ApiPropertyOptional({
     example: 1073741824,
     description: 'How many bytes the account is allowed to use',

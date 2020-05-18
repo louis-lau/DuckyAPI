@@ -210,6 +210,9 @@ export class UsersService {
     const newUser: Partial<User> = {
       package: !admin ? new ObjectId(createUserDto.packageId) : undefined,
       quota: !admin ? userPackage.quota : undefined,
+      maxSend: !admin ? userPackage.maxSend : undefined,
+      maxReceive: !admin ? userPackage.maxReceive : undefined,
+      maxForward: !admin ? userPackage.maxForward : undefined,
       roles: admin ? ['admin'] : ['user'],
     }
     Object.assign(newUser, createUserDto)
@@ -274,18 +277,26 @@ export class UsersService {
 
     userEntity.package = new ObjectId(packageId)
     userEntity.quota = userPackage.quota
+    userEntity.maxForward = userPackage.maxForward
+    userEntity.maxReceive = userPackage.maxReceive
+    userEntity.maxSend = userPackage.maxSend
 
     return this.userRepository.save(userEntity)
   }
 
-  public async replaceQuotasForPackage(packageId: string, oldQuota: number, newQuota: number): Promise<void> {
+  public async replacelimitForPackage(
+    packageId: string,
+    limit: 'quota' | 'maxForward' | 'maxReceive' | 'maxSend',
+    oldLimit: number,
+    newLimit: number,
+  ): Promise<void> {
     this.userRepository.update(
       {
         package: new ObjectID(packageId),
-        quota: oldQuota,
+        [limit]: oldLimit,
       },
       {
-        quota: newQuota,
+        [limit]: newLimit,
       },
     )
   }

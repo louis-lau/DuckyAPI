@@ -152,6 +152,14 @@ export class ForwardersService {
       )
     }
 
+    if (
+      createForwarderDto.limits.forward &&
+      user.maxForward !== 0 &&
+      createForwarderDto.limits.forward > user.maxForward
+    ) {
+      throw new BadRequestException(`Forward limit may not be higher than ${user.maxForward}`, 'ValidationError')
+    }
+
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
@@ -161,7 +169,7 @@ export class ForwardersService {
             address: createForwarderDto.address,
             name: createForwarderDto.name,
             targets: createForwarderDto.targets,
-            forwards: createForwarderDto.limits.forward || this.config.MAX_FORWARD,
+            forwards: createForwarderDto.limits.forward || user.maxForward,
             allowWildcard: this.config.ALLOW_FORWARDER_WILDCARD,
             tags: [`domain:${addressDomain}`, 'forwarder'],
           },

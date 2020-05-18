@@ -66,13 +66,40 @@ export class PackagesController {
     description: 'Will also update quota for existing users, except if you modified the users quota manually.',
   })
   @ApiOkResponse({ description: 'Successfully updated package', type: Package })
-  public async updatePackage(@Body() packaget: Package, @Param() packageIdParams: PackageIdParams): Promise<Package> {
+  public async updatePackage(@Body() newPackage: Package, @Param() packageIdParams: PackageIdParams): Promise<Package> {
     const oldPackage = await this.packagesService.getPackageById(packageIdParams.id)
     if (oldPackage) {
-      packaget._id = packageIdParams.id
-      const savedPackage = await this.packagesService.savePackage(packaget)
-      await this.usersService.replaceQuotasForPackage(packaget._id, oldPackage.quota, packaget.quota)
-      return savedPackage
+      newPackage._id = packageIdParams.id
+      await this.packagesService.savePackage(newPackage)
+
+      if (newPackage.quota) {
+        await this.usersService.replacelimitForPackage(newPackage._id, 'quota', oldPackage.quota, newPackage.quota)
+      }
+      if (newPackage.maxSend) {
+        await this.usersService.replacelimitForPackage(
+          newPackage._id,
+          'maxSend',
+          oldPackage.maxSend,
+          newPackage.maxSend,
+        )
+      }
+      if (newPackage.maxReceive) {
+        await this.usersService.replacelimitForPackage(
+          newPackage._id,
+          'maxReceive',
+          oldPackage.maxReceive,
+          newPackage.maxReceive,
+        )
+      }
+      if (newPackage.maxForward) {
+        await this.usersService.replacelimitForPackage(
+          newPackage._id,
+          'maxForward',
+          oldPackage.maxForward,
+          newPackage.maxForward,
+        )
+      }
+      return this.packagesService.getPackageById(packageIdParams.id)
     } else {
       throw new NotFoundException(`No package found with id ${packageIdParams.id}`, 'PackageNotFoundError')
     }

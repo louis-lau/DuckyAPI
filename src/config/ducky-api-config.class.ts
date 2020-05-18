@@ -71,30 +71,6 @@ export class DuckyApiConfig {
   ALLOW_FORWARDER_WILDCARD = true
 
   @Transform(jsonParse, { toClassOnly: true })
-  @IsOptional()
-  @IsNumber()
-  @Min(0)
-  MAX_QUOTA: number
-
-  @Transform(jsonParse, { toClassOnly: true })
-  @IsOptional()
-  @IsNumber()
-  @Min(0)
-  MAX_SEND: number
-
-  @Transform(jsonParse, { toClassOnly: true })
-  @IsOptional()
-  @IsNumber()
-  @Min(0)
-  MAX_FORWARD: number
-
-  @Transform(jsonParse, { toClassOnly: true })
-  @IsOptional()
-  @IsNumber()
-  @Min(0)
-  MAX_RECEIVE: number
-
-  @Transform(jsonParse, { toClassOnly: true })
   @IsBoolean()
   ARENA_ENABLED = false
 

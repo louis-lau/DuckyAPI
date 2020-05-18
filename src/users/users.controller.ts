@@ -34,9 +34,14 @@ export class UsersController {
   @Roles('admin')
   @ApiTags('Users')
   @ApiOperation({ operationId: 'getUsers', summary: '[Admin only] List all users' })
-  @ApiCreatedResponse({ description: 'list of users', type: User, isArray: true })
+  @ApiOkResponse({ description: 'list of users', type: User, isArray: true })
   public async getUsers(): Promise<User[]> {
-    return this.usersService.getUsers()
+    return (await this.usersService.getUsers()).map((user) => {
+      delete user.password
+      delete user.minTokenDate
+      delete user.domains
+      return user
+    })
   }
 
   @Post()
@@ -55,8 +60,8 @@ export class UsersController {
   @ApiOkResponse({ description: 'User info', type: User })
   public async getMe(@ReqUser() user: User): Promise<User> {
     delete user.password
-    delete user.package
     delete user.minTokenDate
+    delete user.domains
     return user
   }
 

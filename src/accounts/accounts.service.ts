@@ -15,6 +15,7 @@ import { User } from 'src/users/user.entity'
 import { AccountDetails } from './class/account-details.class'
 import { AccountListItem } from './class/account-list-item.class'
 import { CreateAccountDto } from './dto/create-account.dto'
+import { CreateUpdateAccountLimits } from './dto/create-update-common.dto'
 import { UpdateAccountDto } from './dto/update-account.dto'
 
 @Injectable()
@@ -158,6 +159,18 @@ export class AccountsService {
     }
   }
 
+  private async validateLimitsOrFail(user: User, limits: CreateUpdateAccountLimits): Promise<void> {
+    if (limits.send && user.maxSend !== 0 && limits.send > user.maxSend) {
+      throw new BadRequestException(`Send limit may not be higher than ${user.maxSend}`, 'ValidationError')
+    }
+    if (limits.receive && user.maxReceive !== 0 && limits.receive > user.maxReceive) {
+      throw new BadRequestException(`Receive limit may not be higher than ${user.maxReceive}`, 'ValidationError')
+    }
+    if (limits.forward && user.maxForward !== 0 && limits.forward > user.maxForward) {
+      throw new BadRequestException(`Forward limit may not be higher than ${user.maxForward}`, 'ValidationError')
+    }
+  }
+
   public async createAccount(user: User, createAccountDto: CreateAccountDto): Promise<void> {
     const addressDomain = createAccountDto.address.substring(createAccountDto.address.lastIndexOf('@') + 1)
     if (!user.domains.some((domain): boolean => domain.domain === addressDomain)) {
@@ -166,6 +179,10 @@ export class AccountsService {
         `You don't have permission to add accounts on ${addressDomain}. Add the domain first.`,
         'DomainNotFoundError',
       )
+    }
+
+    if (createAccountDto.limits) {
+      await this.validateLimitsOrFail(user, createAccountDto.limits)
     }
 
     let apiResponse: AxiosResponse<any>
@@ -179,10 +196,10 @@ export class AccountsService {
             name: createAccountDto.name,
             password: createAccountDto.password,
             spamLevel: createAccountDto.spamLevel,
-            quota: createAccountDto.limits.quota || this.config.MAX_QUOTA,
-            recipients: createAccountDto.limits.send || this.config.MAX_SEND,
-            receivedMax: createAccountDto.limits.receive || this.config.MAX_RECEIVE,
-            forwards: createAccountDto.limits.forward || this.config.MAX_FORWARD,
+            quota: createAccountDto.limits.quota || user.quota,
+            recipients: createAccountDto.limits.send || user.maxSend,
+            receivedMax: createAccountDto.limits.receive || user.maxReceive,
+            forwards: createAccountDto.limits.forward || user.maxForward,
             disabledScopes: createAccountDto.disabledScopes,
             allowUnsafe: this.config.ALLOW_UNSAFE_ACCOUNT_PASSWORDS,
             tags: [`domain:${addressDomain}`],
@@ -221,6 +238,10 @@ export class AccountsService {
   public async updateAccount(user: User, accountId: string, updateAccountDto: UpdateAccountDto): Promise<void> {
     // Run get accountdetails to make sure account exists and user has permission, we don't do anything with it because it will throw an exception if needed
     await this.getAccountDetails(user, accountId)
+
+    if (updateAccountDto.limits) {
+      await this.validateLimitsOrFail(user, updateAccountDto.limits)
+    }
 
     let apiResponse: AxiosResponse<any>
     try {
