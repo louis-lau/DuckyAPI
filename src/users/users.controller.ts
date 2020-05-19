@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Param, Post, Put, UseGuards } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
+  ApiBody,
   ApiCreatedResponse,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
@@ -15,6 +16,7 @@ import { Roles } from 'src/common/decorators/roles.decorator'
 import { RolesGuard } from 'src/common/guards/roles.guard'
 
 import { CreateUserDto } from './dto/create-user.dto'
+import { DeleteUserDto } from './dto/delete-user.dto'
 import { UpdateUserAdminDto } from './dto/update-user-admin.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { UserIdParams } from './dto/user-id-params.dto'
@@ -72,6 +74,16 @@ export class UsersController {
   @ApiOkResponse({ description: 'User updated successfully' })
   public async updateMe(@ReqUser() user: User, @Body() updateUserDto: UpdateUserDto): Promise<void> {
     await this.usersService.updateUsernameOrPassword(user._id, updateUserDto)
+  }
+
+  @Delete(':id')
+  @Roles('admin')
+  @ApiTags('Users')
+  @ApiOperation({ operationId: 'deleteUser', summary: '[Admin only] Delete API user' })
+  @ApiBody({ required: false, type: DeleteUserDto })
+  @ApiOkResponse({ description: 'User successfully deleted' })
+  public async deleteUser(@Param() userIdParams: UserIdParams, @Body() deleteUserDto?: DeleteUserDto): Promise<void> {
+    this.usersService.deleteUser(userIdParams.id, deleteUserDto?.onlyDeleteDomainsAndSuspend)
   }
 
   @Put(':id')

@@ -13,8 +13,10 @@ import { Queue } from 'bull'
 import { ObjectID, ObjectId } from 'mongodb'
 import { nanoid as NanoId } from 'nanoid'
 import { Domain, DomainAlias } from 'src/domains/domain.entity'
+import { DomainsService } from 'src/domains/domains.service'
 import { Package } from 'src/packages/package.entity'
 import { PackagesService } from 'src/packages/packages.service'
+import { DeleteForDomainData } from 'src/tasks/delete-for-domain/delete-for-domain.interfaces'
 import { SuspensionData } from 'src/tasks/suspension/suspension.interfaces'
 import { MongoRepository } from 'typeorm'
 
@@ -29,8 +31,12 @@ export class UsersService {
     private readonly userRepository: MongoRepository<User>,
     @Inject(forwardRef(() => PackagesService))
     private readonly packagesService: PackagesService,
+    @Inject(forwardRef(() => DomainsService))
+    private readonly domainsService: DomainsService,
     @InjectQueue('suspension')
     readonly suspensionQueue: Queue<SuspensionData>,
+    @InjectQueue('deleteForDomain')
+    readonly deleteForDomainQueue: Queue<DeleteForDomainData>,
   ) {}
   private readonly logger = new Logger(UsersService.name, true)
 
@@ -67,8 +73,23 @@ export class UsersService {
 
   public async findByIdNoPassword(id: string): Promise<User | undefined> {
     const user = await this.userRepository.findOne(id)
+    if (!user) {
+      return undefined
+    }
     delete user.password
     return user
+  }
+
+  public async deleteUser(id: string, onlyDeleteDomainsAndSuspend = false): Promise<void> {
+    const user = await this.findByIdNoPassword(id)
+    if (user) {
+      await this.domainsService.deleteAllDomains(user)
+      if (onlyDeleteDomainsAndSuspend) {
+        this.suspend(user._id, true)
+      } else {
+        this.userRepository.delete(user._id)
+      }
+    }
   }
 
   public async findByDomain(domain: string): Promise<User[] | undefined> {

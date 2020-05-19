@@ -11,11 +11,11 @@ export class UnauthorizedExceptionFilter implements ExceptionFilter {
 
     let message: string
 
-    if (req.authInfo.name === 'TokenExpiredError') {
+    if (req.authInfo?.name === 'TokenExpiredError') {
       message = 'Your access token has expired, please request a new access token'
-    } else if (req.authInfo.name === 'JsonWebTokenError') {
+    } else if (req.authInfo?.name === 'JsonWebTokenError') {
       message = 'Your access token has an invalid format'
-    } else if (req.authInfo.message === 'No auth token') {
+    } else if (req.authInfo?.message === 'No auth token') {
       message = 'No access token provided, please provide an access token to access this resource'
     } else {
       message = 'Invalid access token'

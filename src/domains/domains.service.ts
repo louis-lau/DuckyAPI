@@ -363,6 +363,12 @@ export class DomainsService {
     await this.usersService.pullDomain(user._id, domain)
   }
 
+  public async deleteAllDomains(user: User): Promise<void> {
+    for (const domain of user.domains) {
+      this.deleteDomain(user, domain.domain)
+    }
+  }
+
   public async addAlias(user: User, domain: string, alias: string): Promise<void> {
     await this.checkIfDomainIsAddedToUser(user, domain)
     await this.checkIfDomainAlreadyExists(user, alias)
@@ -402,6 +408,7 @@ export class DomainsService {
   public async deleteAlias(user: User, domain: string, alias: string): Promise<void> {
     await this.checkIfDomainIsAddedToUser(user, domain)
     await this.checkIfDomainIsAddedToUser(user, alias, true)
+
     let resolveResponse: AxiosResponse<any>
     try {
       resolveResponse = await this.httpService
@@ -415,10 +422,13 @@ export class DomainsService {
       this.logger.error(error.message)
       throw new InternalServerErrorException('Backend service not reachable', 'WildduckApiError')
     }
+
+    let aliasExists = true
+
     if (resolveResponse.data.error || !resolveResponse.data.success) {
       switch (resolveResponse.data.code) {
         case 'AliasNotFound':
-          throw new NotFoundException(`No such alias found`, 'AliasNotFoundError')
+          aliasExists = false
 
         default:
           this.logger.error(resolveResponse.data)
@@ -426,24 +436,26 @@ export class DomainsService {
       }
     }
 
-    let deleteResponse: AxiosResponse<any>
-    try {
-      deleteResponse = await this.httpService
-        .delete(`${this.config.WILDDUCK_API_URL}/domainaliases/${resolveResponse.data.id}`, {
-          headers: {
-            'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
-          },
-        })
-        .toPromise()
-    } catch (error) {
-      this.logger.error(error.message)
-      throw new InternalServerErrorException('Backend service not reachable', 'WildduckApiError')
-    }
-    if (deleteResponse.data.error || !deleteResponse.data.success) {
-      switch (deleteResponse.data.code) {
-        default:
-          this.logger.error(deleteResponse.data)
-          throw new InternalServerErrorException('Unknown error')
+    if (aliasExists) {
+      let deleteResponse: AxiosResponse<any>
+      try {
+        deleteResponse = await this.httpService
+          .delete(`${this.config.WILDDUCK_API_URL}/domainaliases/${resolveResponse.data.id}`, {
+            headers: {
+              'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
+            },
+          })
+          .toPromise()
+      } catch (error) {
+        this.logger.error(error.message)
+        throw new InternalServerErrorException('Backend service not reachable', 'WildduckApiError')
+      }
+      if (deleteResponse.data.error || !deleteResponse.data.success) {
+        switch (deleteResponse.data.code) {
+          default:
+            this.logger.error(deleteResponse.data)
+            throw new InternalServerErrorException('Unknown error')
+        }
       }
     }
 
