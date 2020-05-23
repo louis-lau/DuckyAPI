@@ -221,7 +221,8 @@ export class UsersService {
     createUserDto.username = createUserDto.username.toLowerCase()
 
     let userPackage: Package
-    if (!admin) {
+    const hasPackage: boolean = !admin && createUserDto.packageId !== undefined
+    if (hasPackage) {
       userPackage = await this.packagesService.getPackageById(createUserDto.packageId)
       if (!userPackage) {
         throw new BadRequestException(`No package found with id ${createUserDto.packageId}`, 'PackageNotFoundError')
@@ -229,11 +230,11 @@ export class UsersService {
     }
 
     const newUser: Partial<User> = {
-      packageId: !admin ? new ObjectId(createUserDto.packageId) : undefined,
-      quota: !admin ? userPackage.quota : undefined,
-      maxSend: !admin ? userPackage.maxSend : undefined,
-      maxReceive: !admin ? userPackage.maxReceive : undefined,
-      maxForward: !admin ? userPackage.maxForward : undefined,
+      packageId: hasPackage ? new ObjectId(createUserDto.packageId) : undefined,
+      quota: hasPackage ? userPackage.quota : undefined,
+      maxSend: hasPackage ? userPackage.maxSend : undefined,
+      maxReceive: hasPackage ? userPackage.maxReceive : undefined,
+      maxForward: hasPackage ? userPackage.maxForward : undefined,
       roles: admin ? ['admin'] : ['user'],
     }
     Object.assign(newUser, createUserDto)
