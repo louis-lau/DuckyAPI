@@ -1,17 +1,26 @@
 import { BadRequestException, ValidationError, ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
+import fs from 'fs'
 import Helmet from 'helmet'
+import { resolve } from 'path'
+import { promisify } from 'util'
 
 import { AppModule } from './app.module'
 import { UnauthorizedExceptionFilter } from './common/filters/unauthorized-exception.filter'
 import { ConfigService } from './config/config.service'
 
+const writeFile = promisify(fs.writeFile)
 declare const module: any
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule)
   const config: ConfigService = app.get('ConfigService')
+
+  if (config.SERVE_DUCKYPANEL) {
+    // Write baseurl to file for DuckyPanel to find
+    await writeFile(resolve('duckypanel/dist/DuckyPanel/config/production.json'), `{"apiUrl":"/${config.BASE_URL}"}`)
+  }
 
   app.setGlobalPrefix(config.BASE_URL)
 

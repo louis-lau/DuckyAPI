@@ -57,9 +57,18 @@ curl -X POST "http://localhost:3000/users" \
 # or request an access token from the /authentication endpoint
 ```
 
-Visit http://localhost:3000/swagger for the rest of the API documentation. You can also try it out live on swagger.
-If you want to do something cooler than staring at JSON you can now try configuring [DuckyPanel](https://github.com/louis-lau/DuckyPanel).
+## Integrated DuckyPanel
+DuckyApi can serve DuckyPanel on its integrated server. Just run `npm run duckypanel:install` and let it install, this can take a bit of time. Open your configuration and set `SERVE_DUCKYPANEL` to `true`. Then set a custom `BASE_URL` for the api, for example `/api`.
+
+Duckypanel will now be live at http://localhost:3000/, and DuckyApi at http://localhost:3000/api.
+
+#### Updating integrated DuckyPanel
+Update DuckyPanel by running `npm run duckypanel:update`.
+
+## API documentation
+Visit http://localhost:3000/swagger for the API documentation. You can also try it out live.
 
 ![Swagger API documentation screenshot](docs/images/swagger.png)
 
+## Task queue
 Any created background tasks and their progress can be viewed on http://localhost:3000/arena with basicauth if you've enabled this in the configuration. Removing an entire domain or suspending a user will trigger a background task.

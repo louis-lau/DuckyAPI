@@ -11,8 +11,12 @@ import {
   Matches,
   Min,
   NotContains,
+  Validate,
   ValidateIf,
   ValidateNested,
+  ValidationArguments,
+  ValidatorConstraint,
+  ValidatorConstraintInterface,
 } from 'class-validator'
 import { DnsCheckMxRecord } from 'src/domains/class/dns.class'
 
@@ -21,6 +25,22 @@ const jsonParse = (value: any): any => {
     return JSON.parse(value)
   } catch (error) {
     return value
+  }
+}
+
+@ValidatorConstraint({ name: 'customBaseurlIfDuckpanel', async: false })
+class CustomBaseurlIfDuckpanel implements ValidatorConstraintInterface {
+  validate(text: string, args: ValidationArguments): boolean {
+    const config = args.object as DuckyApiConfig
+    if (config.SERVE_DUCKYPANEL) {
+      return text !== ''
+    } else {
+      return true
+    }
+  }
+
+  defaultMessage(): string {
+    return 'You need to specify a custom BASE_URL when SERVE_DUCKYPANEL is set to true'
   }
 }
 
@@ -34,8 +54,22 @@ export class DuckyApiConfig {
   @IsNumber()
   PORT = 3000
 
-  @Transform((value: string) => (value.endsWith('/') ? value.slice(0, -1) : value)) // Remove trailing slash
+  @Transform(jsonParse, { toClassOnly: true })
+  @IsBoolean()
+  SERVE_DUCKYPANEL = false
+
+  @Transform((value: string) => {
+    // Remove leading and trailing slash
+    if (value.endsWith('/')) {
+      value = value.slice(0, -1)
+    }
+    if (value.startsWith('/')) {
+      value = value.slice(1)
+    }
+    return value
+  })
   @IsString()
+  @Validate(CustomBaseurlIfDuckpanel)
   BASE_URL = '/'
 
   @IsNotEmpty()

@@ -1,8 +1,10 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
+import { ServeStaticModule } from '@nestjs/serve-static'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import Arena from 'bull-arena'
 import BasicAuth from 'express-basic-auth'
 import { ConsoleModule } from 'nestjs-console'
+import { resolve } from 'path'
 
 import { AccountsModule } from './accounts/accounts.module'
 import { ApiKeysModule } from './api-keys/api-keys.module'
@@ -50,6 +52,21 @@ const migrationContext = require.context('.', true, /migrations\/\d*-.*\.ts$/)
         useUnifiedTopology: true,
         appname: 'ducky-api',
       }),
+    }),
+    ServeStaticModule.forRootAsync({
+      useFactory: (config: ConfigService) => {
+        if (config.SERVE_DUCKYPANEL) {
+          return [
+            {
+              rootPath: resolve('duckypanel/dist/DuckyPanel'),
+              exclude: [`/${config.BASE_URL}/*`],
+            },
+          ]
+        }
+        return []
+      },
+      imports: [ConfigModule],
+      inject: [ConfigService],
     }),
     ConfigModule,
     AuthModule,

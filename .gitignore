@@ -6,6 +6,9 @@
 config/*
 !config/example.env
 
+# Duckypanel files
+duckypanel
+
 # Logs
 logs
 *.log
