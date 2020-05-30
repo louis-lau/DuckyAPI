@@ -71,4 +71,4 @@ Visit http://localhost:3000/swagger for the API documentation. You can also try 
 ![Swagger API documentation screenshot](docs/images/swagger.png)
 
 ## Task queue
-Any created background tasks and their progress can be viewed on http://localhost:3000/arena with basicauth if you've enabled this in the configuration. Removing an entire domain or suspending a user will trigger a background task.
+Any created background tasks and their progress can be viewed on http://localhost:3000/queues with basicauth if you've enabled this in the configuration. Removing a domain or suspending a user will trigger a background task to execute mass changes.

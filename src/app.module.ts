@@ -86,18 +86,18 @@ const migrationContext = require.context('.', true, /migrations\/\d*-.*\.ts$/)
 export class AppModule implements NestModule {
   constructor(private readonly config: ConfigService) {}
   public configure(consumer: MiddlewareConsumer): void {
-    if (this.config.ARENA_ENABLED) {
-      if (this.config.ARENA_USER) {
+    if (this.config.QUEUE_UI) {
+      if (this.config.QUEUE_UI_USER) {
         consumer
           .apply(
             BasicAuth({
               challenge: true,
               users: {
-                [this.config.ARENA_USER]: this.config.ARENA_PASSWORD,
+                [this.config.QUEUE_UI_USER]: this.config.QUEUE_UI_PASSWORD,
               },
             }),
           )
-          .forRoutes(`arena`)
+          .forRoutes(`queues`)
       }
 
       consumer
@@ -122,7 +122,7 @@ export class AppModule implements NestModule {
             },
           ),
         )
-        .forRoutes(`arena`)
+        .forRoutes(`queues`)
     }
   }
 }

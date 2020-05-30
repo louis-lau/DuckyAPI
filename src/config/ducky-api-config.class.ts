@@ -106,17 +106,18 @@ export class DuckyApiConfig {
 
   @Transform(jsonParse, { toClassOnly: true })
   @IsBoolean()
-  ARENA_ENABLED = false
+  QUEUE_UI = false
 
-  @ValidateIf((config: DuckyApiConfig) => config.ARENA_ENABLED === true)
+  @ValidateIf((config: DuckyApiConfig) => config.QUEUE_UI === true)
+  @IsOptional()
   @IsNotEmpty()
   @IsString()
-  ARENA_USER: string
+  QUEUE_UI_USER?: string
 
-  @ValidateIf((config: DuckyApiConfig) => config.ARENA_ENABLED === true)
+  @ValidateIf((config: DuckyApiConfig) => config.QUEUE_UI === true && config.QUEUE_UI_USER !== undefined)
   @IsNotEmpty()
   @IsString()
-  ARENA_PASSWORD: string
+  QUEUE_UI_PASSWORD: string
 
   @Transform(jsonParse, { toClassOnly: true })
   @Type(() => DnsCheckMxRecord)
