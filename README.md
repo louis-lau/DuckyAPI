@@ -56,6 +56,12 @@ curl -X POST "http://localhost:3000/users" \
 # Now use the normal user to log in to DuckyPanel,
 # or request an access token from the /authentication endpoint
 ```
+👆 Instead of using curl you can also execute these requests from http://localhost:3000/swagger
+
+## API documentation
+API documentation with code examples is available on louis-lau.github.io/DuckyAPI.
+
+You can also visit http://localhost:3000/swagger to try the api out live in your browser. Much nice than using curl!
 
 ## Integrated DuckyPanel
 DuckyApi can serve DuckyPanel on its integrated server. Just run `npm run duckypanel:install` and let it install, this can take a bit of time. Open your configuration and set `SERVE_DUCKYPANEL` to `true`. Then set a custom `BASE_URL` for the api, for example `/api`.
@@ -65,10 +71,7 @@ Duckypanel will now be live at http://localhost:3000/, and DuckyApi at http://lo
 #### Updating integrated DuckyPanel
 Update DuckyPanel by running `npm run duckypanel:update`.
 
-## API documentation
-Visit http://localhost:3000/swagger for the API documentation. You can also try it out live.
 
-![Swagger API documentation screenshot](docs/images/swagger.png)
 
 ## Task queue
 Any created background tasks and their progress can be viewed on http://localhost:3000/queues with basicauth if you've enabled this in the configuration. Removing a domain or suspending a user will trigger a background task to execute mass changes.
