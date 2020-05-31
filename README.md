@@ -56,10 +56,10 @@ curl -X POST "http://localhost:3000/users" \
 # Now use the normal user to log in to DuckyPanel,
 # or request an access token from the /authentication endpoint
 ```
-👆 Instead of using curl you can also execute these requests from http://localhost:3000/swagger
+👆 Instead of using curl you can also execute this request from http://localhost:3000/swagger
 
 ## API documentation
-API documentation with code examples is available on louis-lau.github.io/DuckyAPI.
+API documentation with code examples is available on https://louis-lau.github.io/DuckyAPI.
 
 You can also visit http://localhost:3000/swagger to try the api out live in your browser. Much nice than using curl!
 
