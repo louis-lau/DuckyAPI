@@ -2,44 +2,25 @@
 <html>
   <head>
     <title>DuckyAPI documentation</title>
-    <!-- needed for adaptive design -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Roboto:300,400,700" rel="stylesheet" />
 
-    <!--
-    ReDoc doesn't change outer page styles
-    -->
     <style>
       body {
         margin: 0;
         padding: 0;
       }
+
+      /* hides the 'required' labels on the response objects.
+      As the classes are minified they will need to be updated when updating redoc to a new version */
+      .sc-ibxdXY.bAIwWH .sc-ksYbfQ.sc-hmzhuo.jsTAxL {
+        display: none;
+      }
     </style>
   </head>
   <body>
-    <redoc spec-url="openapi.json" expand-responses="200,201"></redoc>
+    <redoc spec-url="openapi.json" expand-responses="200,201" path-in-middle-panel="true"></redoc>
     <script src="https://cdn.jsdelivr.net/npm/redoc@2.0.0-rc.30/bundles/redoc.standalone.js"></script>
-    <script>
-      window.onload = function () {
-        // This code hides the 'required' labels on the response objects
-        const responseClasses = document
-          .evaluate("//h5[text()='Response Schema: ']", document, null, XPathResult.ANY_TYPE, null)
-          .iterateNext().parentElement.className
-        const requiredClasses = document
-          .evaluate("//div[text()=' required ']", document, null, XPathResult.ANY_TYPE, null)
-          .iterateNext().className
-
-        const responseClassesSelector = `.${responseClasses.replace(/ /g, '.')}`
-        const requiredClassesSelector = `.${requiredClasses.replace(/ /g, '.')}`
-
-        const css = `${responseClassesSelector} ${requiredClassesSelector} { display: none; }`
-        const head = document.head || document.getElementsByTagName('head')[0]
-        const style = document.createElement('style')
-
-        head.appendChild(style)
-        style.appendChild(document.createTextNode(css))
-      }
-    </script>
   </body>
 </html>
