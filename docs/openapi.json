@@ -1206,11 +1206,8 @@
         "parameters": [],
         "responses": {
           "200": { "description": "Successfully expired previous tokens" },
-          "400": { "description": "Error that is resolvable user side" },
-          "401": { "description": "Invalid or expired token" },
-          "500": {
-            "description": "Server error that is not resolvable user side"
-          }
+          "400": { "description": "Bad user input" },
+          "401": { "description": "Invalid or expired token" }
         },
         "tags": ["Authentication"],
         "security": [{ "bearer": [] }],
@@ -1278,11 +1275,8 @@
               }
             }
           },
-          "400": { "description": "Error that is resolvable user side" },
-          "401": { "description": "Invalid username or password" },
-          "500": {
-            "description": "Server error that is not resolvable user side"
-          }
+          "400": { "description": "Bad user input" },
+          "401": { "description": "Invalid username or password" }
         },
         "tags": ["Authentication"],
         "x-code-samples": [
@@ -1346,11 +1340,8 @@
               }
             }
           },
-          "400": { "description": "Error that is resolvable user side" },
-          "401": { "description": "Invalid or expired token" },
-          "500": {
-            "description": "Server error that is not resolvable user side"
-          }
+          "400": { "description": "Bad user input" },
+          "401": { "description": "Invalid or expired token" }
         },
         "security": [{ "bearer": [] }],
         "tags": ["Users"],
@@ -1411,11 +1402,8 @@
         },
         "responses": {
           "201": { "description": "User successfully created" },
-          "400": { "description": "Error that is resolvable user side" },
-          "401": { "description": "Invalid or expired token" },
-          "500": {
-            "description": "Server error that is not resolvable user side"
-          }
+          "400": { "description": "Bad user input" },
+          "401": { "description": "Invalid or expired token" }
         },
         "security": [{ "bearer": [] }],
         "tags": ["Users"],
@@ -1477,11 +1465,8 @@
               }
             }
           },
-          "400": { "description": "Error that is resolvable user side" },
-          "401": { "description": "Invalid or expired token" },
-          "500": {
-            "description": "Server error that is not resolvable user side"
-          }
+          "400": { "description": "Bad user input" },
+          "401": { "description": "Invalid or expired token" }
         },
         "security": [{ "bearer": [] }],
         "tags": ["Profile"],
@@ -1542,11 +1527,8 @@
         },
         "responses": {
           "200": { "description": "User updated successfully" },
-          "400": { "description": "Error that is resolvable user side" },
-          "401": { "description": "Invalid or expired token" },
-          "500": {
-            "description": "Server error that is not resolvable user side"
-          }
+          "400": { "description": "Bad user input" },
+          "401": { "description": "Invalid or expired token" }
         },
         "security": [{ "bearer": [] }],
         "tags": ["Profile"],
@@ -1618,11 +1600,8 @@
         },
         "responses": {
           "200": { "description": "User successfully deleted" },
-          "400": { "description": "Error that is resolvable user side" },
-          "401": { "description": "Invalid or expired token" },
-          "500": {
-            "description": "Server error that is not resolvable user side"
-          }
+          "400": { "description": "Bad user input" },
+          "401": { "description": "Invalid or expired token" }
         },
         "security": [{ "bearer": [] }],
         "tags": ["Users"],
@@ -1692,11 +1671,8 @@
         },
         "responses": {
           "200": { "description": "" },
-          "400": { "description": "Error that is resolvable user side" },
-          "401": { "description": "Invalid or expired token" },
-          "500": {
-            "description": "Server error that is not resolvable user side"
-          }
+          "400": { "description": "Bad user input" },
+          "401": { "description": "Invalid or expired token" }
         },
         "security": [{ "bearer": [] }],
         "tags": ["Users"],
@@ -1761,11 +1737,8 @@
               }
             }
           },
-          "400": { "description": "Error that is resolvable user side" },
-          "401": { "description": "Invalid or expired token" },
-          "500": {
-            "description": "Server error that is not resolvable user side"
-          }
+          "400": { "description": "Bad user input" },
+          "401": { "description": "Invalid or expired token" }
         },
         "tags": ["Packages"],
         "security": [{ "bearer": [] }],
@@ -1833,11 +1806,8 @@
               }
             }
           },
-          "400": { "description": "Error that is resolvable user side" },
-          "401": { "description": "Invalid or expired token" },
-          "500": {
-            "description": "Server error that is not resolvable user side"
-          }
+          "400": { "description": "Bad user input" },
+          "401": { "description": "Invalid or expired token" }
         },
         "tags": ["Packages"],
         "security": [{ "bearer": [] }],
@@ -1917,11 +1887,8 @@
               }
             }
           },
-          "400": { "description": "Error that is resolvable user side" },
-          "401": { "description": "Invalid or expired token" },
-          "500": {
-            "description": "Server error that is not resolvable user side"
-          }
+          "400": { "description": "Bad user input" },
+          "401": { "description": "Invalid or expired token" }
         },
         "tags": ["Packages"],
         "security": [{ "bearer": [] }],
@@ -1990,11 +1957,8 @@
               }
             }
           },
-          "400": { "description": "Error that is resolvable user side" },
-          "401": { "description": "Invalid or expired token" },
-          "500": {
-            "description": "Server error that is not resolvable user side"
-          }
+          "400": { "description": "Bad user input" },
+          "401": { "description": "Invalid or expired token" }
         },
         "tags": ["Packages"],
         "security": [{ "bearer": [] }],
@@ -2058,12 +2022,9 @@
         ],
         "responses": {
           "200": { "description": "Domain successfully deleted" },
-          "400": { "description": "Error that is resolvable user side" },
+          "400": { "description": "Bad user input" },
           "401": { "description": "Invalid or expired token" },
-          "404": { "description": "Domain not found on account" },
-          "500": {
-            "description": "Server error that is not resolvable user side"
-          }
+          "404": { "description": "Domain not found on account" }
         },
         "tags": ["Domains"],
         "security": [{ "bearer": [] }],
@@ -2128,11 +2089,8 @@
               }
             }
           },
-          "400": { "description": "Error that is resolvable user side" },
-          "401": { "description": "Invalid or expired token" },
-          "500": {
-            "description": "Server error that is not resolvable user side"
-          }
+          "400": { "description": "Bad user input" },
+          "401": { "description": "Invalid or expired token" }
         },
         "tags": ["Domains"],
         "security": [{ "bearer": [] }],
@@ -2193,11 +2151,8 @@
         },
         "responses": {
           "201": { "description": "Domain successfully added" },
-          "400": { "description": "Error that is resolvable user side" },
-          "401": { "description": "Invalid or expired token" },
-          "500": {
-            "description": "Server error that is not resolvable user side"
-          }
+          "400": { "description": "Bad user input" },
+          "401": { "description": "Invalid or expired token" }
         },
         "tags": ["Domains"],
         "security": [{ "bearer": [] }],
@@ -2267,12 +2222,9 @@
               }
             }
           },
-          "400": { "description": "Error that is resolvable user side" },
+          "400": { "description": "Bad user input" },
           "401": { "description": "Invalid or expired token" },
-          "404": { "description": "Domain not found on account" },
-          "500": {
-            "description": "Server error that is not resolvable user side"
-          }
+          "404": { "description": "Domain not found on account" }
         },
         "tags": ["Domains"],
         "security": [{ "bearer": [] }],
@@ -2343,12 +2295,9 @@
         },
         "responses": {
           "201": { "description": "Alias successfully added" },
-          "400": { "description": "Error that is resolvable user side" },
+          "400": { "description": "Bad user input" },
           "401": { "description": "Invalid or expired token" },
-          "404": { "description": "Domain not found on account" },
-          "500": {
-            "description": "Server error that is not resolvable user side"
-          }
+          "404": { "description": "Domain not found on account" }
         },
         "tags": ["Domains"],
         "security": [{ "bearer": [] }],
@@ -2418,12 +2367,9 @@
         ],
         "responses": {
           "201": { "description": "Alias successfully deleted" },
-          "400": { "description": "Error that is resolvable user side" },
+          "400": { "description": "Bad user input" },
           "401": { "description": "Invalid or expired token" },
-          "404": { "description": "Domain not found on account" },
-          "500": {
-            "description": "Server error that is not resolvable user side"
-          }
+          "404": { "description": "Domain not found on account" }
         },
         "tags": ["Domains"],
         "security": [{ "bearer": [] }],
@@ -2486,12 +2432,9 @@
         ],
         "responses": {
           "200": { "description": "Account deleted successfully" },
-          "400": { "description": "Error that is resolvable user side" },
+          "400": { "description": "Bad user input" },
           "401": { "description": "Invalid or expired token" },
-          "404": { "description": "No account found with this id" },
-          "500": {
-            "description": "Server error that is not resolvable user side"
-          }
+          "404": { "description": "No account found with this id" }
         },
         "tags": ["Email Accounts"],
         "security": [{ "bearer": [] }],
@@ -2559,12 +2502,9 @@
               }
             }
           },
-          "400": { "description": "Error that is resolvable user side" },
+          "400": { "description": "Bad user input" },
           "401": { "description": "Invalid or expired token" },
-          "404": { "description": "No account found with this id" },
-          "500": {
-            "description": "Server error that is not resolvable user side"
-          }
+          "404": { "description": "No account found with this id" }
         },
         "tags": ["Email Accounts"],
         "security": [{ "bearer": [] }],
@@ -2633,12 +2573,9 @@
         },
         "responses": {
           "200": { "description": "Account updated successfully" },
-          "400": { "description": "Error that is resolvable user side" },
+          "400": { "description": "Bad user input" },
           "401": { "description": "Invalid or expired token" },
-          "404": { "description": "No account found with this id" },
-          "500": {
-            "description": "Server error that is not resolvable user side"
-          }
+          "404": { "description": "No account found with this id" }
         },
         "tags": ["Email Accounts"],
         "security": [{ "bearer": [] }],
@@ -2703,11 +2640,8 @@
               }
             }
           },
-          "400": { "description": "Error that is resolvable user side" },
-          "401": { "description": "Invalid or expired token" },
-          "500": {
-            "description": "Server error that is not resolvable user side"
-          }
+          "400": { "description": "Bad user input" },
+          "401": { "description": "Invalid or expired token" }
         },
         "tags": ["Email Accounts"],
         "security": [{ "bearer": [] }],
@@ -2768,11 +2702,8 @@
         },
         "responses": {
           "201": { "description": "Account created successfully" },
-          "400": { "description": "Error that is resolvable user side" },
-          "401": { "description": "Invalid or expired token" },
-          "500": {
-            "description": "Server error that is not resolvable user side"
-          }
+          "400": { "description": "Bad user input" },
+          "401": { "description": "Invalid or expired token" }
         },
         "tags": ["Email Accounts"],
         "security": [{ "bearer": [] }],
@@ -2835,12 +2766,9 @@
         ],
         "responses": {
           "200": { "description": "DKIM key successfully deleted" },
-          "400": { "description": "Error that is resolvable user side" },
+          "400": { "description": "Bad user input" },
           "401": { "description": "Invalid or expired token" },
-          "404": { "description": "Domain not found in account" },
-          "500": {
-            "description": "Server error that is not resolvable user side"
-          }
+          "404": { "description": "Domain not found in account" }
         },
         "tags": ["Dkim"],
         "security": [{ "bearer": [] }],
@@ -2908,12 +2836,9 @@
               }
             }
           },
-          "400": { "description": "Error that is resolvable user side" },
+          "400": { "description": "Bad user input" },
           "401": { "description": "Invalid or expired token" },
-          "404": { "description": "Domain not found in account" },
-          "500": {
-            "description": "Server error that is not resolvable user side"
-          }
+          "404": { "description": "Domain not found in account" }
         },
         "tags": ["Dkim"],
         "security": [{ "bearer": [] }],
@@ -2989,12 +2914,9 @@
               }
             }
           },
-          "400": { "description": "Error that is resolvable user side" },
+          "400": { "description": "Bad user input" },
           "401": { "description": "Invalid or expired token" },
-          "404": { "description": "Domain not found in account" },
-          "500": {
-            "description": "Server error that is not resolvable user side"
-          }
+          "404": { "description": "Domain not found in account" }
         },
         "tags": ["Dkim"],
         "security": [{ "bearer": [] }],
@@ -3057,12 +2979,9 @@
         ],
         "responses": {
           "200": { "description": "Forwarder deleted successfully" },
-          "400": { "description": "Error that is resolvable user side" },
+          "400": { "description": "Bad user input" },
           "401": { "description": "Invalid or expired token" },
-          "404": { "description": "No forwarder found with this id" },
-          "500": {
-            "description": "Server error that is not resolvable user side"
-          }
+          "404": { "description": "No forwarder found with this id" }
         },
         "tags": ["Forwarders"],
         "security": [{ "bearer": [] }],
@@ -3130,12 +3049,9 @@
               }
             }
           },
-          "400": { "description": "Error that is resolvable user side" },
+          "400": { "description": "Bad user input" },
           "401": { "description": "Invalid or expired token" },
-          "404": { "description": "No forwarder found with this id" },
-          "500": {
-            "description": "Server error that is not resolvable user side"
-          }
+          "404": { "description": "No forwarder found with this id" }
         },
         "tags": ["Forwarders"],
         "security": [{ "bearer": [] }],
@@ -3204,12 +3120,9 @@
         },
         "responses": {
           "200": { "description": "Forwarder updated successfully" },
-          "400": { "description": "Error that is resolvable user side" },
+          "400": { "description": "Bad user input" },
           "401": { "description": "Invalid or expired token" },
-          "404": { "description": "No forwarder found with this id" },
-          "500": {
-            "description": "Server error that is not resolvable user side"
-          }
+          "404": { "description": "No forwarder found with this id" }
         },
         "tags": ["Forwarders"],
         "security": [{ "bearer": [] }],
@@ -3274,11 +3187,8 @@
               }
             }
           },
-          "400": { "description": "Error that is resolvable user side" },
-          "401": { "description": "Invalid or expired token" },
-          "500": {
-            "description": "Server error that is not resolvable user side"
-          }
+          "400": { "description": "Bad user input" },
+          "401": { "description": "Invalid or expired token" }
         },
         "tags": ["Forwarders"],
         "security": [{ "bearer": [] }],
@@ -3339,11 +3249,8 @@
         },
         "responses": {
           "201": { "description": "Forwarder created successfully" },
-          "400": { "description": "Error that is resolvable user side" },
-          "401": { "description": "Invalid or expired token" },
-          "500": {
-            "description": "Server error that is not resolvable user side"
-          }
+          "400": { "description": "Bad user input" },
+          "401": { "description": "Invalid or expired token" }
         },
         "tags": ["Forwarders"],
         "security": [{ "bearer": [] }],
@@ -3414,11 +3321,8 @@
               }
             }
           },
-          "400": { "description": "Error that is resolvable user side" },
-          "401": { "description": "Invalid or expired token" },
-          "500": {
-            "description": "Server error that is not resolvable user side"
-          }
+          "400": { "description": "Bad user input" },
+          "401": { "description": "Invalid or expired token" }
         },
         "tags": ["Api Keys"],
         "security": [{ "bearer": [] }],
@@ -3481,11 +3385,8 @@
               }
             }
           },
-          "400": { "description": "Error that is resolvable user side" },
-          "401": { "description": "Invalid or expired token" },
-          "500": {
-            "description": "Server error that is not resolvable user side"
-          }
+          "400": { "description": "Bad user input" },
+          "401": { "description": "Invalid or expired token" }
         },
         "tags": ["Api Keys"],
         "security": [{ "bearer": [] }],
@@ -3550,11 +3451,8 @@
         ],
         "responses": {
           "200": { "description": "Api key revoked" },
-          "400": { "description": "Error that is resolvable user side" },
-          "401": { "description": "Invalid or expired token" },
-          "500": {
-            "description": "Server error that is not resolvable user side"
-          }
+          "400": { "description": "Bad user input" },
+          "401": { "description": "Invalid or expired token" }
         },
         "tags": ["Api Keys"],
         "security": [{ "bearer": [] }],
@@ -3624,12 +3522,9 @@
         ],
         "responses": {
           "200": { "description": "Filter deleted successfully" },
-          "400": { "description": "Error that is resolvable user side" },
+          "400": { "description": "Bad user input" },
           "401": { "description": "Invalid or expired token" },
-          "404": { "description": "No account or filter found with this id" },
-          "500": {
-            "description": "Server error that is not resolvable user side"
-          }
+          "404": { "description": "No account or filter found with this id" }
         },
         "tags": ["Filters"],
         "security": [{ "bearer": [] }],
@@ -3704,12 +3599,9 @@
               }
             }
           },
-          "400": { "description": "Error that is resolvable user side" },
+          "400": { "description": "Bad user input" },
           "401": { "description": "Invalid or expired token" },
-          "404": { "description": "No account or filter found with this id" },
-          "500": {
-            "description": "Server error that is not resolvable user side"
-          }
+          "404": { "description": "No account or filter found with this id" }
         },
         "tags": ["Filters"],
         "security": [{ "bearer": [] }],
@@ -3785,12 +3677,9 @@
         },
         "responses": {
           "200": { "description": "Account updated successfully" },
-          "400": { "description": "Error that is resolvable user side" },
+          "400": { "description": "Bad user input" },
           "401": { "description": "Invalid or expired token" },
-          "404": { "description": "No account or filter found with this id" },
-          "500": {
-            "description": "Server error that is not resolvable user side"
-          }
+          "404": { "description": "No account or filter found with this id" }
         },
         "tags": ["Filters"],
         "security": [{ "bearer": [] }],
@@ -3863,12 +3752,9 @@
               }
             }
           },
-          "400": { "description": "Error that is resolvable user side" },
+          "400": { "description": "Bad user input" },
           "401": { "description": "Invalid or expired token" },
-          "404": { "description": "No account found with this id" },
-          "500": {
-            "description": "Server error that is not resolvable user side"
-          }
+          "404": { "description": "No account found with this id" }
         },
         "tags": ["Filters"],
         "security": [{ "bearer": [] }],
@@ -3937,12 +3823,9 @@
         },
         "responses": {
           "201": { "description": "Filter created successfully" },
-          "400": { "description": "Error that is resolvable user side" },
+          "400": { "description": "Bad user input" },
           "401": { "description": "Invalid or expired token" },
-          "404": { "description": "No account found with this id" },
-          "500": {
-            "description": "Server error that is not resolvable user side"
-          }
+          "404": { "description": "No account found with this id" }
         },
         "tags": ["Filters"],
         "security": [{ "bearer": [] }],

@@ -23,8 +23,7 @@ import { LoginDto } from './dto/login.dto'
 
 @Controller('authentication')
 @ApiTags('Authentication')
-@ApiBadRequestResponse({ description: 'Error that is resolvable user side' })
-@ApiInternalServerErrorResponse({ description: 'Server error that is not resolvable user side' })
+@ApiBadRequestResponse({ description: 'Bad user input' })
 @ApiUnauthorizedResponse({ description: 'Invalid or expired token' })
 export class AuthController {
   public constructor(private readonly authService: AuthService, private readonly apiKeysService: ApiKeysService) {}

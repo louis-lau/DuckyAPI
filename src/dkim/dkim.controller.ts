@@ -26,8 +26,7 @@ import { DkimParams } from './params/dkim.params'
 @Roles('user')
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: 'Invalid or expired token' })
-@ApiBadRequestResponse({ description: 'Error that is resolvable user side' })
-@ApiInternalServerErrorResponse({ description: 'Server error that is not resolvable user side' })
+@ApiBadRequestResponse({ description: 'Bad user input' })
 @ApiNotFoundResponse({ description: 'Domain not found in account' })
 export class DkimController {
   public constructor(private readonly dkimService: DkimService) {}

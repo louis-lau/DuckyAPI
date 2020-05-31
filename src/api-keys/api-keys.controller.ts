@@ -25,8 +25,7 @@ import { ApiKeysService } from './api-keys.service'
 @ApiTags('Api Keys')
 @UseGuards(AuthGuard('jwt'))
 @ApiBearerAuth()
-@ApiBadRequestResponse({ description: 'Error that is resolvable user side' })
-@ApiInternalServerErrorResponse({ description: 'Server error that is not resolvable user side' })
+@ApiBadRequestResponse({ description: 'Bad user input' })
 @ApiUnauthorizedResponse({ description: 'Invalid or expired token' })
 export class ApiKeysController {
   constructor(private readonly apiKeysService: ApiKeysService) {}

@@ -27,8 +27,7 @@ import { UsersService } from './users.service'
 @UseGuards(AuthGuard('jwt'), RolesGuard)
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: 'Invalid or expired token' })
-@ApiBadRequestResponse({ description: 'Error that is resolvable user side' })
-@ApiInternalServerErrorResponse({ description: 'Server error that is not resolvable user side' })
+@ApiBadRequestResponse({ description: 'Bad user input' })
 export class UsersController {
   public constructor(private readonly usersService: UsersService) {}
 

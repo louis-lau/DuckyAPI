@@ -36,8 +36,7 @@ import { PackagesService } from './packages.service'
 @Roles('admin')
 @ApiBearerAuth()
 @ApiUnauthorizedResponse({ description: 'Invalid or expired token' })
-@ApiBadRequestResponse({ description: 'Error that is resolvable user side' })
-@ApiInternalServerErrorResponse({ description: 'Server error that is not resolvable user side' })
+@ApiBadRequestResponse({ description: 'Bad user input' })
 export class PackagesController {
   public constructor(
     private readonly packagesService: PackagesService,
