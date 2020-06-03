@@ -58,7 +58,7 @@ const migrationContext = require.context('.', true, /migrations\/\d*-.*\.ts$/)
         if (config.SERVE_DUCKYPANEL) {
           return [
             {
-              rootPath: resolve('duckypanel/dist/DuckyPanel'),
+              rootPath: resolve('node_modules/duckypanel/DuckyPanel'),
               exclude: [`/${config.BASE_URL}/*`],
             },
           ]

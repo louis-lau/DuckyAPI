@@ -19,7 +19,10 @@ async function bootstrap(): Promise<void> {
 
   if (config.SERVE_DUCKYPANEL) {
     // Write baseurl to file for DuckyPanel to find
-    await writeFile(resolve('duckypanel/dist/DuckyPanel/config/production.json'), `{"apiUrl":"/${config.BASE_URL}"}`)
+    await writeFile(
+      resolve('node_modules/duckypanel/DuckyPanel/config/production.json'),
+      `{"apiUrl":"/${config.BASE_URL}"}`,
+    )
   }
 
   app.setGlobalPrefix(config.BASE_URL)

@@ -64,14 +64,9 @@ API documentation with code examples is available on [louis-lau.github.io/DuckyA
 You can also visit [localhost:3000/swagger](http://localhost:3000/swagger) to try the api out live in your browser. Much nice than using curl!
 
 ## Integrated DuckyPanel
-DuckyApi can serve DuckyPanel on its integrated server. Just run `npm run duckypanel:install` and let it install, this can take a bit of time. Open your configuration and set `SERVE_DUCKYPANEL` to `true`. Then set a custom `BASE_URL` for the api, for example `/api`.
+DuckyApi can serve DuckyPanel on its integrated server. Just open your configuration and set `SERVE_DUCKYPANEL` to `true`. Then set a custom `BASE_URL` for the api, for example `/api`.
 
 Duckypanel will now be live at [localhost:3000](http://localhost:3000), and DuckyApi at [localhost:3000/api](http://localhost:3000/api).
-
-#### Updating integrated DuckyPanel
-Update DuckyPanel by running `npm run duckypanel:update`.
-
-
 
 ## Task queue
 Any created background tasks and their progress can be viewed on [localhost:3000/queues](http://localhost:3000/queues) with basicauth if you've enabled this in the configuration. Removing a domain or suspending a user will trigger a background task to execute mass changes.
