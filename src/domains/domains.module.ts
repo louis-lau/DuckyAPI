@@ -1,6 +1,8 @@
 import { BullModule } from '@nestjs/bull'
 import { forwardRef, HttpModule, Module } from '@nestjs/common'
 import { AccountsModule } from 'src/accounts/accounts.module'
+import { ConfigModule } from 'src/config/config.module'
+import { ConfigService } from 'src/config/config.service'
 import { DkimModule } from 'src/dkim/dkim.module'
 import { ForwardersModule } from 'src/forwarders/forwarders.module'
 import { DeleteForDomainConfigService } from 'src/tasks/delete-for-domain/delete-for-domain-config.service'
@@ -11,8 +13,17 @@ import { DomainsService } from './domains.service'
 
 @Module({
   imports: [
-    HttpModule.register({
-      timeout: 10000,
+    HttpModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        timeout: 10000,
+        maxRedirects: 5,
+        baseURL: config.WILDDUCK_API_URL,
+        headers: {
+          'X-Access-Token': config.WILDDUCK_API_TOKEN,
+        },
+      }),
     }),
     UsersModule,
     forwardRef(() => AccountsModule),

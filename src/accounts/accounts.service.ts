@@ -51,10 +51,7 @@ export class AccountsService {
       let apiResponse: AxiosResponse<any>
       try {
         apiResponse = await this.httpService
-          .get(`${this.config.WILDDUCK_API_URL}/users`, {
-            headers: {
-              'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
-            },
+          .get(`/users`, {
             params: {
               tags: domainTags,
               limit: 250,
@@ -108,13 +105,7 @@ export class AccountsService {
   public async getAccountDetails(user: User, accountId: string): Promise<AccountDetails> {
     let accountApiResponse: AxiosResponse<any>
     try {
-      accountApiResponse = await this.httpService
-        .get(`${this.config.WILDDUCK_API_URL}/users/${accountId}`, {
-          headers: {
-            'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
-          },
-        })
-        .toPromise()
+      accountApiResponse = await this.httpService.get(`/users/${accountId}`).toPromise()
     } catch (error) {
       this.logger.error(error.message)
       throw new InternalServerErrorException('Backend service not reachable', 'WildduckApiError')
@@ -141,13 +132,7 @@ export class AccountsService {
 
     let aliasApiResponse: AxiosResponse<any>
     try {
-      aliasApiResponse = await this.httpService
-        .get(`${this.config.WILDDUCK_API_URL}/users/${accountId}/addresses`, {
-          headers: {
-            'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
-          },
-        })
-        .toPromise()
+      aliasApiResponse = await this.httpService.get(`/users/${accountId}/addresses`).toPromise()
     } catch (error) {
       this.logger.error(error.message)
       throw new InternalServerErrorException('Backend service not reachable', 'WildduckApiError')
@@ -231,28 +216,20 @@ export class AccountsService {
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
-        .post(
-          `${this.config.WILDDUCK_API_URL}/users`,
-          {
-            username: NanoId(),
-            address: createAccountDto.address,
-            name: createAccountDto.name,
-            password: createAccountDto.password,
-            spamLevel: createAccountDto.spamLevel,
-            quota: createAccountDto.limits.quota || user.quota,
-            recipients: createAccountDto.limits.send || user.maxSend,
-            receivedMax: createAccountDto.limits.receive || user.maxReceive,
-            forwards: createAccountDto.limits.forward || user.maxForward,
-            disabledScopes: createAccountDto.disabledScopes,
-            allowUnsafe: this.config.ALLOW_UNSAFE_ACCOUNT_PASSWORDS,
-            tags: [`domain:${addressDomain}`],
-          },
-          {
-            headers: {
-              'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
-            },
-          },
-        )
+        .post(`/users`, {
+          username: NanoId(),
+          address: createAccountDto.address,
+          name: createAccountDto.name,
+          password: createAccountDto.password,
+          spamLevel: createAccountDto.spamLevel,
+          quota: createAccountDto.limits.quota || user.quota,
+          recipients: createAccountDto.limits.send || user.maxSend,
+          receivedMax: createAccountDto.limits.receive || user.maxReceive,
+          forwards: createAccountDto.limits.forward || user.maxForward,
+          disabledScopes: createAccountDto.disabledScopes,
+          allowUnsafe: this.config.ALLOW_UNSAFE_ACCOUNT_PASSWORDS,
+          tags: [`domain:${addressDomain}`],
+        })
         .toPromise()
     } catch (error) {
       this.logger.error(error.message)
@@ -289,26 +266,18 @@ export class AccountsService {
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
-        .put(
-          `${this.config.WILDDUCK_API_URL}/users/${accountId}`,
-          {
-            name: updateAccountDto.name,
-            password: updateAccountDto.password,
-            spamLevel: updateAccountDto.spamLevel,
-            quota: updateAccountDto.limits.quota,
-            recipients: updateAccountDto.limits.send,
-            receivedMax: updateAccountDto.limits.receive,
-            forwards: updateAccountDto.limits.forward,
-            disabledScopes: updateAccountDto.disabledScopes,
-            allowUnsafe: this.config.ALLOW_UNSAFE_ACCOUNT_PASSWORDS,
-            disabled: updateAccountDto.disabled,
-          },
-          {
-            headers: {
-              'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
-            },
-          },
-        )
+        .put(`/users/${accountId}`, {
+          name: updateAccountDto.name,
+          password: updateAccountDto.password,
+          spamLevel: updateAccountDto.spamLevel,
+          quota: updateAccountDto.limits.quota,
+          recipients: updateAccountDto.limits.send,
+          receivedMax: updateAccountDto.limits.receive,
+          forwards: updateAccountDto.limits.forward,
+          disabledScopes: updateAccountDto.disabledScopes,
+          allowUnsafe: this.config.ALLOW_UNSAFE_ACCOUNT_PASSWORDS,
+          disabled: updateAccountDto.disabled,
+        })
         .toPromise()
     } catch (error) {
       this.logger.error(error.message)
@@ -334,17 +303,9 @@ export class AccountsService {
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
-        .put(
-          `${this.config.WILDDUCK_API_URL}/users/${accountId}`,
-          {
-            suspended: suspend,
-          },
-          {
-            headers: {
-              'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
-            },
-          },
-        )
+        .put(`/users/${accountId}`, {
+          suspended: suspend,
+        })
         .toPromise()
     } catch (error) {
       this.logger.error(error.message)
@@ -369,13 +330,7 @@ export class AccountsService {
 
     let apiResponse: AxiosResponse<any>
     try {
-      apiResponse = await this.httpService
-        .delete(`${this.config.WILDDUCK_API_URL}/users/${accountId}`, {
-          headers: {
-            'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
-          },
-        })
-        .toPromise()
+      apiResponse = await this.httpService.delete(`/users/${accountId}`).toPromise()
     } catch (error) {
       this.logger.error(error.message)
       throw new InternalServerErrorException('Backend service not reachable', 'WildduckApiError')
@@ -415,10 +370,7 @@ export class AccountsService {
       let apiResponse: AxiosResponse<any>
       try {
         apiResponse = await this.httpService
-          .get(`${this.config.WILDDUCK_API_URL}/addresses`, {
-            headers: {
-              'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
-            },
+          .get(`/addresses`, {
             params: {
               tags: domainTags,
               requiredTags: 'alias',
@@ -464,19 +416,11 @@ export class AccountsService {
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
-        .post(
-          `${this.config.WILDDUCK_API_URL}/users/${accountId}/addresses`,
-          {
-            name: address.name,
-            address: address.address,
-            tags: [`domain:${addressDomain}`, 'alias'],
-          },
-          {
-            headers: {
-              'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
-            },
-          },
-        )
+        .post(`/users/${accountId}/addresses`, {
+          name: address.name,
+          address: address.address,
+          tags: [`domain:${addressDomain}`, 'alias'],
+        })
         .toPromise()
     } catch (error) {
       this.logger.error(error.message)
@@ -502,13 +446,7 @@ export class AccountsService {
 
     let apiResponse: AxiosResponse<any>
     try {
-      apiResponse = await this.httpService
-        .delete(`${this.config.WILDDUCK_API_URL}/users/${accountId}/addresses/${aliasId}`, {
-          headers: {
-            'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
-          },
-        })
-        .toPromise()
+      apiResponse = await this.httpService.delete(`/users/${accountId}/addresses/${aliasId}`).toPromise()
     } catch (error) {
       switch (error.response.data.code) {
         case 'AddressNotFound':

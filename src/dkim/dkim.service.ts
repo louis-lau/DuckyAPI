@@ -20,13 +20,7 @@ export class DkimService {
   public async resolveDkimId(domain: string): Promise<string> {
     let ApiResponse: AxiosResponse<any>
     try {
-      ApiResponse = await this.httpService
-        .get(`${this.config.WILDDUCK_API_URL}/dkim/resolve/${domain}`, {
-          headers: {
-            'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
-          },
-        })
-        .toPromise()
+      ApiResponse = await this.httpService.get(`/dkim/resolve/${domain}`).toPromise()
     } catch (error) {
       this.logger.error(error.message)
       throw new InternalServerErrorException('Backend service not reachable', 'WildduckApiError')
@@ -53,13 +47,7 @@ export class DkimService {
 
     let apiResponse: AxiosResponse<any>
     try {
-      apiResponse = await this.httpService
-        .delete(`${this.config.WILDDUCK_API_URL}/dkim/${dkimId}`, {
-          headers: {
-            'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
-          },
-        })
-        .toPromise()
+      apiResponse = await this.httpService.delete(`/dkim/${dkimId}`).toPromise()
     } catch (error) {
       this.logger.error(error.message)
       throw new InternalServerErrorException('Backend service not reachable', 'WildduckApiError')
@@ -84,13 +72,7 @@ export class DkimService {
 
     let apiResponse: AxiosResponse<any>
     try {
-      apiResponse = await this.httpService
-        .get(`${this.config.WILDDUCK_API_URL}/dkim/${dkimId}`, {
-          headers: {
-            'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
-          },
-        })
-        .toPromise()
+      apiResponse = await this.httpService.get(`/dkim/${dkimId}`).toPromise()
     } catch (error) {
       this.logger.error(error.message)
       throw new InternalServerErrorException('Backend service not reachable', 'WildduckApiError')
@@ -127,19 +109,11 @@ export class DkimService {
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
-        .post(
-          `${this.config.WILDDUCK_API_URL}/dkim`,
-          {
-            domain: domain,
-            selector: addDkimDto.selector,
-            privateKey: addDkimDto.privateKey,
-          },
-          {
-            headers: {
-              'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
-            },
-          },
-        )
+        .post(`/dkim`, {
+          domain: domain,
+          selector: addDkimDto.selector,
+          privateKey: addDkimDto.privateKey,
+        })
         .toPromise()
     } catch (error) {
       this.logger.error(error.message)

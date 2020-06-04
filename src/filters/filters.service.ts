@@ -31,13 +31,7 @@ export class FiltersService {
 
     let apiResponse: AxiosResponse<any>
     try {
-      apiResponse = await this.httpService
-        .delete(`${this.config.WILDDUCK_API_URL}/users/${accountId}/filters/${filterId}`, {
-          headers: {
-            'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
-          },
-        })
-        .toPromise()
+      apiResponse = await this.httpService.delete(`/users/${accountId}/filters/${filterId}`).toPromise()
     } catch (error) {
       if (error.response.status === 404) {
         // TODO: remove this when the 404 gets changed to 200 with FilterNotFoundError in WildDuck
@@ -65,13 +59,7 @@ export class FiltersService {
 
     let apiResponse: AxiosResponse<any>
     try {
-      apiResponse = await this.httpService
-        .get(`${this.config.WILDDUCK_API_URL}/users/${accountId}/filters`, {
-          headers: {
-            'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
-          },
-        })
-        .toPromise()
+      apiResponse = await this.httpService.get(`/users/${accountId}/filters`).toPromise()
     } catch (error) {
       this.logger.error(error.message)
       throw new InternalServerErrorException('Backend service not reachable', 'WildduckApiError')
@@ -109,13 +97,7 @@ export class FiltersService {
 
     let apiResponse: AxiosResponse<any>
     try {
-      apiResponse = await this.httpService
-        .get(`${this.config.WILDDUCK_API_URL}/users/${accountId}/filters/${filterId}`, {
-          headers: {
-            'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
-          },
-        })
-        .toPromise()
+      apiResponse = await this.httpService.get(`/users/${accountId}/filters/${filterId}`).toPromise()
     } catch (error) {
       this.logger.error(error.message)
       throw new InternalServerErrorException('Backend service not reachable', 'WildduckApiError')
@@ -154,13 +136,7 @@ export class FiltersService {
     let apiResponse: AxiosResponse<any>
     try {
       // Pass createUpdateFilterDto directly as it's exactly what the WildDuck API requires
-      apiResponse = await this.httpService
-        .post(`${this.config.WILDDUCK_API_URL}/users/${accountId}/filters`, createUpdateFilterDto, {
-          headers: {
-            'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
-          },
-        })
-        .toPromise()
+      apiResponse = await this.httpService.post(`/users/${accountId}/filters`, createUpdateFilterDto).toPromise()
     } catch (error) {
       this.logger.error(error.message)
       throw new InternalServerErrorException('Backend service not reachable', 'WildduckApiError')
@@ -194,11 +170,7 @@ export class FiltersService {
     try {
       // Pass createUpdateFilterDto directly as it's exactly what the WildDuck API requires
       apiResponse = await this.httpService
-        .put(`${this.config.WILDDUCK_API_URL}/users/${accountId}/filters/${filterId}`, createUpdateFilterDto, {
-          headers: {
-            'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
-          },
-        })
+        .put(`/users/${accountId}/filters/${filterId}`, createUpdateFilterDto)
         .toPromise()
     } catch (error) {
       this.logger.error(error.message)

@@ -375,18 +375,10 @@ export class DomainsService {
     let apiResponse: AxiosResponse<any>
     try {
       apiResponse = await this.httpService
-        .post(
-          `${this.config.WILDDUCK_API_URL}/domainaliases`,
-          {
-            domain: domain,
-            alias: alias,
-          },
-          {
-            headers: {
-              'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
-            },
-          },
-        )
+        .post(`/domainaliases`, {
+          domain: domain,
+          alias: alias,
+        })
         .toPromise()
     } catch (error) {
       this.logger.error(error.message)
@@ -411,13 +403,7 @@ export class DomainsService {
 
     let resolveResponse: AxiosResponse<any>
     try {
-      resolveResponse = await this.httpService
-        .get(`${this.config.WILDDUCK_API_URL}/domainaliases/resolve/${alias}`, {
-          headers: {
-            'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
-          },
-        })
-        .toPromise()
+      resolveResponse = await this.httpService.get(`/domainaliases/resolve/${alias}`).toPromise()
     } catch (error) {
       this.logger.error(error.message)
       throw new InternalServerErrorException('Backend service not reachable', 'WildduckApiError')
@@ -439,13 +425,7 @@ export class DomainsService {
     if (aliasExists) {
       let deleteResponse: AxiosResponse<any>
       try {
-        deleteResponse = await this.httpService
-          .delete(`${this.config.WILDDUCK_API_URL}/domainaliases/${resolveResponse.data.id}`, {
-            headers: {
-              'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
-            },
-          })
-          .toPromise()
+        deleteResponse = await this.httpService.delete(`/domainaliases/${resolveResponse.data.id}`).toPromise()
       } catch (error) {
         this.logger.error(error.message)
         throw new InternalServerErrorException('Backend service not reachable', 'WildduckApiError')
