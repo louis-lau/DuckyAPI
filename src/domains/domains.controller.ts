@@ -20,7 +20,7 @@ import { User } from 'src/users/user.entity'
 import { DnsCheck } from './class/dns.class'
 import { Domain, DomainAlias } from './domain.entity'
 import { DomainsService } from './domains.service'
-import { AliasParams } from './params/alias.params'
+import { DomainAliasParams } from './params/alias.params'
 import { DomainParams } from './params/domain.params'
 
 @Controller('domains')
@@ -40,7 +40,7 @@ export class DomainsController {
       'WARNING: This will also delete any email accounts, forwarders, and DKIM keys associated with this domain',
   })
   @ApiOkResponse({ description: 'Domain successfully deleted' })
-  @ApiNotFoundResponse({ description: 'Domain not found on account' })
+  @ApiNotFoundResponse({ description: 'Domain not found on user' })
   private async deleteDomain(@ReqUser() user: User, @Param() domainParams: DomainParams): Promise<void> {
     return this.domainsService.deleteDomain(user, domainParams.domain)
   }
@@ -63,7 +63,7 @@ export class DomainsController {
   @Get(':domain/DNS')
   @ApiOperation({ operationId: 'checkDNS', summary: 'Get and check DNS records' })
   @ApiOkResponse({ description: 'The current and the correct DNS records for this domain', type: DnsCheck })
-  @ApiNotFoundResponse({ description: 'Domain not found on account' })
+  @ApiNotFoundResponse({ description: 'Domain not found on user' })
   private async checkDNS(@ReqUser() user: User, @Param() domainParams: DomainParams): Promise<DnsCheck> {
     return this.domainsService.checkDns(user, domainParams.domain)
   }
@@ -72,7 +72,7 @@ export class DomainsController {
   @IsNotSuspended()
   @ApiOperation({ operationId: 'addAlias', summary: 'Add a domain alias' })
   @ApiCreatedResponse({ description: 'Alias successfully added' })
-  @ApiNotFoundResponse({ description: 'Domain not found on account' })
+  @ApiNotFoundResponse({ description: 'Domain not found on user' })
   private async addAlias(
     @ReqUser() user: User,
     @Param() domainParams: DomainParams,
@@ -83,9 +83,9 @@ export class DomainsController {
 
   @Delete(':domain/aliases/:alias')
   @ApiOperation({ operationId: 'deleteAlias', summary: 'Delete a domain alias' })
-  @ApiCreatedResponse({ description: 'Alias successfully deleted' })
-  @ApiNotFoundResponse({ description: 'Domain not found on account' })
-  private async deleteAlias(@ReqUser() user: User, @Param() aliasParams: AliasParams): Promise<void> {
-    await this.domainsService.deleteAlias(user, aliasParams.domain, aliasParams.alias)
+  @ApiOkResponse({ description: 'Alias successfully deleted' })
+  @ApiNotFoundResponse({ description: 'Domain not found on user' })
+  private async deleteAlias(@ReqUser() user: User, @Param() domainAliasParams: DomainAliasParams): Promise<void> {
+    await this.domainsService.deleteAlias(user, domainAliasParams.domain, domainAliasParams.alias)
   }
 }

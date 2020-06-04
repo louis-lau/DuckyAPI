@@ -14,6 +14,7 @@ import { User } from 'src/users/user.entity'
 
 import { AccountDetails } from './class/account-details.class'
 import { AccountListItem } from './class/account-list-item.class'
+import { Address } from './class/address.class'
 import { CreateAccountDto } from './dto/create-account.dto'
 import { CreateUpdateAccountLimits } from './dto/create-update-common.dto'
 import { UpdateAccountDto } from './dto/update-account.dto'
@@ -80,12 +81,20 @@ export class AccountsService {
       }
     }
 
+    const aliasesForUser = await this.getAliases(user)
+
     const accounts: AccountListItem[] = []
     for (const result of results) {
+      const aliasesForAccount = aliasesForUser.filter((address) => address.user === result.id)
       accounts.push({
         id: result.id,
         name: result.name,
         address: result.address,
+        aliases: aliasesForAccount.map((address) => ({
+          id: address.id,
+          name: address.name,
+          address: address.address,
+        })),
         quota: {
           allowed: result.quota.allowed,
           used: result.quota.used,
@@ -97,9 +106,9 @@ export class AccountsService {
   }
 
   public async getAccountDetails(user: User, accountId: string): Promise<AccountDetails> {
-    let apiResponse: AxiosResponse<any>
+    let accountApiResponse: AxiosResponse<any>
     try {
-      apiResponse = await this.httpService
+      accountApiResponse = await this.httpService
         .get(`${this.config.WILDDUCK_API_URL}/users/${accountId}`, {
           headers: {
             'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
@@ -111,51 +120,85 @@ export class AccountsService {
       throw new InternalServerErrorException('Backend service not reachable', 'WildduckApiError')
     }
 
-    if (apiResponse.data.error || !apiResponse.data.success) {
-      switch (apiResponse.data.code) {
+    if (accountApiResponse.data.error || !accountApiResponse.data.success) {
+      switch (accountApiResponse.data.code) {
         case 'UserNotFound':
           throw new NotFoundException(`No account found with id: ${accountId}`, 'AccountNotFoundError')
 
         default:
-          this.logger.error(apiResponse.data)
+          this.logger.error(accountApiResponse.data)
           throw new InternalServerErrorException('Unknown error')
       }
     }
 
-    const addressDomain: string = apiResponse.data.address.substring(apiResponse.data.address.lastIndexOf('@') + 1)
+    const addressDomain: string = accountApiResponse.data.address.substring(
+      accountApiResponse.data.address.lastIndexOf('@') + 1,
+    )
     if (!user.domains.some((domain): boolean => domain.domain === addressDomain)) {
       // if address domain doesn't belong to user
       throw new NotFoundException(`No account found with id: ${accountId}`, 'AccountNotFoundError')
     }
 
+    let aliasApiResponse: AxiosResponse<any>
+    try {
+      aliasApiResponse = await this.httpService
+        .get(`${this.config.WILDDUCK_API_URL}/users/${accountId}/addresses`, {
+          headers: {
+            'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
+          },
+        })
+        .toPromise()
+    } catch (error) {
+      this.logger.error(error.message)
+      throw new InternalServerErrorException('Backend service not reachable', 'WildduckApiError')
+    }
+
+    if (aliasApiResponse.data.error || !aliasApiResponse.data.success) {
+      switch (aliasApiResponse.data.code) {
+        case 'UserNotFound':
+          throw new NotFoundException(`No account found with id: ${accountId}`, 'AccountNotFoundError')
+
+        default:
+          this.logger.error(aliasApiResponse.data)
+          throw new InternalServerErrorException('Unknown error')
+      }
+    }
+
+    const aliases = aliasApiResponse.data.results.filter((address) => address.tags.includes('alias'))
+
     return {
-      id: apiResponse.data.id,
-      name: apiResponse.data.name,
-      address: apiResponse.data.address,
+      id: accountApiResponse.data.id,
+      name: accountApiResponse.data.name,
+      address: accountApiResponse.data.address,
+      aliases: aliases.map((address) => ({
+        id: address.id,
+        name: address.name,
+        address: address.address,
+      })),
       limits: {
         quota: {
-          allowed: apiResponse.data.limits.quota.allowed,
-          used: apiResponse.data.limits.quota.used,
+          allowed: accountApiResponse.data.limits.quota.allowed,
+          used: accountApiResponse.data.limits.quota.used,
         },
         send: {
-          allowed: apiResponse.data.limits.recipients.allowed,
-          used: apiResponse.data.limits.recipients.used,
-          ttl: apiResponse.data.limits.recipients.ttl,
+          allowed: accountApiResponse.data.limits.recipients.allowed,
+          used: accountApiResponse.data.limits.recipients.used,
+          ttl: accountApiResponse.data.limits.recipients.ttl,
         },
         receive: {
-          allowed: apiResponse.data.limits.received.allowed,
-          used: apiResponse.data.limits.received.used,
-          ttl: apiResponse.data.limits.received.ttl,
+          allowed: accountApiResponse.data.limits.received.allowed,
+          used: accountApiResponse.data.limits.received.used,
+          ttl: accountApiResponse.data.limits.received.ttl,
         },
         forward: {
-          allowed: apiResponse.data.limits.forwards.allowed,
-          used: apiResponse.data.limits.forwards.used,
-          ttl: apiResponse.data.limits.forwards.ttl,
+          allowed: accountApiResponse.data.limits.forwards.allowed,
+          used: accountApiResponse.data.limits.forwards.used,
+          ttl: accountApiResponse.data.limits.forwards.ttl,
         },
       },
-      disabled: apiResponse.data.disabled,
-      spamLevel: apiResponse.data.spamLevel,
-      disabledScopes: apiResponse.data.disabledScopes,
+      disabled: accountApiResponse.data.disabled,
+      spamLevel: accountApiResponse.data.spamLevel,
+      disabledScopes: accountApiResponse.data.disabledScopes,
     }
   }
 
@@ -336,6 +379,145 @@ export class AccountsService {
     } catch (error) {
       this.logger.error(error.message)
       throw new InternalServerErrorException('Backend service not reachable', 'WildduckApiError')
+    }
+
+    if (apiResponse.data.error || !apiResponse.data.success) {
+      switch (apiResponse.data.code) {
+        case 'UserNotFound':
+          throw new NotFoundException(`No account found with id: ${accountId}`, 'AccountNotFoundError')
+
+        default:
+          this.logger.error(apiResponse.data)
+          throw new InternalServerErrorException('Unknown error')
+      }
+    }
+  }
+
+  public async getAliases(user: User, domain?: string): Promise<Record<string, any>[]> {
+    if (user.domains.length === 0) {
+      return []
+    }
+
+    let domainTags: string
+    if (domain) {
+      await this.domainsService.checkIfDomainIsAddedToUser(user, domain)
+      domainTags = `domain:${domain}`
+    } else {
+      // Comma delimited list of domains with "domain:" prefix to match the tags added to accounts
+      domainTags = user.domains.map((domain): string => `domain:${domain.domain}`).join()
+    }
+
+    let results: any[] = []
+    let nextCursor: string | false
+
+    // Loop until no more pages
+    while (true) {
+      let apiResponse: AxiosResponse<any>
+      try {
+        apiResponse = await this.httpService
+          .get(`${this.config.WILDDUCK_API_URL}/addresses`, {
+            headers: {
+              'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
+            },
+            params: {
+              tags: domainTags,
+              requiredTags: 'alias',
+              limit: 250,
+              next: nextCursor,
+            },
+          })
+          .toPromise()
+      } catch (error) {
+        this.logger.error(error.message)
+        throw new InternalServerErrorException('Backend service not reachable', 'WildduckApiError')
+      }
+      if (apiResponse.data.results.length === 0) {
+        return []
+      }
+
+      // Add results of this page to the results array
+      results = results.concat(apiResponse.data.results)
+
+      if (apiResponse.data.nextCursor) {
+        // Set next cursor value and repeat
+        nextCursor = apiResponse.data.nextCursor
+      } else {
+        break
+      }
+    }
+    return results
+  }
+
+  public async addAlias(user: User, accountId: string, address: Address): Promise<void> {
+    // Run get accountdetails to make sure account exists and user has permission, we don't do anything with it because it will throw an exception if needed
+    await this.getAccountDetails(user, accountId)
+
+    const addressDomain = address.address.substring(address.address.lastIndexOf('@') + 1)
+    if (!user.domains.some((domain): boolean => domain.domain === addressDomain)) {
+      // if address domain doesn't belong to user
+      throw new BadRequestException(
+        `You don't have permission to add aliases on ${addressDomain}. Add the domain first.`,
+        'DomainNotFoundError',
+      )
+    }
+
+    let apiResponse: AxiosResponse<any>
+    try {
+      apiResponse = await this.httpService
+        .post(
+          `${this.config.WILDDUCK_API_URL}/users/${accountId}/addresses`,
+          {
+            name: address.name,
+            address: address.address,
+            tags: [`domain:${addressDomain}`, 'alias'],
+          },
+          {
+            headers: {
+              'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
+            },
+          },
+        )
+        .toPromise()
+    } catch (error) {
+      this.logger.error(error.message)
+      throw new InternalServerErrorException('Backend service not reachable', 'WildduckApiError')
+    }
+
+    if (apiResponse.data.error || !apiResponse.data.success) {
+      switch (apiResponse.data.code) {
+        case 'AddressExistsError':
+        case 'UserExistsError':
+          throw new BadRequestException(`Address: ${address.address} already exists`, 'AddressExistsError')
+
+        default:
+          this.logger.error(apiResponse.data)
+          throw new InternalServerErrorException('Unknown error')
+      }
+    }
+  }
+
+  public async deleteAlias(user: User, accountId: string, aliasId: string): Promise<void> {
+    // Run get accountdetails to make sure account exists and user has permission, we don't do anything with it because it will throw an exception if needed
+    await this.getAccountDetails(user, accountId)
+
+    let apiResponse: AxiosResponse<any>
+    try {
+      apiResponse = await this.httpService
+        .delete(`${this.config.WILDDUCK_API_URL}/users/${accountId}/addresses/${aliasId}`, {
+          headers: {
+            'X-Access-Token': this.config.WILDDUCK_API_TOKEN,
+          },
+        })
+        .toPromise()
+    } catch (error) {
+      switch (error.response.data.code) {
+        case 'AddressNotFound':
+          throw new NotFoundException(`No alias found with id: ${aliasId}`, 'AliasNotFoundError')
+
+        default:
+          this.logger.error(error.message)
+          throw new InternalServerErrorException('Backend service not reachable', 'WildduckApiError')
+      }
     }
 
     if (apiResponse.data.error || !apiResponse.data.success) {

@@ -20,8 +20,10 @@ import { User } from 'src/users/user.entity'
 import { AccountsService } from './accounts.service'
 import { AccountDetails } from './class/account-details.class'
 import { AccountListItem } from './class/account-list-item.class'
+import { Address } from './class/address.class'
 import { CreateAccountDto } from './dto/create-account.dto'
 import { UpdateAccountDto } from './dto/update-account.dto'
+import { AccountAliasParams } from './params/account-alias.params'
 import { AccountIdParams } from './params/account-id.params'
 
 @Controller('accounts')
@@ -78,5 +80,26 @@ export class AccountsController {
     @Body() updateAccountDto: UpdateAccountDto,
   ): Promise<void> {
     return this.accountsService.updateAccount(user, accountIdParams.accountId, updateAccountDto)
+  }
+
+  @Post(':accountId/aliases')
+  @IsNotSuspended()
+  @ApiOperation({ operationId: 'addAccountAlias', summary: 'Add an account alias' })
+  @ApiCreatedResponse({ description: 'Alias successfully added' })
+  @ApiNotFoundResponse({ description: 'No account found with this id' })
+  private async addAlias(
+    @ReqUser() user: User,
+    @Param() accountIdParams: AccountIdParams,
+    @Body() address: Address,
+  ): Promise<void> {
+    return this.accountsService.addAlias(user, accountIdParams.accountId, address)
+  }
+
+  @Delete(':accountId/aliases/:aliasId')
+  @ApiOperation({ operationId: 'deleteAccountAlias', summary: 'Delete an account alias' })
+  @ApiOkResponse({ description: 'Alias successfully deleted' })
+  @ApiNotFoundResponse({ description: 'No account or alias found with this id' })
+  private async deleteAlias(@ReqUser() user: User, @Param() accountAliasParams: AccountAliasParams): Promise<void> {
+    return this.accountsService.deleteAlias(user, accountAliasParams.accountId, accountAliasParams.aliasId)
   }
 }
