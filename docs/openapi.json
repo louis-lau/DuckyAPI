@@ -425,7 +425,7 @@
             "description": "The E-Mail address of the email account"
           }
         },
-        "required": ["id", "name", "address"]
+        "required": ["id", "address"]
       },
       "AccountListItemQuota": {
         "type": "object",
@@ -479,7 +479,7 @@
             ]
           }
         },
-        "required": ["id", "name", "address", "disabled", "aliases", "quota"]
+        "required": ["id", "address", "disabled", "aliases", "quota"]
       },
       "AccountDetailsLimitsQuota": {
         "type": "object",
@@ -645,7 +645,6 @@
         },
         "required": [
           "id",
-          "name",
           "address",
           "disabled",
           "aliases",

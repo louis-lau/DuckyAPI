@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator'
 
 export class Address {
@@ -9,7 +9,7 @@ export class Address {
   })
   public id?: string
 
-  @ApiProperty({ example: 'John Doe', description: 'The name of the email account' })
+  @ApiPropertyOptional({ example: 'John Doe', description: 'The name of the email account' })
   @IsOptional()
   @IsString()
   @IsNotEmpty()
