@@ -86,6 +86,32 @@ export class DeleteForDomainProcessor {
     job.progress(100)
   }
 
+  @Process({ name: 'deleteAccountAliases' })
+  private async processDeleteAccountAliases(job: Job<DeleteForDomainData>): Promise<void> {
+    const accountAliases = await this.accountsService.getAliases(job.data.user, job.data.domain)
+    if (!accountAliases || accountAliases.length === 0) {
+      return
+    }
+
+    const aliasChunks: Record<string, any>[][] = []
+    const chunkSize = 10
+    for (let i = 0; i < accountAliases.length; i += chunkSize) {
+      aliasChunks.push(accountAliases.slice(i, i + chunkSize))
+    }
+
+    let promises: Promise<void>[] = []
+    for (const [i, aliasChunk] of aliasChunks.entries()) {
+      job.progress(Math.round((i / aliasChunks.length) * 100))
+
+      promises = []
+      for (const alias of aliasChunk) {
+        promises.push(this.accountsService.deleteAlias(job.data.user, alias.user, alias.id))
+      }
+      await Promise.all(promises)
+    }
+    job.progress(100)
+  }
+
   @Process({ name: 'deleteAliases' })
   private async processDeleteAliases(job: Job<DeleteForDomainData>): Promise<void> {
     const aliases = job.data.user.domains.find((domain) => domain.domain === job.data.domain).aliases

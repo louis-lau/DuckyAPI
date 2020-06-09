@@ -345,6 +345,11 @@ export class DomainsService {
       }
     }
 
+    await this.deleteForDomainQueue.add('deleteAccountAliases', {
+      user: user,
+      domain: domain,
+    })
+
     await this.deleteForDomainQueue.add('deleteAccounts', {
       user: user,
       domain: domain,
