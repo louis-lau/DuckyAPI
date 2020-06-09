@@ -46,7 +46,7 @@
     "class-transformer": "^0.2.3",
     "class-validator": "^0.12.2",
     "commander": "^5.1.0",
-    "duckypanel": "0.0.3",
+    "duckypanel": "0.0.4",
     "express-basic-auth": "^1.2.0",
     "generate-password": "^1.5.1",
     "helmet": "^3.22.0",
