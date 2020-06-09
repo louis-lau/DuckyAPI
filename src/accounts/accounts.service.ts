@@ -89,7 +89,7 @@ export class AccountsService {
         address: result.address,
         aliases: aliasesForAccount.map((address) => ({
           id: address.id,
-          name: address.name,
+          name: address.name !== false ? address.name : undefined,
           address: address.address,
         })),
         quota: {
@@ -417,7 +417,7 @@ export class AccountsService {
     try {
       apiResponse = await this.httpService
         .post(`/users/${accountId}/addresses`, {
-          name: address.name,
+          name: address.name || '',
           address: address.address,
           tags: [`domain:${addressDomain}`, 'alias'],
         })
