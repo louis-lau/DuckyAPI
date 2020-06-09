@@ -419,6 +419,7 @@ export class AccountsService {
         .post(`/users/${accountId}/addresses`, {
           name: address.name || '',
           address: address.address,
+          allowWildcard: this.config.ALLOW_ACCOUNT_WILDCARD,
           tags: [`domain:${addressDomain}`, 'alias'],
         })
         .toPromise()

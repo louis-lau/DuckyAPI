@@ -106,6 +106,10 @@ export class DuckyApiConfig {
 
   @Transform(jsonParse, { toClassOnly: true })
   @IsBoolean()
+  ALLOW_ACCOUNT_WILDCARD = true
+
+  @Transform(jsonParse, { toClassOnly: true })
+  @IsBoolean()
   QUEUE_UI = false
 
   @ValidateIf((config: DuckyApiConfig) => config.QUEUE_UI === true)
