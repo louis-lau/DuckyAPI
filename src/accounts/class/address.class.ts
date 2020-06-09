@@ -2,7 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator'
 
 export class Address {
-  @ApiProperty({
+  @ApiPropertyOptional({
     example: '59cb948ad80a820b68f05230',
     description: 'The unique id of the email account',
     readOnly: true,
