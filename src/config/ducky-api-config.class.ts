@@ -138,6 +138,11 @@ export class DuckyApiConfig {
   @IsString()
   SPF_REGEX: string
 
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  DEFAULT_DKIM_SELECTOR: string
+
   @Transform(jsonParse, { toClassOnly: true })
   @IsOptional()
   @IsNumber()

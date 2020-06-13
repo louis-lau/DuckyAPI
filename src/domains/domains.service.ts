@@ -330,7 +330,16 @@ export class DomainsService {
 
   public async addDomain(user: User, domain: string): Promise<void> {
     await this.checkIfDomainAlreadyExists(user, domain)
-    await this.usersService.pushDomain(user._id, { domain: domain, admin: true })
+    const updatedUser = await this.usersService.pushDomain(user._id, { domain: domain, admin: true })
+    if (this.config.DEFAULT_DKIM_SELECTOR) {
+      await this.dkimService.updateDkim(
+        updatedUser,
+        {
+          selector: this.config.DEFAULT_DKIM_SELECTOR,
+        },
+        domain,
+      )
+    }
   }
 
   public async deleteDomain(user: User, domain: string): Promise<void> {
