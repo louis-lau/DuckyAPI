@@ -10,7 +10,7 @@
     "build:dev": "webpack --color --config webpack.config.dev.js",
     "start": "wait-on dist/main.js && node dist/main",
     "start:dev": "wait-on dist/main.js && nodemon --watch config/development.env --exec \"node --unhandled-rejections=strict dist/main\"",
-    "start:debug": "wait-on dist/main.js && nodemon --watch config/development.env --exec \"node --inspect-brk dist/main\"",
+    "start:debug": "wait-on dist/main.js && nodemon --watch config/development.env --exec \"node --inspect dist/main\"",
     "buildstart": "npm-run-all --silent --print-label clean build start",
     "buildstart:dev": "npm-run-all --silent --print-label clean --parallel build:dev start:dev",
     "buildstart:debug": "npm-run-all --silent --print-label clean --parallel build:dev start:debug",

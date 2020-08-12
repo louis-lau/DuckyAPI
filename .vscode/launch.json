@@ -7,11 +7,12 @@
     {
       "name": "Launch Debug Session",
       "type": "node",
-      "request": "launch",
+      "request": "attach",
       "preLaunchTask": "npm: buildstart:debug",
       "port": 9229,
       "restart": true,
       "timeout": 60000,
+      "stopOnEntry": false,
       "smartStep": true
     }
   ]
