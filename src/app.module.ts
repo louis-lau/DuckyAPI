@@ -19,6 +19,7 @@ import { PackagesModule } from './packages/packages.module'
 import { TasksModule } from './tasks/delete-for-domain/delete-for-domain.module'
 import { SuspensionModule } from './tasks/suspension/suspension.module'
 import { UsersModule } from './users/users.module'
+import Bull from 'bull'
 
 const entityContext = require.context('.', true, /\.entity\.ts$/)
 const migrationContext = require.context('.', true, /migrations\/\d*-.*\.ts$/)
@@ -104,6 +105,7 @@ export class AppModule implements NestModule {
         .apply(
           Arena(
             {
+              Bull,
               queues: [
                 {
                   name: 'deleteForDomain',
@@ -118,6 +120,7 @@ export class AppModule implements NestModule {
               ],
             },
             {
+              useCdn: false,
               disableListen: true,
             },
           ),
