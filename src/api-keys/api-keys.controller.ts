@@ -46,7 +46,7 @@ export class ApiKeysController {
   @ApiOperation({ operationId: 'getApiKeys', summary: 'List active api keys' })
   @ApiOkResponse({ description: 'List of active api keys', type: ApiKey, isArray: true })
   public async getApiKeys(@ReqUser() user: User): Promise<ApiKey[]> {
-    return this.apiKeysService.getKeysForUser(user._id)
+    return this.apiKeysService.getKeysForUser(user._id.toHexString())
   }
 
   @Delete(':id')
@@ -59,6 +59,6 @@ export class ApiKeysController {
   @Roles('user')
   @ApiOkResponse({ description: 'Api key revoked' })
   public async revokeApiKey(@ReqUser() user: User, @Param() apiKeyIdParams: ApiKeyIdParams): Promise<void> {
-    return this.apiKeysService.revokeKey(user._id, apiKeyIdParams.id)
+    return this.apiKeysService.revokeKey(user._id.toHexString(), apiKeyIdParams.id)
   }
 }

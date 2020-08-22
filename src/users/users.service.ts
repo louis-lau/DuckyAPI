@@ -85,9 +85,9 @@ export class UsersService {
     if (user) {
       await this.domainsService.deleteAllDomains(user)
       if (onlyDeleteDomainsAndSuspend) {
-        this.suspend(user._id, true)
+        this.suspend(id, true)
       } else {
-        this.userRepository.delete(user._id)
+        this.userRepository.delete(id)
       }
     }
   }

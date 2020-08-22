@@ -1,6 +1,7 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
 import { ServeStaticModule } from '@nestjs/serve-static'
 import { TypeOrmModule } from '@nestjs/typeorm'
+import Bull from 'bull'
 import Arena from 'bull-arena'
 import BasicAuth from 'express-basic-auth'
 import { ConsoleModule } from 'nestjs-console'
@@ -19,7 +20,6 @@ import { PackagesModule } from './packages/packages.module'
 import { TasksModule } from './tasks/delete-for-domain/delete-for-domain.module'
 import { SuspensionModule } from './tasks/suspension/suspension.module'
 import { UsersModule } from './users/users.module'
-import Bull from 'bull'
 
 const entityContext = require.context('.', true, /\.entity\.ts$/)
 const migrationContext = require.context('.', true, /migrations\/\d*-.*\.ts$/)

@@ -11,7 +11,7 @@ export class User {
     example: '5d49e11f600a423ffc0b1297',
     description: 'Unique id for this user',
   })
-  public _id?: string
+  public _id?: ObjectId
 
   @Column()
   @ApiProperty({ example: 'johndoe', description: 'The username for this user' })

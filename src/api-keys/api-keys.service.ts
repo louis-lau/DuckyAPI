@@ -19,7 +19,7 @@ export class ApiKeysService {
 
   public async generateApiKey(user: User, name: string): Promise<ApiKeyAccessToken> {
     const payload = {
-      sub: user._id,
+      sub: user._id.toHexString(),
       type: 'api_key',
     }
     const keyId = NanoId()

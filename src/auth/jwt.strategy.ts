@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { PassportStrategy } from '@nestjs/passport'
 import { ExtractJwt, Strategy } from 'passport-jwt'
 import { ConfigService } from 'src/config/config.service'
+import { User } from 'src/users/user.entity'
 import { UsersService } from 'src/users/users.service'
 
 import { ApiKeysService } from '../api-keys/api-keys.service'
@@ -20,7 +21,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     })
   }
 
-  public async validate(payload: any): Promise<object | false> {
+  public async validate(payload: Record<string, any>): Promise<{ jwt: any; user: User } | null> {
     switch (payload.type) {
       case 'access_token':
         const issuedAt = new Date(payload.iat * 1000)

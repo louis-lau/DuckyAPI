@@ -23,7 +23,7 @@ export class AuthService {
 
   public async getAccessToken(user: User, rememberMe = false): Promise<AccessToken> {
     const payload = {
-      sub: user._id,
+      sub: user._id.toHexString(),
       type: 'access_token',
     }
     const expireHours = rememberMe ? 7 * 24 : 8
@@ -39,6 +39,6 @@ export class AuthService {
   }
 
   public async expireTokens(user: User): Promise<void> {
-    this.usersService.updateMinTokenDate(user._id)
+    this.usersService.updateMinTokenDate(user._id.toHexString())
   }
 }

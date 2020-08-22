@@ -150,7 +150,7 @@ export class SuspensionProcessor {
 
   @OnQueueActive()
   private onActive(job: Job<SuspensionData>): void {
-    this.logger.log(`Processing job ${job.id} (${job.name}) for user ${job.data.user._id}`)
+    this.logger.log(`Processing job ${job.id} (${job.name}) for user ${job.data.user._id.toHexString()}`)
   }
 
   @OnQueueCompleted()

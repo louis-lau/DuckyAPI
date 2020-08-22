@@ -89,7 +89,7 @@ export class DuckyApiConfig {
 
   @IsNotEmpty()
   @IsString()
-  @IsUrl({ require_tld: false }) // eslint-disable-line @typescript-eslint/camelcase
+  @IsUrl({ require_tld: false })
   WILDDUCK_API_URL: string
 
   @IsString()

@@ -330,7 +330,7 @@ export class DomainsService {
 
   public async addDomain(user: User, domain: string): Promise<void> {
     await this.checkIfDomainAlreadyExists(user, domain)
-    const updatedUser = await this.usersService.pushDomain(user._id, { domain: domain, admin: true })
+    const updatedUser = await this.usersService.pushDomain(user._id.toHexString(), { domain: domain, admin: true })
     if (this.config.DEFAULT_DKIM_SELECTOR) {
       await this.dkimService.updateDkim(
         updatedUser,
@@ -374,7 +374,7 @@ export class DomainsService {
       domain: domain,
     })
 
-    await this.usersService.pullDomain(user._id, domain)
+    await this.usersService.pullDomain(user._id.toHexString(), domain)
   }
 
   public async deleteAllDomains(user: User): Promise<void> {
@@ -408,7 +408,7 @@ export class DomainsService {
           throw new InternalServerErrorException('Unknown error')
       }
     }
-    this.usersService.pushAlias(user._id, domain, { domain: alias })
+    this.usersService.pushAlias(user._id.toHexString(), domain, { domain: alias })
   }
 
   public async deleteAlias(user: User, domain: string, alias: string): Promise<void> {
@@ -462,6 +462,6 @@ export class DomainsService {
       }
     }
 
-    this.usersService.pullAlias(user._id, alias)
+    this.usersService.pullAlias(user._id.toHexString(), alias)
   }
 }

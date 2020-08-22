@@ -71,7 +71,7 @@ export class UsersController {
   @ApiOperation({ operationId: 'updateMe', summary: 'Update username/password' })
   @ApiOkResponse({ description: 'User updated successfully' })
   public async updateMe(@ReqUser() user: User, @Body() updateUserDto: UpdateUserDto): Promise<void> {
-    await this.usersService.updateUsernameOrPassword(user._id, updateUserDto)
+    await this.usersService.updateUsernameOrPassword(user._id.toHexString(), updateUserDto)
   }
 
   @Delete(':id')

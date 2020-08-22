@@ -9,7 +9,6 @@ export class EachIsEmailOrHttpOrSmtp implements ValidatorConstraintInterface {
           isEmail(item) ||
           isURL(item, {
             protocols: ['http', 'https', 'smtp', 'smtps'],
-            // eslint-disable-next-line @typescript-eslint/camelcase
             require_protocol: true,
           })
         )
