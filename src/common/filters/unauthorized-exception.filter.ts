@@ -12,7 +12,7 @@ export class UnauthorizedExceptionFilter implements ExceptionFilter {
     let message: string
 
     if (exception.message === 'InvalidLocal') {
-      message = 'Invalid username and password'
+      message = 'Invalid username or password'
     } else if (req.authInfo?.name === 'TokenExpiredError') {
       message = 'Your access token has expired, please request a new access token'
     } else if (req.authInfo?.name === 'JsonWebTokenError') {
