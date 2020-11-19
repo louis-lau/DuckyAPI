@@ -1,9 +1,9 @@
 import { NestFactory } from '@nestjs/core'
 import { SwaggerModule } from '@nestjs/swagger'
 import { writeFileSync } from 'fs'
+import { safeDump as safeDumpYaml } from 'js-yaml'
 import OpenAPISnippet from 'openapi-snippet'
 import { resolve } from 'path'
-import prettier from 'prettier'
 import { AppModule } from 'src/app.module'
 import { openapiOptions } from 'src/openapi-options'
 
@@ -89,8 +89,8 @@ const main = async () => {
 
   const enrichedSchema = enrichSchema(document, targets)
 
-  const prettySchema = prettier.format(JSON.stringify(enrichedSchema), { parser: 'json' })
-  writeFileSync(resolve('docs/openapi.json'), prettySchema)
+  const yamlSchema = safeDumpYaml(enrichedSchema, { skipInvalid: true })
+  writeFileSync(resolve('docs/openapi.yml'), yamlSchema)
 
   process.exit(0)
 }

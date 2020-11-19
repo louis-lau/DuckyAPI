@@ -1,0 +1,2355 @@
+openapi: 3.0.0
+info:
+  title: DuckyAPI
+  description: A customer facing api for WildDuck
+  version: '1.0'
+  contact: {}
+tags:
+  - name: Authentication
+    description: ''
+  - name: Api Keys
+    description: ''
+  - name: Domains
+    description: ''
+  - name: Dkim
+    description: ''
+  - name: Email Accounts
+    description: ''
+  - name: Filters
+    description: ''
+  - name: Forwarders
+    description: ''
+  - name: Profile
+    description: ''
+  - name: Users
+    description: ''
+  - name: Packages
+    description: ''
+servers:
+  - url: 'http://localhost:3000'
+components:
+  securitySchemes:
+    bearer:
+      scheme: bearer
+      bearerFormat: JWT
+      type: http
+  schemas:
+    LoginDto:
+      type: object
+      properties:
+        username:
+          type: string
+          example: johndoe
+          description: Username of the user you want to login as
+        password:
+          type: string
+          example: supersecret
+          description: Password of the user you want to login as
+        rememberMe:
+          type: boolean
+          example: false
+          description: Makes the token have a longer expiry time
+      required:
+        - username
+        - password
+    AccessToken:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          example: >-
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG5kb2UiLCJzdWIiOiI1ZDM1ZDczZmU0YTY3NzVmYjQxZmE0ZjEiLCJpYXQiOjE1NjM5MTU0OTgsImV4cCI6MTU2MzkxNTc5OH0.qYejtBl1Tcv9IWgp9Ax5FiR6uT_W0VwizHkB-3S7_r0
+          description: Access token that can be used to authenticate against the api
+        expires:
+          format: date-time
+          type: string
+          example: '2019-09-01T22:12:08.882Z'
+          description: The expiry date of the access token
+      required:
+        - accessToken
+        - expires
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 5d49e11f600a423ffc0b1297
+          description: Unique id for this user
+        username:
+          type: string
+          example: johndoe
+          description: The username for this user
+        suspended:
+          type: boolean
+          example: false
+          description: >-
+            A suspended user doesn't have access to most api methods, and all
+            accounts and forwarders are suspended
+        roles:
+          example:
+            - user
+          description: User roles
+          type: array
+          items:
+            type: string
+        packageId:
+          type: string
+          example: 5d49e11f600a423ffc0b1297
+          description: Package id for this user
+        quota:
+          type: number
+          example: 1073741824
+          description: 'Storage quota in bytes, 0 is unlimited'
+        maxSend:
+          type: number
+          example: 200
+          description: 'Max send quota for accounts created by this user, 0 is unlimited'
+        maxReceive:
+          type: number
+          example: 1000
+          description: 'Max recieve quota for accounts created by this user, 0 is unlimited'
+        maxForward:
+          type: number
+          example: 100
+          description: 'Max forward quota for accounts created by this user, 0 is unlimited'
+      required:
+        - _id
+        - username
+        - suspended
+        - roles
+        - packageId
+        - quota
+        - maxSend
+        - maxReceive
+        - maxForward
+    CreateUserDto:
+      type: object
+      properties:
+        username:
+          type: string
+          example: johndoe
+          description: The username for this user
+        password:
+          type: string
+          example: supersecret
+          description: The password for this user
+        packageId:
+          type: string
+          example: 5d49e11f600a423ffc0b1297
+          description: Package id to assign to this user
+      required:
+        - username
+        - password
+    UpdateUserDto:
+      type: object
+      properties:
+        username:
+          type: string
+          example: johndoe
+          description: The username for this user
+        password:
+          type: string
+          example: supersecret
+          description: The password for this user
+      required:
+        - username
+        - password
+    DeleteUserDto:
+      type: object
+      properties:
+        onlyDeleteDomainsAndSuspend:
+          type: boolean
+          description: >-
+            If true will not delete the user, but delete all domains and suspend
+            the user
+          example: true
+    UpdateUserAdminDto:
+      type: object
+      properties:
+        username:
+          type: string
+          example: johndoe
+          description: The username for this user
+        password:
+          type: string
+          example: supersecret
+          description: The password for this user
+        packageId:
+          type: string
+          example: 5d49e11f600a423ffc0b1297
+          description: Package id to assign to this user
+        suspended:
+          type: boolean
+          example: false
+          description: >-
+            A suspended user doesn't have access to most api methods, and all
+            accounts and forwarders are suspended
+      required:
+        - username
+        - password
+        - packageId
+        - suspended
+    Package:
+      type: object
+      properties:
+        _id:
+          type: object
+          example: 5d49e11f600a423ffc0b1297
+          description: Unique id for this package
+          readOnly: true
+        name:
+          type: string
+          example: Small
+          description: Display name to use for this package
+        quota:
+          type: number
+          example: 1073741824
+          description: 'Storage quota in bytes, 0 is unlimited'
+        maxSend:
+          type: number
+          example: 200
+          description: 'Max send quota for accounts created by this user, 0 is unlimited'
+        maxReceive:
+          type: number
+          example: 1000
+          description: 'Max recieve quota for accounts created by this user, 0 is unlimited'
+        maxForward:
+          type: number
+          example: 100
+          description: 'Max forward quota for accounts created by this user, 0 is unlimited'
+      required:
+        - name
+    DomainAlias:
+      type: object
+      properties:
+        domain:
+          type: string
+          example: example.com
+          description: The domain name
+        dkim:
+          type: boolean
+          example: false
+          readOnly: true
+          description: If DKIM is active for this domain
+      required:
+        - domain
+    Domain:
+      type: object
+      properties:
+        domain:
+          type: string
+          example: example.com
+          description: The domain name
+        dkim:
+          type: boolean
+          example: false
+          readOnly: true
+          description: If DKIM is active for this domain
+        admin:
+          type: boolean
+          example: true
+          readOnly: true
+          description: 'If this user is the domain admin, this currently serves no function'
+        aliases:
+          description: Domains aliased to this domain
+          readOnly: true
+          type: array
+          items:
+            $ref: '#/components/schemas/DomainAlias'
+      required:
+        - domain
+    DnsCheckMxRecord:
+      type: object
+      properties:
+        exchange:
+          type: string
+          example: mx.example.com
+          description: MX record server
+        priority:
+          type: number
+          example: 1
+          description: MX record priority
+      required:
+        - exchange
+        - priority
+    DnsCheckDkimRecord:
+      type: object
+      properties:
+        selector:
+          type: string
+          example: default
+          description: DKIM record selector
+        value:
+          type: string
+          example: >-
+            v=DKIM1;t=s;p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAseRvI//jDgRsZ1BtGixcLO16/B8yEzsgVSBvCWgwf39LRAey14eZLoyyolX7wVUe71VN67cEuey7XlYGHzGntDtLh/CmI8vvDaiym0VNv8zrZok2TbYW0I4Ts9YkNtCUC5EKjyrwX7AT97ZjiXVX6JK+oEmdtgwxtrQc9+trYj3udlStEmpH0yluY3kSmUYDe3e4TEdLUX7+x/i4D8+65dIXdw52cRNka9aMpH7ZdsfPvrFd6y+ItOuX1Zsb8uFdQz21/Tf1aVczwbZgpUFfpyt55erLwfFLdlH7aRwBIJGQDMzl4SFkGgxDuSPjUePHO266PiHm2/r8A0515n3ZCwIDAQAB
+          description: DKIM record value
+      required:
+        - selector
+        - value
+    DnsCheckCurrentValues:
+      type: object
+      properties:
+        mx:
+          description: List of DNS records
+          type: array
+          items:
+            $ref: '#/components/schemas/DnsCheckMxRecord'
+        spf:
+          type: string
+          example: 'v=spf1 include:example.com -all'
+          description: Value of the SPF record
+        dkim:
+          allOf:
+            - $ref: '#/components/schemas/DnsCheckDkimRecord'
+            - description: DKIM record selector and value
+      required:
+        - mx
+        - spf
+    DnsCheckCorrectValues:
+      type: object
+      properties:
+        mx:
+          description: List of DNS records
+          type: array
+          items:
+            $ref: '#/components/schemas/DnsCheckMxRecord'
+        spf:
+          type: string
+          example: 'v=spf1 include:example.com -all'
+          description: Value of the SPF record
+        dkim:
+          allOf:
+            - $ref: '#/components/schemas/DnsCheckDkimRecord'
+            - description: DKIM record selector and value
+      required:
+        - mx
+        - spf
+    DnsCheckError:
+      type: object
+      properties:
+        type:
+          type: string
+          example: dkim
+          description: 'Type of error/warning. Can be ns, mx, spf, dkim'
+        error:
+          type: string
+          example: DkimNotFound
+          description: Machine readable error/warning string
+        message:
+          type: string
+          example: 'DKIM is enabled, but no record was found'
+          description: Human readable error/warning message
+      required:
+        - type
+        - error
+        - message
+    DnsCheck:
+      type: object
+      properties:
+        currentValues:
+          allOf:
+            - $ref: '#/components/schemas/DnsCheckCurrentValues'
+            - description: Current values of the DNS records
+        correctValues:
+          allOf:
+            - $ref: '#/components/schemas/DnsCheckCorrectValues'
+            - description: Correct values of the DNS records
+        errors:
+          description: List of errors with the DNS records
+          type: array
+          items:
+            $ref: '#/components/schemas/DnsCheckError'
+        warnings:
+          description: List of warnings with the DNS records
+          type: array
+          items:
+            $ref: '#/components/schemas/DnsCheckError'
+      required:
+        - currentValues
+        - correctValues
+        - errors
+        - warnings
+    Address:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 59cb948ad80a820b68f05230
+          description: The unique id of the email account
+          readOnly: true
+        name:
+          type: string
+          example: John Doe
+          description: The name of the email account
+        address:
+          type: string
+          example: john@example.com
+          description: The E-Mail address of the email account
+      required:
+        - address
+    AccountListItemQuota:
+      type: object
+      properties:
+        allowed:
+          type: number
+          example: 1073741824
+          description: How many bytes the account is allowed to use
+        used:
+          type: number
+          example: 17799833
+          description: How many bytes the account is currently using
+      required:
+        - allowed
+        - used
+    AccountListItem:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 59cb948ad80a820b68f05230
+          description: The unique id of the email account
+          readOnly: true
+        name:
+          type: string
+          example: John Doe
+          description: The name of the email account
+        address:
+          type: string
+          example: john@example.com
+          description: The E-Mail address of the email account
+        disabled:
+          type: boolean
+          example: false
+          description: >-
+            If true then the account can not authenticate or receive any new
+            mail
+        aliases:
+          description: List of aliases for this account
+          type: array
+          items:
+            $ref: '#/components/schemas/Address'
+        quota:
+          allOf:
+            - $ref: '#/components/schemas/AccountListItemQuota'
+            - description: Account quota usage and limit
+      required:
+        - address
+        - disabled
+        - aliases
+        - quota
+    AccountDetailsLimitsQuota:
+      type: object
+      properties:
+        allowed:
+          type: number
+          example: 1073741824
+          description: How many bytes the account is allowed to use
+        used:
+          type: number
+          example: 2048
+          description: How many bytes the account is currently using
+      required:
+        - allowed
+        - used
+    AccountDetailsLimitsSend:
+      type: object
+      properties:
+        allowed:
+          type: number
+          example: 200
+          description: How many messages can be sent per period
+        used:
+          type: number
+          example: 231
+          description: How many messages were sent in the current period
+        ttl:
+          type: number
+          example: 3600
+          description: Seconds until the end of the current period
+      required:
+        - allowed
+        - used
+        - ttl
+    AccountDetailsLimitsReceive:
+      type: object
+      properties:
+        allowed:
+          type: number
+          example: 1000
+          description: How many messages can be received per period
+        used:
+          type: number
+          example: 574
+          description: How many messages were received in the current period
+        ttl:
+          type: number
+          example: 3600
+          description: Seconds until the end of the current period
+      required:
+        - allowed
+        - used
+        - ttl
+    AccountDetailsLimitsForward:
+      type: object
+      properties:
+        allowed:
+          type: number
+          example: 100
+          description: How many messages can be forwarded per period
+        used:
+          type: number
+          example: 56
+          description: How many messages were forwarded in the current period
+        ttl:
+          type: number
+          example: 3600
+          description: Seconds until the end of the current period
+      required:
+        - allowed
+        - used
+        - ttl
+    AccountDetailsLimits:
+      type: object
+      properties:
+        quota:
+          allOf:
+            - $ref: '#/components/schemas/AccountDetailsLimitsQuota'
+            - description: Storage quota limit and usage
+        send:
+          allOf:
+            - $ref: '#/components/schemas/AccountDetailsLimitsSend'
+            - description: How many emails the account can send in a period
+        receive:
+          allOf:
+            - $ref: '#/components/schemas/AccountDetailsLimitsReceive'
+            - description: How many emails the account can receive in a period
+        forward:
+          allOf:
+            - $ref: '#/components/schemas/AccountDetailsLimitsForward'
+            - description: How many emails the account can forward in a period
+      required:
+        - quota
+        - send
+        - receive
+        - forward
+    AccountDetails:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 59cb948ad80a820b68f05230
+          description: The unique id of the email account
+          readOnly: true
+        name:
+          type: string
+          example: John Doe
+          description: The name of the email account
+        address:
+          type: string
+          example: john@example.com
+          description: The E-Mail address of the email account
+        disabled:
+          type: boolean
+          example: false
+          description: >-
+            If true then the account can not authenticate or receive any new
+            mail
+        aliases:
+          description: List of aliases for this account
+          type: array
+          items:
+            $ref: '#/components/schemas/Address'
+        spamLevel:
+          type: number
+          example: 50
+          description: >-
+            Relative scale for detecting spam. 0 means that everything is spam,
+            100 means that nothing is spam
+        disabledScopes:
+          example:
+            - imap
+            - pop3
+          description: List of scopes that are disabled for this user
+          type: array
+          items:
+            type: string
+        limits:
+          allOf:
+            - $ref: '#/components/schemas/AccountDetailsLimits'
+            - description: Account limits
+      required:
+        - address
+        - disabled
+        - aliases
+        - spamLevel
+        - disabledScopes
+        - limits
+    CreateUpdateAccountLimits:
+      type: object
+      properties:
+        quota:
+          type: number
+          example: 1073741824
+          description: How many bytes the account is allowed to use
+        send:
+          type: number
+          example: 200
+          description: How many emails the account can send in a period
+        receive:
+          type: number
+          example: 1000
+          description: How many emails the account can receive in a period
+        forward:
+          type: number
+          example: 100
+          description: How many emails the account can forward in a period
+    CreateAccountDto:
+      type: object
+      properties:
+        name:
+          type: string
+          example: John Doe
+          description: The name of the email account
+        spamLevel:
+          type: number
+          example: 50
+          description: >-
+            Relative scale for detecting spam. 0 means that everything is spam,
+            100 means that nothing is spam
+        limits:
+          allOf:
+            - $ref: '#/components/schemas/CreateUpdateAccountLimits'
+            - description: Account limits
+        disabledScopes:
+          example: &ref_0
+            - imap
+            - pop3
+          description: List of scopes that are disabled for this user
+          type: array
+          items:
+            type: string
+        address:
+          type: string
+          example: john@example.com
+          description: The E-Mail address of the email account
+        password:
+          type: string
+          example: verysecret
+          description: The new password of the email account
+      required:
+        - limits
+        - address
+        - password
+    UpdateAccountDto:
+      type: object
+      properties:
+        name:
+          type: string
+          example: John Doe
+          description: The name of the email account
+        spamLevel:
+          type: number
+          example: 50
+          description: >-
+            Relative scale for detecting spam. 0 means that everything is spam,
+            100 means that nothing is spam
+        limits:
+          allOf:
+            - $ref: '#/components/schemas/CreateUpdateAccountLimits'
+            - description: Account limits
+        disabledScopes:
+          example: *ref_0
+          description: List of scopes that are disabled for this user
+          type: array
+          items:
+            type: string
+        password:
+          type: string
+          example: verysecret
+          description: The new password of the email account
+        disabled:
+          type: boolean
+          example: false
+          description: >-
+            If true then the account can not authenticate or receive any new
+            mail
+      required:
+        - limits
+    DnsTxt:
+      type: object
+      properties:
+        name:
+          type: string
+          example: ducky._domainkey.example.com
+          description: Domain name to which the TXT record should be added
+        value:
+          type: string
+          example: v=DKIM1;t=s;p=MIGfMA0...
+          description: Value of the TXT record
+      required:
+        - name
+        - value
+    DkimKey:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 59ef21aef255ed1d9d790e7a
+          description: Unique id of the DKIM key
+        domain:
+          type: string
+          example: example.com
+          description: The domain this DKIM key applies to
+        selector:
+          type: string
+          example: ducky
+          description: DKIM selector
+        fingerprint:
+          type: string
+          example: '6a:aa:d7:ba:e4:99:b4:12:e0:f3:35:01:71:d4:f1:d6:b4:95:c4:f5'
+          description: Unique id of the DKIM key
+        publicKey:
+          type: string
+          example: "-----BEGIN PUBLIC KEY-----\r\nMIGfMA0..."
+          description: 'Public key in DNS format (no prefix/suffix, single line)'
+        dnsTxt:
+          allOf:
+            - $ref: '#/components/schemas/DnsTxt'
+            - description: Value for the DNS TXT record
+        created:
+          type: string
+          example: '2017-10-24T11:19:10.911Z'
+          description: Datestring of the time the DKIM key was created
+      required:
+        - id
+        - domain
+        - selector
+        - fingerprint
+        - publicKey
+        - dnsTxt
+        - created
+    AddDkimDto:
+      type: object
+      properties:
+        selector:
+          type: string
+          example: default
+          description: Selector for dkim key
+        privateKey:
+          type: string
+          example: '-----BEGIN RSA PRIVATE KEY-----...'
+          description: >-
+            Pem formatted DKIM private key. If not set then a new 2048 bit RSA
+            key is generated, beware though that it can take several seconds to
+            complete
+      required:
+        - selector
+    Forwarder:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 59cb948ad80a820b68f05230
+          description: The unique id of the forwarder
+        address:
+          type: string
+          example: john@example.com
+          description: The E-Mail address of the forwarder
+      required:
+        - id
+        - address
+    ForwarderDetailsForwards:
+      type: object
+      properties:
+        allowed:
+          type: number
+          example: 100
+          description: How many messages can be forwarded per period
+        used:
+          type: number
+          example: 56
+          description: How many messages were forwarded in the current period
+        ttl:
+          type: number
+          example: 3600
+          description: Seconds until the end of the current period
+      required:
+        - allowed
+        - used
+        - ttl
+    ForwarderDetailsLimits:
+      type: object
+      properties:
+        forward:
+          allOf:
+            - $ref: '#/components/schemas/ForwarderDetailsForwards'
+            - description: Forwarding quota
+      required:
+        - forward
+    ForwarderDetails:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 59cb948ad80a820b68f05230
+          description: The unique id of the forwarder
+        address:
+          type: string
+          example: john@example.com
+          description: The E-Mail address of the forwarder
+        name:
+          type: string
+          example: John Doe
+          description: Identity name
+        targets:
+          example:
+            - johndoe@example.com
+            - 'smtp://mx.example.com:25'
+            - 'https://example.com'
+          description: List of forwarding targets
+          type: array
+          items:
+            type: string
+        limits:
+          allOf:
+            - $ref: '#/components/schemas/ForwarderDetailsLimits'
+            - description: Forwarder limits and usage
+      required:
+        - id
+        - address
+        - name
+        - targets
+        - limits
+    CreateUpdateForwarderCommonDtoLimits:
+      type: object
+      properties:
+        forward:
+          type: number
+          example: 600
+          description: How many messages can be forwarded per period
+    CreateForwarderDto:
+      type: object
+      properties:
+        name:
+          type: string
+          example: John Doe
+          description: Identity name
+        targets:
+          example: &ref_1
+            - johndoe@example.com
+            - 'smtp://mx.example.com:25'
+            - 'https://example.com'
+          description: >-
+            An array of forwarding targets. The value could either be an email
+            address or a relay url to next MX server ("smtp://mx2.zone.eu:25")
+            or an URL where mail contents are POSTed to
+          type: array
+          items:
+            type: string
+        limits:
+          allOf:
+            - $ref: '#/components/schemas/CreateUpdateForwarderCommonDtoLimits'
+            - description: Limits for this forwarder
+        address:
+          type: string
+          example: john@example.com
+          description: The E-Mail address that should be forwarded
+      required:
+        - limits
+        - address
+    UpdateForwarderDto:
+      type: object
+      properties:
+        name:
+          type: string
+          example: John Doe
+          description: Identity name
+        targets:
+          example: *ref_1
+          description: >-
+            An array of forwarding targets. The value could either be an email
+            address or a relay url to next MX server ("smtp://mx2.zone.eu:25")
+            or an URL where mail contents are POSTed to
+          type: array
+          items:
+            type: string
+        limits:
+          allOf:
+            - $ref: '#/components/schemas/CreateUpdateForwarderCommonDtoLimits'
+            - description: Limits for this forwarder
+        address:
+          type: string
+          example: john@example.com
+          description: The E-Mail address that should be forwarded
+      required:
+        - limits
+    ApiKey:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: pnx97h6p64t4gau6vbub-
+          description: Unique id for this api key
+          readOnly: true
+        name:
+          type: string
+          example: API key for my script
+          description: Name of api key
+        issuedAt:
+          format: date-time
+          type: string
+          example: '2019-09-01T22:12:08.882Z'
+          description: Date the api key was issued
+          readOnly: true
+      required:
+        - name
+    ApiKeyAccessToken:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          example: >-
+            eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG5kb2UiLCJzdWIiOiI1ZDM1ZDczZmU0YTY3NzVmYjQxZmE0ZjEiLCJpYXQiOjE1NjM5MTU0OTgsImV4cCI6MTU2MzkxNTc5OH0.qYejtBl1Tcv9IWgp9Ax5FiR6uT_W0VwizHkB-3S7_r0
+          description: API key that can be used to authenticate against the api
+        details:
+          allOf:
+            - $ref: '#/components/schemas/ApiKey'
+            - description: API key details
+      required:
+        - accessToken
+        - details
+    FilterListItem:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Mark as seen from John
+          description: The name of the filter
+        disabled:
+          type: boolean
+          example: false
+          description: 'If true, then this filter is ignored'
+        id:
+          type: string
+          example: 5a1c0ee490a34c67e266931c
+          description: Unique id of the filter
+        query:
+          example:
+            - - from
+              - (John)
+            - - to
+              - (John)
+          description: A list of query descriptions
+          type: array
+          items:
+            type: string
+        action:
+          example:
+            - - mark it as spam
+            - - forward to
+              - 'johndoe@example.com, smtp://mx.example.com:25, example.com'
+          description: A list of action descriptions
+          type: array
+          items:
+            type: string
+        created:
+          type: string
+          example: '2019-08-14T15:14:25.176Z'
+          description: Datestring of the time the filter was created
+      required:
+        - id
+        - query
+        - action
+        - created
+    Query:
+      type: object
+      properties:
+        from:
+          type: string
+          example: John
+          description: 'Partial match for the From: header (case insensitive)'
+        to:
+          type: string
+          example: John
+          description: 'Partial match for the To:/Cc: headers (case insensitive)'
+        subject:
+          type: string
+          example: You have 1 new notification
+          description: 'Partial match for the Subject: header (case insensitive)'
+        listId:
+          type: string
+          example: John's list
+          description: 'Partial match for the List-ID: header (case insensitive)'
+        text:
+          type: string
+          example: Dedicated servers
+          description: Fulltext search against message text
+        ha:
+          type: boolean
+          example: false
+          description: Does a message have to have an attachment or not
+        size:
+          type: number
+          example: 1000
+          description: >-
+            Message size in bytes. If the value is a positive number then
+            message needs to be larger, if negative then message needs to be
+            smaller than abs(size) value
+    Action:
+      type: object
+      properties:
+        seen:
+          type: boolean
+          example: true
+          description: If true then mark matching messages as Seen
+        flag:
+          type: boolean
+          example: true
+          description: If true then mark matching messages as Flagged
+        delete:
+          type: boolean
+          example: true
+          description: If true then do not store matching messages
+        spam:
+          type: boolean
+          example: true
+          description: If true then store matching messags to Junk Mail folder
+        mailbox:
+          type: string
+          example: 5a1c0ee490a34c67e266932c
+          description: Mailbox ID to store matching messages to
+        targets:
+          example:
+            - johndoe@example.com
+            - 'smtp://mx.example.com:25'
+            - 'https://example.com'
+          description: >-
+            An array of forwarding targets. The value could either be an email
+            address or a relay url to next MX server ("smtp://mx2.zone.eu:25")
+            or an URL where mail contents are POSTed to
+          type: array
+          items:
+            type: string
+    FilterDetails:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Mark as seen from John
+          description: The name of the filter
+        disabled:
+          type: boolean
+          example: false
+          description: 'If true, then this filter is ignored'
+        query:
+          allOf:
+            - $ref: '#/components/schemas/Query'
+            - description: Rules that a message must match
+        action:
+          allOf:
+            - $ref: '#/components/schemas/Action'
+            - description: Rules that a message must match
+        id:
+          type: string
+          example: 5a1c0ee490a34c67e266931c
+          description: Unique id of the filter
+      required:
+        - query
+        - action
+        - id
+    CreateUpdateFilterDto:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Mark as seen from John
+          description: The name of the filter
+        disabled:
+          type: boolean
+          example: false
+          description: 'If true, then this filter is ignored'
+        query:
+          allOf:
+            - $ref: '#/components/schemas/Query'
+            - description: Rules that a message must match
+        action:
+          allOf:
+            - $ref: '#/components/schemas/Action'
+            - description: Rules that a message must match
+      required:
+        - query
+        - action
+paths:
+  /authentication:
+    delete:
+      operationId: revokeAllAccessTokens
+      summary: Revoke previous access tokens
+      description: >-
+        Note: This resource is forbidden when using an API key as authorization.
+        Use an access token.
+      parameters: []
+      responses:
+        '200':
+          description: Successfully expired previous tokens
+        '400': &ref_2
+          description: Bad user input
+        '401':
+          description: Invalid or expired token
+      tags: &ref_3
+        - Authentication
+      security:
+        - bearer: []
+      x-code-samples:
+        - lang: Shell
+          label: Curl
+          source: |-
+            curl --request DELETE \
+              --url http://localhost:3000/authentication \
+              --header 'authorization: Bearer REPLACE_BEARER_TOKEN'
+    post:
+      operationId: getAccessToken
+      summary: Get an access token
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginDto'
+      responses:
+        '201':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessToken'
+        '400': *ref_2
+        '401':
+          description: Invalid username or password
+      tags: *ref_3
+      x-code-samples:
+        - lang: Shell
+          label: Curl
+          source: |-
+            curl --request POST \
+              --url http://localhost:3000/authentication \
+              --header 'content-type: application/json' \
+              --data '{"username":"johndoe","password":"supersecret","rememberMe":false}'
+  /users:
+    get:
+      operationId: getUsers
+      summary: '[Admin only] List all users'
+      parameters: []
+      responses:
+        '200':
+          description: list of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '400': &ref_4
+          description: Bad user input
+        '401': &ref_5
+          description: Invalid or expired token
+      security: &ref_6
+        - bearer: []
+      tags:
+        - Users
+      x-code-samples:
+        - lang: Shell
+          label: Curl
+          source: |-
+            curl --request GET \
+              --url http://localhost:3000/users \
+              --header 'authorization: Bearer REPLACE_BEARER_TOKEN'
+    post:
+      operationId: createUser
+      summary: '[Admin only] Create new API user'
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserDto'
+      responses:
+        '201':
+          description: User successfully created
+        '400': *ref_4
+        '401': *ref_5
+      security: *ref_6
+      tags:
+        - Users
+      x-code-samples:
+        - lang: Shell
+          label: Curl
+          source: |-
+            curl --request POST \
+              --url http://localhost:3000/users \
+              --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \
+              --header 'content-type: application/json' \
+              --data '{"username":"johndoe","password":"supersecret","packageId":"5d49e11f600a423ffc0b1297"}'
+  /users/me:
+    get:
+      operationId: getMe
+      summary: Get account info for current access token
+      parameters: []
+      responses:
+        '200':
+          description: User info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400': *ref_4
+        '401': *ref_5
+      security: *ref_6
+      tags:
+        - Profile
+      x-code-samples:
+        - lang: Shell
+          label: Curl
+          source: |-
+            curl --request GET \
+              --url http://localhost:3000/users/me \
+              --header 'authorization: Bearer REPLACE_BEARER_TOKEN'
+    put:
+      operationId: updateMe
+      summary: Update username/password
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserDto'
+      responses:
+        '200':
+          description: User updated successfully
+        '400': *ref_4
+        '401': *ref_5
+      security: *ref_6
+      tags:
+        - Profile
+      x-code-samples:
+        - lang: Shell
+          label: Curl
+          source: |-
+            curl --request PUT \
+              --url http://localhost:3000/users/me \
+              --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \
+              --header 'content-type: application/json' \
+              --data '{"username":"johndoe","password":"supersecret"}'
+  '/users/{id}':
+    delete:
+      operationId: deleteUser
+      summary: '[Admin only] Delete API user'
+      parameters:
+        - name: id
+          required: true
+          in: path
+          example: 5d49e11f600a423ffc0b1297
+          description: Unique id for the user
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteUserDto'
+      responses:
+        '200':
+          description: User successfully deleted
+        '400': *ref_4
+        '401': *ref_5
+      security: *ref_6
+      tags:
+        - Users
+      x-code-samples:
+        - lang: Shell
+          label: Curl
+          source: |-
+            curl --request DELETE \
+              --url http://localhost:3000/users/5d49e11f600a423ffc0b1297 \
+              --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \
+              --header 'content-type: application/json' \
+              --data '{"onlyDeleteDomainsAndSuspend":true}'
+    put:
+      operationId: updateUser
+      summary: '[Admin only] Update API user'
+      parameters:
+        - name: id
+          required: true
+          in: path
+          example: 5d49e11f600a423ffc0b1297
+          description: Unique id for the user
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserAdminDto'
+      responses:
+        '200':
+          description: ''
+        '400': *ref_4
+        '401': *ref_5
+      security: *ref_6
+      tags:
+        - Users
+      x-code-samples:
+        - lang: Shell
+          label: Curl
+          source: |-
+            curl --request PUT \
+              --url http://localhost:3000/users/5d49e11f600a423ffc0b1297 \
+              --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \
+              --header 'content-type: application/json' \
+              --data '{"username":"johndoe","password":"supersecret","packageId":"5d49e11f600a423ffc0b1297","suspended":false}'
+  /packages:
+    get:
+      operationId: getPackages
+      summary: '[Admin only] Get a list of packages'
+      parameters: []
+      responses:
+        '200':
+          description: List of packages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Package'
+        '400': &ref_7
+          description: Bad user input
+        '401': &ref_8
+          description: Invalid or expired token
+      tags: &ref_9
+        - Packages
+      security: &ref_10
+        - bearer: []
+      x-code-samples:
+        - lang: Shell
+          label: Curl
+          source: |-
+            curl --request GET \
+              --url http://localhost:3000/packages \
+              --header 'authorization: Bearer REPLACE_BEARER_TOKEN'
+    post:
+      operationId: createPackage
+      summary: '[Admin only] Create package'
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Package'
+      responses:
+        '201':
+          description: Successfully created package
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Package'
+        '400': *ref_7
+        '401': *ref_8
+      tags: *ref_9
+      security: *ref_10
+      x-code-samples:
+        - lang: Shell
+          label: Curl
+          source: |-
+            curl --request POST \
+              --url http://localhost:3000/packages \
+              --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \
+              --header 'content-type: application/json' \
+              --data '{"name":"Small","quota":1073741824,"maxSend":200,"maxReceive":1000,"maxForward":100}'
+  '/packages/{id}':
+    put:
+      operationId: updatePackage
+      summary: '[Admin only] Update package'
+      description: >-
+        Will also update quota for existing users, except if you modified the
+        users quota manually.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          example: 5d49e11f600a423ffc0b1297
+          description: Unique id for the package
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Package'
+      responses:
+        '200':
+          description: Successfully updated package
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Package'
+        '400': *ref_7
+        '401': *ref_8
+      tags: *ref_9
+      security: *ref_10
+      x-code-samples:
+        - lang: Shell
+          label: Curl
+          source: |-
+            curl --request PUT \
+              --url http://localhost:3000/packages/5d49e11f600a423ffc0b1297 \
+              --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \
+              --header 'content-type: application/json' \
+              --data '{"name":"Small","quota":1073741824,"maxSend":200,"maxReceive":1000,"maxForward":100}'
+    delete:
+      operationId: deletePackage
+      summary: '[Admin only] Delete package'
+      parameters:
+        - name: id
+          required: true
+          in: path
+          example: 5d49e11f600a423ffc0b1297
+          description: Unique id for the package
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully deleted package
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Package'
+        '400': *ref_7
+        '401': *ref_8
+      tags: *ref_9
+      security: *ref_10
+      x-code-samples:
+        - lang: Shell
+          label: Curl
+          source: |-
+            curl --request DELETE \
+              --url http://localhost:3000/packages/5d49e11f600a423ffc0b1297 \
+              --header 'authorization: Bearer REPLACE_BEARER_TOKEN'
+  '/domains/{domain}':
+    delete:
+      operationId: deleteDomain
+      summary: Delete a domain
+      description: >-
+        WARNING: This will also delete any email accounts, forwarders, and DKIM
+        keys associated with this domain
+      parameters:
+        - name: domain
+          required: true
+          in: path
+          description: example.com
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Domain successfully deleted
+        '400': &ref_11
+          description: Bad user input
+        '401': &ref_12
+          description: Invalid or expired token
+        '404':
+          description: Domain not found on user
+      tags: &ref_13
+        - Domains
+      security: &ref_14
+        - bearer: []
+      x-code-samples:
+        - lang: Shell
+          label: Curl
+          source: |-
+            curl --request DELETE \
+              --url http://localhost:3000/domains/%7Bdomain%7D \
+              --header 'authorization: Bearer REPLACE_BEARER_TOKEN'
+  /domains:
+    get:
+      operationId: getDomains
+      summary: List domains
+      parameters: []
+      responses:
+        '200':
+          description: A list of domains
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Domain'
+        '400': *ref_11
+        '401': *ref_12
+      tags: *ref_13
+      security: *ref_14
+      x-code-samples:
+        - lang: Shell
+          label: Curl
+          source: |-
+            curl --request GET \
+              --url http://localhost:3000/domains \
+              --header 'authorization: Bearer REPLACE_BEARER_TOKEN'
+    post:
+      operationId: addDomain
+      summary: Add a domain
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Domain'
+      responses:
+        '201':
+          description: Domain successfully added
+        '400': *ref_11
+        '401': *ref_12
+      tags: *ref_13
+      security: *ref_14
+      x-code-samples:
+        - lang: Shell
+          label: Curl
+          source: |-
+            curl --request POST \
+              --url http://localhost:3000/domains \
+              --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \
+              --header 'content-type: application/json' \
+              --data '{"domain":"example.com"}'
+  '/domains/{domain}/DNS':
+    get:
+      operationId: checkDNS
+      summary: Get and check DNS records
+      parameters:
+        - name: domain
+          required: true
+          in: path
+          description: example.com
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The current and the correct DNS records for this domain
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DnsCheck'
+        '400': *ref_11
+        '401': *ref_12
+        '404':
+          description: Domain not found on user
+      tags: *ref_13
+      security: *ref_14
+      x-code-samples:
+        - lang: Shell
+          label: Curl
+          source: |-
+            curl --request GET \
+              --url http://localhost:3000/domains/%7Bdomain%7D/DNS \
+              --header 'authorization: Bearer REPLACE_BEARER_TOKEN'
+  '/domains/{domain}/aliases':
+    post:
+      operationId: addAlias
+      summary: Add a domain alias
+      parameters:
+        - name: domain
+          required: true
+          in: path
+          description: example.com
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DomainAlias'
+      responses:
+        '201':
+          description: Alias successfully added
+        '400': *ref_11
+        '401': *ref_12
+        '404':
+          description: Domain not found on user
+      tags: *ref_13
+      security: *ref_14
+      x-code-samples:
+        - lang: Shell
+          label: Curl
+          source: |-
+            curl --request POST \
+              --url http://localhost:3000/domains/%7Bdomain%7D/aliases \
+              --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \
+              --header 'content-type: application/json' \
+              --data '{"domain":"example.com"}'
+  '/domains/{domain}/aliases/{alias}':
+    delete:
+      operationId: deleteAlias
+      summary: Delete a domain alias
+      parameters:
+        - name: domain
+          required: true
+          in: path
+          description: example.com
+          schema:
+            type: string
+        - name: alias
+          required: true
+          in: path
+          description: example.com
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Alias successfully deleted
+        '400': *ref_11
+        '401': *ref_12
+        '404':
+          description: Domain not found on user
+      tags: *ref_13
+      security: *ref_14
+      x-code-samples:
+        - lang: Shell
+          label: Curl
+          source: |-
+            curl --request DELETE \
+              --url http://localhost:3000/domains/%7Bdomain%7D/aliases/%7Balias%7D \
+              --header 'authorization: Bearer REPLACE_BEARER_TOKEN'
+  '/accounts/{accountId}':
+    delete:
+      operationId: deleteAccount
+      summary: Delete email account
+      parameters:
+        - name: accountId
+          required: true
+          in: path
+          description: Unique id of the account
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Account deleted successfully
+        '400': &ref_15
+          description: Bad user input
+        '401': &ref_16
+          description: Invalid or expired token
+        '404':
+          description: No account found with this id
+      tags: &ref_17
+        - Email Accounts
+      security: &ref_18
+        - bearer: []
+      x-code-samples:
+        - lang: Shell
+          label: Curl
+          source: |-
+            curl --request DELETE \
+              --url http://localhost:3000/accounts/%7BaccountId%7D \
+              --header 'authorization: Bearer REPLACE_BEARER_TOKEN'
+    get:
+      operationId: getAccountDetails
+      summary: Get email account details
+      parameters:
+        - name: accountId
+          required: true
+          in: path
+          description: Unique id of the account
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Account details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDetails'
+        '400': *ref_15
+        '401': *ref_16
+        '404':
+          description: No account found with this id
+      tags: *ref_17
+      security: *ref_18
+      x-code-samples:
+        - lang: Shell
+          label: Curl
+          source: |-
+            curl --request GET \
+              --url http://localhost:3000/accounts/%7BaccountId%7D \
+              --header 'authorization: Bearer REPLACE_BEARER_TOKEN'
+    put:
+      operationId: updateAccount
+      summary: Update existing email account
+      parameters:
+        - name: accountId
+          required: true
+          in: path
+          description: Unique id of the account
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAccountDto'
+      responses:
+        '200':
+          description: Account updated successfully
+        '400': *ref_15
+        '401': *ref_16
+        '404':
+          description: No account found with this id
+      tags: *ref_17
+      security: *ref_18
+      x-code-samples:
+        - lang: Shell
+          label: Curl
+          source: |-
+            curl --request PUT \
+              --url http://localhost:3000/accounts/%7BaccountId%7D \
+              --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \
+              --header 'content-type: application/json' \
+              --data '{"name":"John Doe","spamLevel":50,"limits":{"quota":1073741824,"send":200,"receive":1000,"forward":100},"disabledScopes":["imap","pop3"],"password":"verysecret","disabled":false}'
+  /accounts:
+    get:
+      operationId: getAccounts
+      summary: List email accounts
+      parameters: []
+      responses:
+        '200':
+          description: A list of accounts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccountListItem'
+        '400': *ref_15
+        '401': *ref_16
+      tags: *ref_17
+      security: *ref_18
+      x-code-samples:
+        - lang: Shell
+          label: Curl
+          source: |-
+            curl --request GET \
+              --url http://localhost:3000/accounts \
+              --header 'authorization: Bearer REPLACE_BEARER_TOKEN'
+    post:
+      operationId: createAccount
+      summary: Create a new email account
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAccountDto'
+      responses:
+        '201':
+          description: Account created successfully
+        '400': *ref_15
+        '401': *ref_16
+      tags: *ref_17
+      security: *ref_18
+      x-code-samples:
+        - lang: Shell
+          label: Curl
+          source: |-
+            curl --request POST \
+              --url http://localhost:3000/accounts \
+              --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \
+              --header 'content-type: application/json' \
+              --data '{"name":"John Doe","spamLevel":50,"limits":{"quota":1073741824,"send":200,"receive":1000,"forward":100},"disabledScopes":["imap","pop3"],"address":"john@example.com","password":"verysecret"}'
+  '/accounts/{accountId}/aliases':
+    post:
+      operationId: addAccountAlias
+      summary: Add an account alias
+      parameters:
+        - name: accountId
+          required: true
+          in: path
+          description: Unique id of the account
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Address'
+      responses:
+        '201':
+          description: Alias successfully added
+        '400': *ref_15
+        '401': *ref_16
+        '404':
+          description: No account found with this id
+      tags: *ref_17
+      security: *ref_18
+      x-code-samples:
+        - lang: Shell
+          label: Curl
+          source: |-
+            curl --request POST \
+              --url http://localhost:3000/accounts/%7BaccountId%7D/aliases \
+              --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \
+              --header 'content-type: application/json' \
+              --data '{"name":"John Doe","address":"john@example.com"}'
+  '/accounts/{accountId}/aliases/{aliasId}':
+    delete:
+      operationId: deleteAccountAlias
+      summary: Delete an account alias
+      parameters:
+        - name: accountId
+          required: true
+          in: path
+          description: Unique id of the account
+          schema:
+            type: string
+        - name: aliasId
+          required: true
+          in: path
+          description: Unique id of the alias
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Alias successfully deleted
+        '400': *ref_15
+        '401': *ref_16
+        '404':
+          description: No account or alias found with this id
+      tags: *ref_17
+      security: *ref_18
+      x-code-samples:
+        - lang: Shell
+          label: Curl
+          source: |-
+            curl --request DELETE \
+              --url http://localhost:3000/accounts/%7BaccountId%7D/aliases/%7BaliasId%7D \
+              --header 'authorization: Bearer REPLACE_BEARER_TOKEN'
+  '/domains/{domainOrAlias}/dkim':
+    delete:
+      operationId: deleteDkim
+      summary: Delete DKIM key for a domain
+      parameters:
+        - name: domainOrAlias
+          required: true
+          in: path
+          description: example.com
+          schema:
+            type: string
+      responses:
+        '200':
+          description: DKIM key successfully deleted
+        '400': &ref_19
+          description: Bad user input
+        '401': &ref_20
+          description: Invalid or expired token
+        '404': &ref_21
+          description: Domain not found in account
+      tags: &ref_22
+        - Dkim
+      security: &ref_23
+        - bearer: []
+      x-code-samples:
+        - lang: Shell
+          label: Curl
+          source: |-
+            curl --request DELETE \
+              --url http://localhost:3000/domains/%7BdomainOrAlias%7D/dkim \
+              --header 'authorization: Bearer REPLACE_BEARER_TOKEN'
+    get:
+      operationId: getDkim
+      summary: Get DKIM key info for a domain
+      parameters:
+        - name: domainOrAlias
+          required: true
+          in: path
+          description: example.com
+          schema:
+            type: string
+      responses:
+        '200':
+          description: DKIM key info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DkimKey'
+        '400': *ref_19
+        '401': *ref_20
+        '404': *ref_21
+      tags: *ref_22
+      security: *ref_23
+      x-code-samples:
+        - lang: Shell
+          label: Curl
+          source: |-
+            curl --request GET \
+              --url http://localhost:3000/domains/%7BdomainOrAlias%7D/dkim \
+              --header 'authorization: Bearer REPLACE_BEARER_TOKEN'
+    put:
+      operationId: updateDkim
+      summary: Add or update DKIM key for a domain
+      parameters:
+        - name: domainOrAlias
+          required: true
+          in: path
+          description: example.com
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddDkimDto'
+      responses:
+        '200':
+          description: DKIM key info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DkimKey'
+        '400': *ref_19
+        '401': *ref_20
+        '404': *ref_21
+      tags: *ref_22
+      security: *ref_23
+      x-code-samples:
+        - lang: Shell
+          label: Curl
+          source: |-
+            curl --request PUT \
+              --url http://localhost:3000/domains/%7BdomainOrAlias%7D/dkim \
+              --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \
+              --header 'content-type: application/json' \
+              --data '{"selector":"default","privateKey":"-----BEGIN RSA PRIVATE KEY-----..."}'
+  '/forwarders/{forwarderId}':
+    delete:
+      operationId: deleteForwarder
+      summary: Delete forwarder
+      parameters:
+        - name: forwarderId
+          required: true
+          in: path
+          description: Unique id of the forwarder
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Forwarder deleted successfully
+        '400': &ref_24
+          description: Bad user input
+        '401': &ref_25
+          description: Invalid or expired token
+        '404':
+          description: No forwarder found with this id
+      tags: &ref_26
+        - Forwarders
+      security: &ref_27
+        - bearer: []
+      x-code-samples:
+        - lang: Shell
+          label: Curl
+          source: |-
+            curl --request DELETE \
+              --url http://localhost:3000/forwarders/%7BforwarderId%7D \
+              --header 'authorization: Bearer REPLACE_BEARER_TOKEN'
+    get:
+      operationId: getForwarderDetails
+      summary: Get forwarder details
+      parameters:
+        - name: forwarderId
+          required: true
+          in: path
+          description: Unique id of the forwarder
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Forwarder details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ForwarderDetails'
+        '400': *ref_24
+        '401': *ref_25
+        '404':
+          description: No forwarder found with this id
+      tags: *ref_26
+      security: *ref_27
+      x-code-samples:
+        - lang: Shell
+          label: Curl
+          source: |-
+            curl --request GET \
+              --url http://localhost:3000/forwarders/%7BforwarderId%7D \
+              --header 'authorization: Bearer REPLACE_BEARER_TOKEN'
+    put:
+      operationId: updateForwarder
+      summary: Update existing forwarder
+      parameters:
+        - name: forwarderId
+          required: true
+          in: path
+          description: Unique id of the forwarder
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateForwarderDto'
+      responses:
+        '200':
+          description: Forwarder updated successfully
+        '400': *ref_24
+        '401': *ref_25
+        '404':
+          description: No forwarder found with this id
+      tags: *ref_26
+      security: *ref_27
+      x-code-samples:
+        - lang: Shell
+          label: Curl
+          source: |-
+            curl --request PUT \
+              --url http://localhost:3000/forwarders/%7BforwarderId%7D \
+              --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \
+              --header 'content-type: application/json' \
+              --data '{"name":"John Doe","targets":["johndoe@example.com","smtp://mx.example.com:25","https://example.com"],"limits":{"forward":600},"address":"john@example.com"}'
+  /forwarders:
+    get:
+      operationId: getForwarders
+      summary: List forwarders
+      parameters: []
+      responses:
+        '200':
+          description: A list of forwarders
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Forwarder'
+        '400': *ref_24
+        '401': *ref_25
+      tags: *ref_26
+      security: *ref_27
+      x-code-samples:
+        - lang: Shell
+          label: Curl
+          source: |-
+            curl --request GET \
+              --url http://localhost:3000/forwarders \
+              --header 'authorization: Bearer REPLACE_BEARER_TOKEN'
+    post:
+      operationId: createForwarder
+      summary: Create a new forwarder
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateForwarderDto'
+      responses:
+        '201':
+          description: Forwarder created successfully
+        '400': *ref_24
+        '401': *ref_25
+      tags: *ref_26
+      security: *ref_27
+      x-code-samples:
+        - lang: Shell
+          label: Curl
+          source: |-
+            curl --request POST \
+              --url http://localhost:3000/forwarders \
+              --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \
+              --header 'content-type: application/json' \
+              --data '{"name":"John Doe","targets":["johndoe@example.com","smtp://mx.example.com:25","https://example.com"],"limits":{"forward":600},"address":"john@example.com"}'
+  /apikeys:
+    post:
+      operationId: createApiKey
+      summary: Create an API key
+      description: >-
+        Note: This resource is forbidden when using an API key as authorization.
+        Use an access token.
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiKey'
+      responses:
+        '201':
+          description: API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiKeyAccessToken'
+        '400': &ref_28
+          description: Bad user input
+        '401': &ref_29
+          description: Invalid or expired token
+      tags: &ref_30
+        - Api Keys
+      security: &ref_31
+        - bearer: []
+      x-code-samples:
+        - lang: Shell
+          label: Curl
+          source: |-
+            curl --request POST \
+              --url http://localhost:3000/apikeys \
+              --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \
+              --header 'content-type: application/json' \
+              --data '{"name":"API key for my script"}'
+    get:
+      operationId: getApiKeys
+      summary: List active api keys
+      parameters: []
+      responses:
+        '200':
+          description: List of active api keys
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiKey'
+        '400': *ref_28
+        '401': *ref_29
+      tags: *ref_30
+      security: *ref_31
+      x-code-samples:
+        - lang: Shell
+          label: Curl
+          source: |-
+            curl --request GET \
+              --url http://localhost:3000/apikeys \
+              --header 'authorization: Bearer REPLACE_BEARER_TOKEN'
+  '/apikeys/{id}':
+    delete:
+      operationId: revokeApiKey
+      summary: Revoke api key
+      description: >-
+        Note: This resource is forbidden when using an API key as authorization.
+        Use an access token.
+      parameters:
+        - name: id
+          required: true
+          in: path
+          example: pnx97h6p64t4gau6vbub-
+          description: Unique id of the api key
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Api key revoked
+        '400': *ref_28
+        '401': *ref_29
+      tags: *ref_30
+      security: *ref_31
+      x-code-samples:
+        - lang: Shell
+          label: Curl
+          source: |-
+            curl --request DELETE \
+              --url http://localhost:3000/apikeys/pnx97h6p64t4gau6vbub- \
+              --header 'authorization: Bearer REPLACE_BEARER_TOKEN'
+  '/accounts/{accountId}/filters/{filterId}':
+    delete:
+      operationId: deleteFilter
+      summary: Delete filter
+      parameters:
+        - name: accountId
+          required: true
+          in: path
+          description: Unique id of the account
+          schema:
+            type: string
+        - name: filterId
+          required: true
+          in: path
+          description: Unique id of the filter
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Filter deleted successfully
+        '400': &ref_32
+          description: Bad user input
+        '401': &ref_33
+          description: Invalid or expired token
+        '404':
+          description: No account or filter found with this id
+      tags: &ref_34
+        - Filters
+      security: &ref_35
+        - bearer: []
+      x-code-samples:
+        - lang: Shell
+          label: Curl
+          source: |-
+            curl --request DELETE \
+              --url http://localhost:3000/accounts/%7BaccountId%7D/filters/%7BfilterId%7D \
+              --header 'authorization: Bearer REPLACE_BEARER_TOKEN'
+    get:
+      operationId: getFilterDetails
+      summary: Get filter details
+      parameters:
+        - name: accountId
+          required: true
+          in: path
+          description: Unique id of the account
+          schema:
+            type: string
+        - name: filterId
+          required: true
+          in: path
+          description: Unique id of the filter
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Filter details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FilterDetails'
+        '400': *ref_32
+        '401': *ref_33
+        '404':
+          description: No account or filter found with this id
+      tags: *ref_34
+      security: *ref_35
+      x-code-samples:
+        - lang: Shell
+          label: Curl
+          source: |-
+            curl --request GET \
+              --url http://localhost:3000/accounts/%7BaccountId%7D/filters/%7BfilterId%7D \
+              --header 'authorization: Bearer REPLACE_BEARER_TOKEN'
+    put:
+      operationId: updateFilter
+      summary: Update existing filter
+      parameters:
+        - name: accountId
+          required: true
+          in: path
+          description: Unique id of the account
+          schema:
+            type: string
+        - name: filterId
+          required: true
+          in: path
+          description: Unique id of the filter
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUpdateFilterDto'
+      responses:
+        '200':
+          description: Account updated successfully
+        '400': *ref_32
+        '401': *ref_33
+        '404':
+          description: No account or filter found with this id
+      tags: *ref_34
+      security: *ref_35
+      x-code-samples:
+        - lang: Shell
+          label: Curl
+          source: |-
+            curl --request PUT \
+              --url http://localhost:3000/accounts/%7BaccountId%7D/filters/%7BfilterId%7D \
+              --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \
+              --header 'content-type: application/json' \
+              --data '{"name":"Mark as seen from John","disabled":false,"query":{"from":"John","to":"John","subject":"You have 1 new notification","listId":"John'\''s list","text":"Dedicated servers","ha":false,"size":1000},"action":{"seen":true,"flag":true,"delete":true,"spam":true,"mailbox":"5a1c0ee490a34c67e266932c","targets":["johndoe@example.com","smtp://mx.example.com:25","https://example.com"]}}'
+  '/accounts/{accountId}/filters':
+    get:
+      operationId: getFilters
+      summary: List filters
+      parameters:
+        - name: accountId
+          required: true
+          in: path
+          description: Unique id of the account
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of filters
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FilterListItem'
+        '400': *ref_32
+        '401': *ref_33
+        '404':
+          description: No account found with this id
+      tags: *ref_34
+      security: *ref_35
+      x-code-samples:
+        - lang: Shell
+          label: Curl
+          source: |-
+            curl --request GET \
+              --url http://localhost:3000/accounts/%7BaccountId%7D/filters \
+              --header 'authorization: Bearer REPLACE_BEARER_TOKEN'
+    post:
+      operationId: createFilter
+      summary: Create a new filter
+      parameters:
+        - name: accountId
+          required: true
+          in: path
+          description: Unique id of the account
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUpdateFilterDto'
+      responses:
+        '201':
+          description: Filter created successfully
+        '400': *ref_32
+        '401': *ref_33
+        '404':
+          description: No account found with this id
+      tags: *ref_34
+      security: *ref_35
+      x-code-samples:
+        - lang: Shell
+          label: Curl
+          source: |-
+            curl --request POST \
+              --url http://localhost:3000/accounts/%7BaccountId%7D/filters \
+              --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \
+              --header 'content-type: application/json' \
+              --data '{"name":"Mark as seen from John","disabled":false,"query":{"from":"John","to":"John","subject":"You have 1 new notification","listId":"John'\''s list","text":"Dedicated servers","ha":false,"size":1000},"action":{"seen":true,"flag":true,"delete":true,"spam":true,"mailbox":"5a1c0ee490a34c67e266932c","targets":["johndoe@example.com","smtp://mx.example.com:25","https://example.com"]}}'
