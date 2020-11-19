@@ -1,11 +1,11 @@
-import axios from 'axios'
-import fs from 'fs'
+import { NestFactory } from '@nestjs/core'
+import { SwaggerModule } from '@nestjs/swagger'
+import { writeFileSync } from 'fs'
 import OpenAPISnippet from 'openapi-snippet'
 import { resolve } from 'path'
 import prettier from 'prettier'
-import { promisify } from 'util'
-
-const writeFile = promisify(fs.writeFile)
+import { AppModule } from 'src/app.module'
+import { openapiOptions } from 'src/openapi-options'
 
 const enrichSchema = (schema, targets): any => {
   schema.servers = [
@@ -70,38 +70,29 @@ const enrichSchema = (schema, targets): any => {
   }
   return schema
 }
-// define input:
-axios
-  .get('http://localhost:3000/swagger-json')
-  .then((openApiResponse) => {
-    if (!(typeof openApiResponse.data === 'object' && openApiResponse.data !== null && openApiResponse.data.openapi)) {
-      console.error("Invalid OpenApi document found on 'http://localhost:3000/swagger-json'")
-      console.error(`DuckyApi needs to be running without duckypanel enabled to generate documentation`)
-      process.exit(1)
-    }
 
-    const targets = [
-      'shell_curl',
-      'node_native',
-      'javascript_xhr',
-      'python_python3',
-      'php_curl',
-      'java_unirest',
-      'csharp_restsharp',
-      'c_libcurl',
-    ]
+const main = async () => {
+  const app = await NestFactory.create(AppModule)
+  const document = SwaggerModule.createDocument(app, openapiOptions)
+  app.close()
 
-    const enrichedSchema = enrichSchema(openApiResponse.data, targets)
+  const targets = [
+    'shell_curl',
+    // 'node_native',
+    // 'javascript_xhr',
+    // 'python_python3',
+    // 'php_curl',
+    // 'java_unirest',
+    // 'csharp_restsharp',
+    // 'c_libcurl',
+  ]
 
-    const prettySchema = prettier.format(JSON.stringify(enrichedSchema), { parser: 'json' })
-    writeFile(resolve('docs/openapi.json'), prettySchema)
-  })
-  .catch((error) => {
-    console.error(
-      `Error connecting to 'http://localhost:3000/swagger-json': ${
-        error.response ? JSON.stringify(error.response.data) : error.code
-      }`,
-    )
-    console.error(`DuckyApi needs to be running (without a baseurl) to generate documentation`)
-    process.exit(1)
-  })
+  const enrichedSchema = enrichSchema(document, targets)
+
+  const prettySchema = prettier.format(JSON.stringify(enrichedSchema), { parser: 'json' })
+  writeFileSync(resolve('docs/openapi.json'), prettySchema)
+
+  process.exit(0)
+}
+
+main()

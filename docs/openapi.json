@@ -425,7 +425,7 @@
             "description": "The E-Mail address of the email account"
           }
         },
-        "required": ["id", "address"]
+        "required": ["address"]
       },
       "AccountListItemQuota": {
         "type": "object",
@@ -479,7 +479,7 @@
             ]
           }
         },
-        "required": ["id", "address", "disabled", "aliases", "quota"]
+        "required": ["address", "disabled", "aliases", "quota"]
       },
       "AccountDetailsLimitsQuota": {
         "type": "object",
@@ -644,7 +644,6 @@
           }
         },
         "required": [
-          "id",
           "address",
           "disabled",
           "aliases",
@@ -1250,41 +1249,6 @@
             "lang": "Shell",
             "label": "Curl",
             "source": "curl --request DELETE \\\n  --url http://localhost:3000/authentication \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "Node.js",
-            "source": "var http = require(\"http\");\n\nvar options = {\n  \"method\": \"DELETE\",\n  \"hostname\": \"localhost\",\n  \"port\": \"3000\",\n  \"path\": \"/authentication\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.end();"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "JavaScript",
-            "source": "var data = null;\n\nvar xhr = new XMLHttpRequest();\nxhr.withCredentials = true;\n\nxhr.addEventListener(\"readystatechange\", function () {\n  if (this.readyState === this.DONE) {\n    console.log(this.responseText);\n  }\n});\n\nxhr.open(\"DELETE\", \"http://localhost:3000/authentication\");\nxhr.setRequestHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\n\nxhr.send(data);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python3",
-            "source": "import http.client\n\nconn = http.client.HTTPConnection(\"localhost:3000\")\n\nheaders = { 'authorization': \"Bearer REPLACE_BEARER_TOKEN\" }\n\nconn.request(\"DELETE\", \"/authentication\", headers=headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
-          },
-          {
-            "lang": "PHP",
-            "label": "PHP",
-            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_PORT => \"3000\",\n  CURLOPT_URL => \"http://localhost:3000/authentication\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"DELETE\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-          },
-          {
-            "lang": "Java",
-            "label": "Java",
-            "source": "HttpResponse<String> response = Unirest.delete(\"http://localhost:3000/authentication\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
-          },
-          {
-            "lang": "C#",
-            "label": "C#",
-            "source": "var client = new RestClient(\"http://localhost:3000/authentication\");\nvar request = new RestRequest(Method.DELETE);\nrequest.AddHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nIRestResponse response = client.Execute(request);"
-          },
-          {
-            "lang": "C",
-            "label": "C",
-            "source": "CURL *hnd = curl_easy_init();\n\ncurl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, \"DELETE\");\ncurl_easy_setopt(hnd, CURLOPT_URL, \"http://localhost:3000/authentication\");\n\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, \"authorization: Bearer REPLACE_BEARER_TOKEN\");\ncurl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);\n\nCURLcode ret = curl_easy_perform(hnd);"
           }
         ]
       },
@@ -1318,41 +1282,6 @@
             "lang": "Shell",
             "label": "Curl",
             "source": "curl --request POST \\\n  --url http://localhost:3000/authentication \\\n  --header 'content-type: application/json' \\\n  --data '{\"username\":\"johndoe\",\"password\":\"supersecret\",\"rememberMe\":false}'"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "Node.js",
-            "source": "var http = require(\"http\");\n\nvar options = {\n  \"method\": \"POST\",\n  \"hostname\": \"localhost\",\n  \"port\": \"3000\",\n  \"path\": \"/authentication\",\n  \"headers\": {\n    \"content-type\": \"application/json\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.write(JSON.stringify({username: 'johndoe', password: 'supersecret', rememberMe: false}));\nreq.end();"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "JavaScript",
-            "source": "var data = JSON.stringify({\n  \"username\": \"johndoe\",\n  \"password\": \"supersecret\",\n  \"rememberMe\": false\n});\n\nvar xhr = new XMLHttpRequest();\nxhr.withCredentials = true;\n\nxhr.addEventListener(\"readystatechange\", function () {\n  if (this.readyState === this.DONE) {\n    console.log(this.responseText);\n  }\n});\n\nxhr.open(\"POST\", \"http://localhost:3000/authentication\");\nxhr.setRequestHeader(\"content-type\", \"application/json\");\n\nxhr.send(data);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python3",
-            "source": "import http.client\n\nconn = http.client.HTTPConnection(\"localhost:3000\")\n\npayload = \"{\\\"username\\\":\\\"johndoe\\\",\\\"password\\\":\\\"supersecret\\\",\\\"rememberMe\\\":false}\"\n\nheaders = { 'content-type': \"application/json\" }\n\nconn.request(\"POST\", \"/authentication\", payload, headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
-          },
-          {
-            "lang": "PHP",
-            "label": "PHP",
-            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_PORT => \"3000\",\n  CURLOPT_URL => \"http://localhost:3000/authentication\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"POST\",\n  CURLOPT_POSTFIELDS => \"{\\\"username\\\":\\\"johndoe\\\",\\\"password\\\":\\\"supersecret\\\",\\\"rememberMe\\\":false}\",\n  CURLOPT_HTTPHEADER => array(\n    \"content-type: application/json\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-          },
-          {
-            "lang": "Java",
-            "label": "Java",
-            "source": "HttpResponse<String> response = Unirest.post(\"http://localhost:3000/authentication\")\n  .header(\"content-type\", \"application/json\")\n  .body(\"{\\\"username\\\":\\\"johndoe\\\",\\\"password\\\":\\\"supersecret\\\",\\\"rememberMe\\\":false}\")\n  .asString();"
-          },
-          {
-            "lang": "C#",
-            "label": "C#",
-            "source": "var client = new RestClient(\"http://localhost:3000/authentication\");\nvar request = new RestRequest(Method.POST);\nrequest.AddHeader(\"content-type\", \"application/json\");\nrequest.AddParameter(\"application/json\", \"{\\\"username\\\":\\\"johndoe\\\",\\\"password\\\":\\\"supersecret\\\",\\\"rememberMe\\\":false}\", ParameterType.RequestBody);\nIRestResponse response = client.Execute(request);"
-          },
-          {
-            "lang": "C",
-            "label": "C",
-            "source": "CURL *hnd = curl_easy_init();\n\ncurl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, \"POST\");\ncurl_easy_setopt(hnd, CURLOPT_URL, \"http://localhost:3000/authentication\");\n\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, \"content-type: application/json\");\ncurl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);\n\ncurl_easy_setopt(hnd, CURLOPT_POSTFIELDS, \"{\\\"username\\\":\\\"johndoe\\\",\\\"password\\\":\\\"supersecret\\\",\\\"rememberMe\\\":false}\");\n\nCURLcode ret = curl_easy_perform(hnd);"
           }
         ]
       }
@@ -1384,41 +1313,6 @@
             "lang": "Shell",
             "label": "Curl",
             "source": "curl --request GET \\\n  --url http://localhost:3000/users \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "Node.js",
-            "source": "var http = require(\"http\");\n\nvar options = {\n  \"method\": \"GET\",\n  \"hostname\": \"localhost\",\n  \"port\": \"3000\",\n  \"path\": \"/users\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.end();"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "JavaScript",
-            "source": "var data = null;\n\nvar xhr = new XMLHttpRequest();\nxhr.withCredentials = true;\n\nxhr.addEventListener(\"readystatechange\", function () {\n  if (this.readyState === this.DONE) {\n    console.log(this.responseText);\n  }\n});\n\nxhr.open(\"GET\", \"http://localhost:3000/users\");\nxhr.setRequestHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\n\nxhr.send(data);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python3",
-            "source": "import http.client\n\nconn = http.client.HTTPConnection(\"localhost:3000\")\n\nheaders = { 'authorization': \"Bearer REPLACE_BEARER_TOKEN\" }\n\nconn.request(\"GET\", \"/users\", headers=headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
-          },
-          {
-            "lang": "PHP",
-            "label": "PHP",
-            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_PORT => \"3000\",\n  CURLOPT_URL => \"http://localhost:3000/users\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-          },
-          {
-            "lang": "Java",
-            "label": "Java",
-            "source": "HttpResponse<String> response = Unirest.get(\"http://localhost:3000/users\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
-          },
-          {
-            "lang": "C#",
-            "label": "C#",
-            "source": "var client = new RestClient(\"http://localhost:3000/users\");\nvar request = new RestRequest(Method.GET);\nrequest.AddHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nIRestResponse response = client.Execute(request);"
-          },
-          {
-            "lang": "C",
-            "label": "C",
-            "source": "CURL *hnd = curl_easy_init();\n\ncurl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, \"GET\");\ncurl_easy_setopt(hnd, CURLOPT_URL, \"http://localhost:3000/users\");\n\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, \"authorization: Bearer REPLACE_BEARER_TOKEN\");\ncurl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);\n\nCURLcode ret = curl_easy_perform(hnd);"
           }
         ]
       },
@@ -1446,41 +1340,6 @@
             "lang": "Shell",
             "label": "Curl",
             "source": "curl --request POST \\\n  --url http://localhost:3000/users \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --header 'content-type: application/json' \\\n  --data '{\"username\":\"johndoe\",\"password\":\"supersecret\",\"packageId\":\"5d49e11f600a423ffc0b1297\"}'"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "Node.js",
-            "source": "var http = require(\"http\");\n\nvar options = {\n  \"method\": \"POST\",\n  \"hostname\": \"localhost\",\n  \"port\": \"3000\",\n  \"path\": \"/users\",\n  \"headers\": {\n    \"content-type\": \"application/json\",\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.write(JSON.stringify({\n  username: 'johndoe',\n  password: 'supersecret',\n  packageId: '5d49e11f600a423ffc0b1297'\n}));\nreq.end();"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "JavaScript",
-            "source": "var data = JSON.stringify({\n  \"username\": \"johndoe\",\n  \"password\": \"supersecret\",\n  \"packageId\": \"5d49e11f600a423ffc0b1297\"\n});\n\nvar xhr = new XMLHttpRequest();\nxhr.withCredentials = true;\n\nxhr.addEventListener(\"readystatechange\", function () {\n  if (this.readyState === this.DONE) {\n    console.log(this.responseText);\n  }\n});\n\nxhr.open(\"POST\", \"http://localhost:3000/users\");\nxhr.setRequestHeader(\"content-type\", \"application/json\");\nxhr.setRequestHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\n\nxhr.send(data);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python3",
-            "source": "import http.client\n\nconn = http.client.HTTPConnection(\"localhost:3000\")\n\npayload = \"{\\\"username\\\":\\\"johndoe\\\",\\\"password\\\":\\\"supersecret\\\",\\\"packageId\\\":\\\"5d49e11f600a423ffc0b1297\\\"}\"\n\nheaders = {\n    'content-type': \"application/json\",\n    'authorization': \"Bearer REPLACE_BEARER_TOKEN\"\n    }\n\nconn.request(\"POST\", \"/users\", payload, headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
-          },
-          {
-            "lang": "PHP",
-            "label": "PHP",
-            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_PORT => \"3000\",\n  CURLOPT_URL => \"http://localhost:3000/users\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"POST\",\n  CURLOPT_POSTFIELDS => \"{\\\"username\\\":\\\"johndoe\\\",\\\"password\\\":\\\"supersecret\\\",\\\"packageId\\\":\\\"5d49e11f600a423ffc0b1297\\\"}\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\",\n    \"content-type: application/json\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-          },
-          {
-            "lang": "Java",
-            "label": "Java",
-            "source": "HttpResponse<String> response = Unirest.post(\"http://localhost:3000/users\")\n  .header(\"content-type\", \"application/json\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .body(\"{\\\"username\\\":\\\"johndoe\\\",\\\"password\\\":\\\"supersecret\\\",\\\"packageId\\\":\\\"5d49e11f600a423ffc0b1297\\\"}\")\n  .asString();"
-          },
-          {
-            "lang": "C#",
-            "label": "C#",
-            "source": "var client = new RestClient(\"http://localhost:3000/users\");\nvar request = new RestRequest(Method.POST);\nrequest.AddHeader(\"content-type\", \"application/json\");\nrequest.AddHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nrequest.AddParameter(\"application/json\", \"{\\\"username\\\":\\\"johndoe\\\",\\\"password\\\":\\\"supersecret\\\",\\\"packageId\\\":\\\"5d49e11f600a423ffc0b1297\\\"}\", ParameterType.RequestBody);\nIRestResponse response = client.Execute(request);"
-          },
-          {
-            "lang": "C",
-            "label": "C",
-            "source": "CURL *hnd = curl_easy_init();\n\ncurl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, \"POST\");\ncurl_easy_setopt(hnd, CURLOPT_URL, \"http://localhost:3000/users\");\n\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, \"content-type: application/json\");\nheaders = curl_slist_append(headers, \"authorization: Bearer REPLACE_BEARER_TOKEN\");\ncurl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);\n\ncurl_easy_setopt(hnd, CURLOPT_POSTFIELDS, \"{\\\"username\\\":\\\"johndoe\\\",\\\"password\\\":\\\"supersecret\\\",\\\"packageId\\\":\\\"5d49e11f600a423ffc0b1297\\\"}\");\n\nCURLcode ret = curl_easy_perform(hnd);"
           }
         ]
       }
@@ -1509,41 +1368,6 @@
             "lang": "Shell",
             "label": "Curl",
             "source": "curl --request GET \\\n  --url http://localhost:3000/users/me \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "Node.js",
-            "source": "var http = require(\"http\");\n\nvar options = {\n  \"method\": \"GET\",\n  \"hostname\": \"localhost\",\n  \"port\": \"3000\",\n  \"path\": \"/users/me\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.end();"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "JavaScript",
-            "source": "var data = null;\n\nvar xhr = new XMLHttpRequest();\nxhr.withCredentials = true;\n\nxhr.addEventListener(\"readystatechange\", function () {\n  if (this.readyState === this.DONE) {\n    console.log(this.responseText);\n  }\n});\n\nxhr.open(\"GET\", \"http://localhost:3000/users/me\");\nxhr.setRequestHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\n\nxhr.send(data);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python3",
-            "source": "import http.client\n\nconn = http.client.HTTPConnection(\"localhost:3000\")\n\nheaders = { 'authorization': \"Bearer REPLACE_BEARER_TOKEN\" }\n\nconn.request(\"GET\", \"/users/me\", headers=headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
-          },
-          {
-            "lang": "PHP",
-            "label": "PHP",
-            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_PORT => \"3000\",\n  CURLOPT_URL => \"http://localhost:3000/users/me\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-          },
-          {
-            "lang": "Java",
-            "label": "Java",
-            "source": "HttpResponse<String> response = Unirest.get(\"http://localhost:3000/users/me\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
-          },
-          {
-            "lang": "C#",
-            "label": "C#",
-            "source": "var client = new RestClient(\"http://localhost:3000/users/me\");\nvar request = new RestRequest(Method.GET);\nrequest.AddHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nIRestResponse response = client.Execute(request);"
-          },
-          {
-            "lang": "C",
-            "label": "C",
-            "source": "CURL *hnd = curl_easy_init();\n\ncurl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, \"GET\");\ncurl_easy_setopt(hnd, CURLOPT_URL, \"http://localhost:3000/users/me\");\n\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, \"authorization: Bearer REPLACE_BEARER_TOKEN\");\ncurl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);\n\nCURLcode ret = curl_easy_perform(hnd);"
           }
         ]
       },
@@ -1571,41 +1395,6 @@
             "lang": "Shell",
             "label": "Curl",
             "source": "curl --request PUT \\\n  --url http://localhost:3000/users/me \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --header 'content-type: application/json' \\\n  --data '{\"username\":\"johndoe\",\"password\":\"supersecret\"}'"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "Node.js",
-            "source": "var http = require(\"http\");\n\nvar options = {\n  \"method\": \"PUT\",\n  \"hostname\": \"localhost\",\n  \"port\": \"3000\",\n  \"path\": \"/users/me\",\n  \"headers\": {\n    \"content-type\": \"application/json\",\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.write(JSON.stringify({username: 'johndoe', password: 'supersecret'}));\nreq.end();"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "JavaScript",
-            "source": "var data = JSON.stringify({\n  \"username\": \"johndoe\",\n  \"password\": \"supersecret\"\n});\n\nvar xhr = new XMLHttpRequest();\nxhr.withCredentials = true;\n\nxhr.addEventListener(\"readystatechange\", function () {\n  if (this.readyState === this.DONE) {\n    console.log(this.responseText);\n  }\n});\n\nxhr.open(\"PUT\", \"http://localhost:3000/users/me\");\nxhr.setRequestHeader(\"content-type\", \"application/json\");\nxhr.setRequestHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\n\nxhr.send(data);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python3",
-            "source": "import http.client\n\nconn = http.client.HTTPConnection(\"localhost:3000\")\n\npayload = \"{\\\"username\\\":\\\"johndoe\\\",\\\"password\\\":\\\"supersecret\\\"}\"\n\nheaders = {\n    'content-type': \"application/json\",\n    'authorization': \"Bearer REPLACE_BEARER_TOKEN\"\n    }\n\nconn.request(\"PUT\", \"/users/me\", payload, headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
-          },
-          {
-            "lang": "PHP",
-            "label": "PHP",
-            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_PORT => \"3000\",\n  CURLOPT_URL => \"http://localhost:3000/users/me\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"PUT\",\n  CURLOPT_POSTFIELDS => \"{\\\"username\\\":\\\"johndoe\\\",\\\"password\\\":\\\"supersecret\\\"}\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\",\n    \"content-type: application/json\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-          },
-          {
-            "lang": "Java",
-            "label": "Java",
-            "source": "HttpResponse<String> response = Unirest.put(\"http://localhost:3000/users/me\")\n  .header(\"content-type\", \"application/json\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .body(\"{\\\"username\\\":\\\"johndoe\\\",\\\"password\\\":\\\"supersecret\\\"}\")\n  .asString();"
-          },
-          {
-            "lang": "C#",
-            "label": "C#",
-            "source": "var client = new RestClient(\"http://localhost:3000/users/me\");\nvar request = new RestRequest(Method.PUT);\nrequest.AddHeader(\"content-type\", \"application/json\");\nrequest.AddHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nrequest.AddParameter(\"application/json\", \"{\\\"username\\\":\\\"johndoe\\\",\\\"password\\\":\\\"supersecret\\\"}\", ParameterType.RequestBody);\nIRestResponse response = client.Execute(request);"
-          },
-          {
-            "lang": "C",
-            "label": "C",
-            "source": "CURL *hnd = curl_easy_init();\n\ncurl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, \"PUT\");\ncurl_easy_setopt(hnd, CURLOPT_URL, \"http://localhost:3000/users/me\");\n\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, \"content-type: application/json\");\nheaders = curl_slist_append(headers, \"authorization: Bearer REPLACE_BEARER_TOKEN\");\ncurl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);\n\ncurl_easy_setopt(hnd, CURLOPT_POSTFIELDS, \"{\\\"username\\\":\\\"johndoe\\\",\\\"password\\\":\\\"supersecret\\\"}\");\n\nCURLcode ret = curl_easy_perform(hnd);"
           }
         ]
       }
@@ -1643,42 +1432,7 @@
           {
             "lang": "Shell",
             "label": "Curl",
-            "source": "curl --request DELETE \\\n  --url http://localhost:3000/users/%7Bid%7D \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --header 'content-type: application/json' \\\n  --data '{\"onlyDeleteDomainsAndSuspend\":true}'"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "Node.js",
-            "source": "var http = require(\"http\");\n\nvar options = {\n  \"method\": \"DELETE\",\n  \"hostname\": \"localhost\",\n  \"port\": \"3000\",\n  \"path\": \"/users/%7Bid%7D\",\n  \"headers\": {\n    \"content-type\": \"application/json\",\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.write(JSON.stringify({onlyDeleteDomainsAndSuspend: true}));\nreq.end();"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "JavaScript",
-            "source": "var data = JSON.stringify({\n  \"onlyDeleteDomainsAndSuspend\": true\n});\n\nvar xhr = new XMLHttpRequest();\nxhr.withCredentials = true;\n\nxhr.addEventListener(\"readystatechange\", function () {\n  if (this.readyState === this.DONE) {\n    console.log(this.responseText);\n  }\n});\n\nxhr.open(\"DELETE\", \"http://localhost:3000/users/%7Bid%7D\");\nxhr.setRequestHeader(\"content-type\", \"application/json\");\nxhr.setRequestHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\n\nxhr.send(data);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python3",
-            "source": "import http.client\n\nconn = http.client.HTTPConnection(\"localhost:3000\")\n\npayload = \"{\\\"onlyDeleteDomainsAndSuspend\\\":true}\"\n\nheaders = {\n    'content-type': \"application/json\",\n    'authorization': \"Bearer REPLACE_BEARER_TOKEN\"\n    }\n\nconn.request(\"DELETE\", \"/users/%7Bid%7D\", payload, headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
-          },
-          {
-            "lang": "PHP",
-            "label": "PHP",
-            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_PORT => \"3000\",\n  CURLOPT_URL => \"http://localhost:3000/users/%7Bid%7D\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"DELETE\",\n  CURLOPT_POSTFIELDS => \"{\\\"onlyDeleteDomainsAndSuspend\\\":true}\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\",\n    \"content-type: application/json\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-          },
-          {
-            "lang": "Java",
-            "label": "Java",
-            "source": "HttpResponse<String> response = Unirest.delete(\"http://localhost:3000/users/%7Bid%7D\")\n  .header(\"content-type\", \"application/json\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .body(\"{\\\"onlyDeleteDomainsAndSuspend\\\":true}\")\n  .asString();"
-          },
-          {
-            "lang": "C#",
-            "label": "C#",
-            "source": "var client = new RestClient(\"http://localhost:3000/users/%7Bid%7D\");\nvar request = new RestRequest(Method.DELETE);\nrequest.AddHeader(\"content-type\", \"application/json\");\nrequest.AddHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nrequest.AddParameter(\"application/json\", \"{\\\"onlyDeleteDomainsAndSuspend\\\":true}\", ParameterType.RequestBody);\nIRestResponse response = client.Execute(request);"
-          },
-          {
-            "lang": "C",
-            "label": "C",
-            "source": "CURL *hnd = curl_easy_init();\n\ncurl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, \"DELETE\");\ncurl_easy_setopt(hnd, CURLOPT_URL, \"http://localhost:3000/users/%7Bid%7D\");\n\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, \"content-type: application/json\");\nheaders = curl_slist_append(headers, \"authorization: Bearer REPLACE_BEARER_TOKEN\");\ncurl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);\n\ncurl_easy_setopt(hnd, CURLOPT_POSTFIELDS, \"{\\\"onlyDeleteDomainsAndSuspend\\\":true}\");\n\nCURLcode ret = curl_easy_perform(hnd);"
+            "source": "curl --request DELETE \\\n  --url http://localhost:3000/users/5d49e11f600a423ffc0b1297 \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --header 'content-type: application/json' \\\n  --data '{\"onlyDeleteDomainsAndSuspend\":true}'"
           }
         ]
       },
@@ -1714,42 +1468,7 @@
           {
             "lang": "Shell",
             "label": "Curl",
-            "source": "curl --request PUT \\\n  --url http://localhost:3000/users/%7Bid%7D \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --header 'content-type: application/json' \\\n  --data '{\"username\":\"johndoe\",\"password\":\"supersecret\",\"packageId\":\"5d49e11f600a423ffc0b1297\",\"suspended\":false}'"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "Node.js",
-            "source": "var http = require(\"http\");\n\nvar options = {\n  \"method\": \"PUT\",\n  \"hostname\": \"localhost\",\n  \"port\": \"3000\",\n  \"path\": \"/users/%7Bid%7D\",\n  \"headers\": {\n    \"content-type\": \"application/json\",\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.write(JSON.stringify({\n  username: 'johndoe',\n  password: 'supersecret',\n  packageId: '5d49e11f600a423ffc0b1297',\n  suspended: false\n}));\nreq.end();"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "JavaScript",
-            "source": "var data = JSON.stringify({\n  \"username\": \"johndoe\",\n  \"password\": \"supersecret\",\n  \"packageId\": \"5d49e11f600a423ffc0b1297\",\n  \"suspended\": false\n});\n\nvar xhr = new XMLHttpRequest();\nxhr.withCredentials = true;\n\nxhr.addEventListener(\"readystatechange\", function () {\n  if (this.readyState === this.DONE) {\n    console.log(this.responseText);\n  }\n});\n\nxhr.open(\"PUT\", \"http://localhost:3000/users/%7Bid%7D\");\nxhr.setRequestHeader(\"content-type\", \"application/json\");\nxhr.setRequestHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\n\nxhr.send(data);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python3",
-            "source": "import http.client\n\nconn = http.client.HTTPConnection(\"localhost:3000\")\n\npayload = \"{\\\"username\\\":\\\"johndoe\\\",\\\"password\\\":\\\"supersecret\\\",\\\"packageId\\\":\\\"5d49e11f600a423ffc0b1297\\\",\\\"suspended\\\":false}\"\n\nheaders = {\n    'content-type': \"application/json\",\n    'authorization': \"Bearer REPLACE_BEARER_TOKEN\"\n    }\n\nconn.request(\"PUT\", \"/users/%7Bid%7D\", payload, headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
-          },
-          {
-            "lang": "PHP",
-            "label": "PHP",
-            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_PORT => \"3000\",\n  CURLOPT_URL => \"http://localhost:3000/users/%7Bid%7D\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"PUT\",\n  CURLOPT_POSTFIELDS => \"{\\\"username\\\":\\\"johndoe\\\",\\\"password\\\":\\\"supersecret\\\",\\\"packageId\\\":\\\"5d49e11f600a423ffc0b1297\\\",\\\"suspended\\\":false}\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\",\n    \"content-type: application/json\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-          },
-          {
-            "lang": "Java",
-            "label": "Java",
-            "source": "HttpResponse<String> response = Unirest.put(\"http://localhost:3000/users/%7Bid%7D\")\n  .header(\"content-type\", \"application/json\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .body(\"{\\\"username\\\":\\\"johndoe\\\",\\\"password\\\":\\\"supersecret\\\",\\\"packageId\\\":\\\"5d49e11f600a423ffc0b1297\\\",\\\"suspended\\\":false}\")\n  .asString();"
-          },
-          {
-            "lang": "C#",
-            "label": "C#",
-            "source": "var client = new RestClient(\"http://localhost:3000/users/%7Bid%7D\");\nvar request = new RestRequest(Method.PUT);\nrequest.AddHeader(\"content-type\", \"application/json\");\nrequest.AddHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nrequest.AddParameter(\"application/json\", \"{\\\"username\\\":\\\"johndoe\\\",\\\"password\\\":\\\"supersecret\\\",\\\"packageId\\\":\\\"5d49e11f600a423ffc0b1297\\\",\\\"suspended\\\":false}\", ParameterType.RequestBody);\nIRestResponse response = client.Execute(request);"
-          },
-          {
-            "lang": "C",
-            "label": "C",
-            "source": "CURL *hnd = curl_easy_init();\n\ncurl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, \"PUT\");\ncurl_easy_setopt(hnd, CURLOPT_URL, \"http://localhost:3000/users/%7Bid%7D\");\n\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, \"content-type: application/json\");\nheaders = curl_slist_append(headers, \"authorization: Bearer REPLACE_BEARER_TOKEN\");\ncurl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);\n\ncurl_easy_setopt(hnd, CURLOPT_POSTFIELDS, \"{\\\"username\\\":\\\"johndoe\\\",\\\"password\\\":\\\"supersecret\\\",\\\"packageId\\\":\\\"5d49e11f600a423ffc0b1297\\\",\\\"suspended\\\":false}\");\n\nCURLcode ret = curl_easy_perform(hnd);"
+            "source": "curl --request PUT \\\n  --url http://localhost:3000/users/5d49e11f600a423ffc0b1297 \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --header 'content-type: application/json' \\\n  --data '{\"username\":\"johndoe\",\"password\":\"supersecret\",\"packageId\":\"5d49e11f600a423ffc0b1297\",\"suspended\":false}'"
           }
         ]
       }
@@ -1781,41 +1500,6 @@
             "lang": "Shell",
             "label": "Curl",
             "source": "curl --request GET \\\n  --url http://localhost:3000/packages \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "Node.js",
-            "source": "var http = require(\"http\");\n\nvar options = {\n  \"method\": \"GET\",\n  \"hostname\": \"localhost\",\n  \"port\": \"3000\",\n  \"path\": \"/packages\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.end();"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "JavaScript",
-            "source": "var data = null;\n\nvar xhr = new XMLHttpRequest();\nxhr.withCredentials = true;\n\nxhr.addEventListener(\"readystatechange\", function () {\n  if (this.readyState === this.DONE) {\n    console.log(this.responseText);\n  }\n});\n\nxhr.open(\"GET\", \"http://localhost:3000/packages\");\nxhr.setRequestHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\n\nxhr.send(data);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python3",
-            "source": "import http.client\n\nconn = http.client.HTTPConnection(\"localhost:3000\")\n\nheaders = { 'authorization': \"Bearer REPLACE_BEARER_TOKEN\" }\n\nconn.request(\"GET\", \"/packages\", headers=headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
-          },
-          {
-            "lang": "PHP",
-            "label": "PHP",
-            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_PORT => \"3000\",\n  CURLOPT_URL => \"http://localhost:3000/packages\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-          },
-          {
-            "lang": "Java",
-            "label": "Java",
-            "source": "HttpResponse<String> response = Unirest.get(\"http://localhost:3000/packages\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
-          },
-          {
-            "lang": "C#",
-            "label": "C#",
-            "source": "var client = new RestClient(\"http://localhost:3000/packages\");\nvar request = new RestRequest(Method.GET);\nrequest.AddHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nIRestResponse response = client.Execute(request);"
-          },
-          {
-            "lang": "C",
-            "label": "C",
-            "source": "CURL *hnd = curl_easy_init();\n\ncurl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, \"GET\");\ncurl_easy_setopt(hnd, CURLOPT_URL, \"http://localhost:3000/packages\");\n\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, \"authorization: Bearer REPLACE_BEARER_TOKEN\");\ncurl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);\n\nCURLcode ret = curl_easy_perform(hnd);"
           }
         ]
       },
@@ -1850,41 +1534,6 @@
             "lang": "Shell",
             "label": "Curl",
             "source": "curl --request POST \\\n  --url http://localhost:3000/packages \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --header 'content-type: application/json' \\\n  --data '{\"name\":\"Small\",\"quota\":1073741824,\"maxSend\":200,\"maxReceive\":1000,\"maxForward\":100}'"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "Node.js",
-            "source": "var http = require(\"http\");\n\nvar options = {\n  \"method\": \"POST\",\n  \"hostname\": \"localhost\",\n  \"port\": \"3000\",\n  \"path\": \"/packages\",\n  \"headers\": {\n    \"content-type\": \"application/json\",\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.write(JSON.stringify({\n  name: 'Small',\n  quota: 1073741824,\n  maxSend: 200,\n  maxReceive: 1000,\n  maxForward: 100\n}));\nreq.end();"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "JavaScript",
-            "source": "var data = JSON.stringify({\n  \"name\": \"Small\",\n  \"quota\": 1073741824,\n  \"maxSend\": 200,\n  \"maxReceive\": 1000,\n  \"maxForward\": 100\n});\n\nvar xhr = new XMLHttpRequest();\nxhr.withCredentials = true;\n\nxhr.addEventListener(\"readystatechange\", function () {\n  if (this.readyState === this.DONE) {\n    console.log(this.responseText);\n  }\n});\n\nxhr.open(\"POST\", \"http://localhost:3000/packages\");\nxhr.setRequestHeader(\"content-type\", \"application/json\");\nxhr.setRequestHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\n\nxhr.send(data);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python3",
-            "source": "import http.client\n\nconn = http.client.HTTPConnection(\"localhost:3000\")\n\npayload = \"{\\\"name\\\":\\\"Small\\\",\\\"quota\\\":1073741824,\\\"maxSend\\\":200,\\\"maxReceive\\\":1000,\\\"maxForward\\\":100}\"\n\nheaders = {\n    'content-type': \"application/json\",\n    'authorization': \"Bearer REPLACE_BEARER_TOKEN\"\n    }\n\nconn.request(\"POST\", \"/packages\", payload, headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
-          },
-          {
-            "lang": "PHP",
-            "label": "PHP",
-            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_PORT => \"3000\",\n  CURLOPT_URL => \"http://localhost:3000/packages\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"POST\",\n  CURLOPT_POSTFIELDS => \"{\\\"name\\\":\\\"Small\\\",\\\"quota\\\":1073741824,\\\"maxSend\\\":200,\\\"maxReceive\\\":1000,\\\"maxForward\\\":100}\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\",\n    \"content-type: application/json\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-          },
-          {
-            "lang": "Java",
-            "label": "Java",
-            "source": "HttpResponse<String> response = Unirest.post(\"http://localhost:3000/packages\")\n  .header(\"content-type\", \"application/json\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .body(\"{\\\"name\\\":\\\"Small\\\",\\\"quota\\\":1073741824,\\\"maxSend\\\":200,\\\"maxReceive\\\":1000,\\\"maxForward\\\":100}\")\n  .asString();"
-          },
-          {
-            "lang": "C#",
-            "label": "C#",
-            "source": "var client = new RestClient(\"http://localhost:3000/packages\");\nvar request = new RestRequest(Method.POST);\nrequest.AddHeader(\"content-type\", \"application/json\");\nrequest.AddHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nrequest.AddParameter(\"application/json\", \"{\\\"name\\\":\\\"Small\\\",\\\"quota\\\":1073741824,\\\"maxSend\\\":200,\\\"maxReceive\\\":1000,\\\"maxForward\\\":100}\", ParameterType.RequestBody);\nIRestResponse response = client.Execute(request);"
-          },
-          {
-            "lang": "C",
-            "label": "C",
-            "source": "CURL *hnd = curl_easy_init();\n\ncurl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, \"POST\");\ncurl_easy_setopt(hnd, CURLOPT_URL, \"http://localhost:3000/packages\");\n\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, \"content-type: application/json\");\nheaders = curl_slist_append(headers, \"authorization: Bearer REPLACE_BEARER_TOKEN\");\ncurl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);\n\ncurl_easy_setopt(hnd, CURLOPT_POSTFIELDS, \"{\\\"name\\\":\\\"Small\\\",\\\"quota\\\":1073741824,\\\"maxSend\\\":200,\\\"maxReceive\\\":1000,\\\"maxForward\\\":100}\");\n\nCURLcode ret = curl_easy_perform(hnd);"
           }
         ]
       }
@@ -1930,42 +1579,7 @@
           {
             "lang": "Shell",
             "label": "Curl",
-            "source": "curl --request PUT \\\n  --url http://localhost:3000/packages/%7Bid%7D \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --header 'content-type: application/json' \\\n  --data '{\"name\":\"Small\",\"quota\":1073741824,\"maxSend\":200,\"maxReceive\":1000,\"maxForward\":100}'"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "Node.js",
-            "source": "var http = require(\"http\");\n\nvar options = {\n  \"method\": \"PUT\",\n  \"hostname\": \"localhost\",\n  \"port\": \"3000\",\n  \"path\": \"/packages/%7Bid%7D\",\n  \"headers\": {\n    \"content-type\": \"application/json\",\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.write(JSON.stringify({\n  name: 'Small',\n  quota: 1073741824,\n  maxSend: 200,\n  maxReceive: 1000,\n  maxForward: 100\n}));\nreq.end();"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "JavaScript",
-            "source": "var data = JSON.stringify({\n  \"name\": \"Small\",\n  \"quota\": 1073741824,\n  \"maxSend\": 200,\n  \"maxReceive\": 1000,\n  \"maxForward\": 100\n});\n\nvar xhr = new XMLHttpRequest();\nxhr.withCredentials = true;\n\nxhr.addEventListener(\"readystatechange\", function () {\n  if (this.readyState === this.DONE) {\n    console.log(this.responseText);\n  }\n});\n\nxhr.open(\"PUT\", \"http://localhost:3000/packages/%7Bid%7D\");\nxhr.setRequestHeader(\"content-type\", \"application/json\");\nxhr.setRequestHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\n\nxhr.send(data);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python3",
-            "source": "import http.client\n\nconn = http.client.HTTPConnection(\"localhost:3000\")\n\npayload = \"{\\\"name\\\":\\\"Small\\\",\\\"quota\\\":1073741824,\\\"maxSend\\\":200,\\\"maxReceive\\\":1000,\\\"maxForward\\\":100}\"\n\nheaders = {\n    'content-type': \"application/json\",\n    'authorization': \"Bearer REPLACE_BEARER_TOKEN\"\n    }\n\nconn.request(\"PUT\", \"/packages/%7Bid%7D\", payload, headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
-          },
-          {
-            "lang": "PHP",
-            "label": "PHP",
-            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_PORT => \"3000\",\n  CURLOPT_URL => \"http://localhost:3000/packages/%7Bid%7D\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"PUT\",\n  CURLOPT_POSTFIELDS => \"{\\\"name\\\":\\\"Small\\\",\\\"quota\\\":1073741824,\\\"maxSend\\\":200,\\\"maxReceive\\\":1000,\\\"maxForward\\\":100}\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\",\n    \"content-type: application/json\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-          },
-          {
-            "lang": "Java",
-            "label": "Java",
-            "source": "HttpResponse<String> response = Unirest.put(\"http://localhost:3000/packages/%7Bid%7D\")\n  .header(\"content-type\", \"application/json\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .body(\"{\\\"name\\\":\\\"Small\\\",\\\"quota\\\":1073741824,\\\"maxSend\\\":200,\\\"maxReceive\\\":1000,\\\"maxForward\\\":100}\")\n  .asString();"
-          },
-          {
-            "lang": "C#",
-            "label": "C#",
-            "source": "var client = new RestClient(\"http://localhost:3000/packages/%7Bid%7D\");\nvar request = new RestRequest(Method.PUT);\nrequest.AddHeader(\"content-type\", \"application/json\");\nrequest.AddHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nrequest.AddParameter(\"application/json\", \"{\\\"name\\\":\\\"Small\\\",\\\"quota\\\":1073741824,\\\"maxSend\\\":200,\\\"maxReceive\\\":1000,\\\"maxForward\\\":100}\", ParameterType.RequestBody);\nIRestResponse response = client.Execute(request);"
-          },
-          {
-            "lang": "C",
-            "label": "C",
-            "source": "CURL *hnd = curl_easy_init();\n\ncurl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, \"PUT\");\ncurl_easy_setopt(hnd, CURLOPT_URL, \"http://localhost:3000/packages/%7Bid%7D\");\n\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, \"content-type: application/json\");\nheaders = curl_slist_append(headers, \"authorization: Bearer REPLACE_BEARER_TOKEN\");\ncurl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);\n\ncurl_easy_setopt(hnd, CURLOPT_POSTFIELDS, \"{\\\"name\\\":\\\"Small\\\",\\\"quota\\\":1073741824,\\\"maxSend\\\":200,\\\"maxReceive\\\":1000,\\\"maxForward\\\":100}\");\n\nCURLcode ret = curl_easy_perform(hnd);"
+            "source": "curl --request PUT \\\n  --url http://localhost:3000/packages/5d49e11f600a423ffc0b1297 \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --header 'content-type: application/json' \\\n  --data '{\"name\":\"Small\",\"quota\":1073741824,\"maxSend\":200,\"maxReceive\":1000,\"maxForward\":100}'"
           }
         ]
       },
@@ -2000,42 +1614,7 @@
           {
             "lang": "Shell",
             "label": "Curl",
-            "source": "curl --request DELETE \\\n  --url http://localhost:3000/packages/%7Bid%7D \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "Node.js",
-            "source": "var http = require(\"http\");\n\nvar options = {\n  \"method\": \"DELETE\",\n  \"hostname\": \"localhost\",\n  \"port\": \"3000\",\n  \"path\": \"/packages/%7Bid%7D\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.end();"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "JavaScript",
-            "source": "var data = null;\n\nvar xhr = new XMLHttpRequest();\nxhr.withCredentials = true;\n\nxhr.addEventListener(\"readystatechange\", function () {\n  if (this.readyState === this.DONE) {\n    console.log(this.responseText);\n  }\n});\n\nxhr.open(\"DELETE\", \"http://localhost:3000/packages/%7Bid%7D\");\nxhr.setRequestHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\n\nxhr.send(data);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python3",
-            "source": "import http.client\n\nconn = http.client.HTTPConnection(\"localhost:3000\")\n\nheaders = { 'authorization': \"Bearer REPLACE_BEARER_TOKEN\" }\n\nconn.request(\"DELETE\", \"/packages/%7Bid%7D\", headers=headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
-          },
-          {
-            "lang": "PHP",
-            "label": "PHP",
-            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_PORT => \"3000\",\n  CURLOPT_URL => \"http://localhost:3000/packages/%7Bid%7D\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"DELETE\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-          },
-          {
-            "lang": "Java",
-            "label": "Java",
-            "source": "HttpResponse<String> response = Unirest.delete(\"http://localhost:3000/packages/%7Bid%7D\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
-          },
-          {
-            "lang": "C#",
-            "label": "C#",
-            "source": "var client = new RestClient(\"http://localhost:3000/packages/%7Bid%7D\");\nvar request = new RestRequest(Method.DELETE);\nrequest.AddHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nIRestResponse response = client.Execute(request);"
-          },
-          {
-            "lang": "C",
-            "label": "C",
-            "source": "CURL *hnd = curl_easy_init();\n\ncurl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, \"DELETE\");\ncurl_easy_setopt(hnd, CURLOPT_URL, \"http://localhost:3000/packages/%7Bid%7D\");\n\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, \"authorization: Bearer REPLACE_BEARER_TOKEN\");\ncurl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);\n\nCURLcode ret = curl_easy_perform(hnd);"
+            "source": "curl --request DELETE \\\n  --url http://localhost:3000/packages/5d49e11f600a423ffc0b1297 \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
           }
         ]
       }
@@ -2067,41 +1646,6 @@
             "lang": "Shell",
             "label": "Curl",
             "source": "curl --request DELETE \\\n  --url http://localhost:3000/domains/%7Bdomain%7D \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "Node.js",
-            "source": "var http = require(\"http\");\n\nvar options = {\n  \"method\": \"DELETE\",\n  \"hostname\": \"localhost\",\n  \"port\": \"3000\",\n  \"path\": \"/domains/%7Bdomain%7D\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.end();"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "JavaScript",
-            "source": "var data = null;\n\nvar xhr = new XMLHttpRequest();\nxhr.withCredentials = true;\n\nxhr.addEventListener(\"readystatechange\", function () {\n  if (this.readyState === this.DONE) {\n    console.log(this.responseText);\n  }\n});\n\nxhr.open(\"DELETE\", \"http://localhost:3000/domains/%7Bdomain%7D\");\nxhr.setRequestHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\n\nxhr.send(data);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python3",
-            "source": "import http.client\n\nconn = http.client.HTTPConnection(\"localhost:3000\")\n\nheaders = { 'authorization': \"Bearer REPLACE_BEARER_TOKEN\" }\n\nconn.request(\"DELETE\", \"/domains/%7Bdomain%7D\", headers=headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
-          },
-          {
-            "lang": "PHP",
-            "label": "PHP",
-            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_PORT => \"3000\",\n  CURLOPT_URL => \"http://localhost:3000/domains/%7Bdomain%7D\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"DELETE\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-          },
-          {
-            "lang": "Java",
-            "label": "Java",
-            "source": "HttpResponse<String> response = Unirest.delete(\"http://localhost:3000/domains/%7Bdomain%7D\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
-          },
-          {
-            "lang": "C#",
-            "label": "C#",
-            "source": "var client = new RestClient(\"http://localhost:3000/domains/%7Bdomain%7D\");\nvar request = new RestRequest(Method.DELETE);\nrequest.AddHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nIRestResponse response = client.Execute(request);"
-          },
-          {
-            "lang": "C",
-            "label": "C",
-            "source": "CURL *hnd = curl_easy_init();\n\ncurl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, \"DELETE\");\ncurl_easy_setopt(hnd, CURLOPT_URL, \"http://localhost:3000/domains/%7Bdomain%7D\");\n\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, \"authorization: Bearer REPLACE_BEARER_TOKEN\");\ncurl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);\n\nCURLcode ret = curl_easy_perform(hnd);"
           }
         ]
       }
@@ -2133,41 +1677,6 @@
             "lang": "Shell",
             "label": "Curl",
             "source": "curl --request GET \\\n  --url http://localhost:3000/domains \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "Node.js",
-            "source": "var http = require(\"http\");\n\nvar options = {\n  \"method\": \"GET\",\n  \"hostname\": \"localhost\",\n  \"port\": \"3000\",\n  \"path\": \"/domains\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.end();"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "JavaScript",
-            "source": "var data = null;\n\nvar xhr = new XMLHttpRequest();\nxhr.withCredentials = true;\n\nxhr.addEventListener(\"readystatechange\", function () {\n  if (this.readyState === this.DONE) {\n    console.log(this.responseText);\n  }\n});\n\nxhr.open(\"GET\", \"http://localhost:3000/domains\");\nxhr.setRequestHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\n\nxhr.send(data);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python3",
-            "source": "import http.client\n\nconn = http.client.HTTPConnection(\"localhost:3000\")\n\nheaders = { 'authorization': \"Bearer REPLACE_BEARER_TOKEN\" }\n\nconn.request(\"GET\", \"/domains\", headers=headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
-          },
-          {
-            "lang": "PHP",
-            "label": "PHP",
-            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_PORT => \"3000\",\n  CURLOPT_URL => \"http://localhost:3000/domains\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-          },
-          {
-            "lang": "Java",
-            "label": "Java",
-            "source": "HttpResponse<String> response = Unirest.get(\"http://localhost:3000/domains\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
-          },
-          {
-            "lang": "C#",
-            "label": "C#",
-            "source": "var client = new RestClient(\"http://localhost:3000/domains\");\nvar request = new RestRequest(Method.GET);\nrequest.AddHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nIRestResponse response = client.Execute(request);"
-          },
-          {
-            "lang": "C",
-            "label": "C",
-            "source": "CURL *hnd = curl_easy_init();\n\ncurl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, \"GET\");\ncurl_easy_setopt(hnd, CURLOPT_URL, \"http://localhost:3000/domains\");\n\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, \"authorization: Bearer REPLACE_BEARER_TOKEN\");\ncurl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);\n\nCURLcode ret = curl_easy_perform(hnd);"
           }
         ]
       },
@@ -2195,41 +1704,6 @@
             "lang": "Shell",
             "label": "Curl",
             "source": "curl --request POST \\\n  --url http://localhost:3000/domains \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --header 'content-type: application/json' \\\n  --data '{\"domain\":\"example.com\"}'"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "Node.js",
-            "source": "var http = require(\"http\");\n\nvar options = {\n  \"method\": \"POST\",\n  \"hostname\": \"localhost\",\n  \"port\": \"3000\",\n  \"path\": \"/domains\",\n  \"headers\": {\n    \"content-type\": \"application/json\",\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.write(JSON.stringify({domain: 'example.com'}));\nreq.end();"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "JavaScript",
-            "source": "var data = JSON.stringify({\n  \"domain\": \"example.com\"\n});\n\nvar xhr = new XMLHttpRequest();\nxhr.withCredentials = true;\n\nxhr.addEventListener(\"readystatechange\", function () {\n  if (this.readyState === this.DONE) {\n    console.log(this.responseText);\n  }\n});\n\nxhr.open(\"POST\", \"http://localhost:3000/domains\");\nxhr.setRequestHeader(\"content-type\", \"application/json\");\nxhr.setRequestHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\n\nxhr.send(data);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python3",
-            "source": "import http.client\n\nconn = http.client.HTTPConnection(\"localhost:3000\")\n\npayload = \"{\\\"domain\\\":\\\"example.com\\\"}\"\n\nheaders = {\n    'content-type': \"application/json\",\n    'authorization': \"Bearer REPLACE_BEARER_TOKEN\"\n    }\n\nconn.request(\"POST\", \"/domains\", payload, headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
-          },
-          {
-            "lang": "PHP",
-            "label": "PHP",
-            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_PORT => \"3000\",\n  CURLOPT_URL => \"http://localhost:3000/domains\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"POST\",\n  CURLOPT_POSTFIELDS => \"{\\\"domain\\\":\\\"example.com\\\"}\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\",\n    \"content-type: application/json\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-          },
-          {
-            "lang": "Java",
-            "label": "Java",
-            "source": "HttpResponse<String> response = Unirest.post(\"http://localhost:3000/domains\")\n  .header(\"content-type\", \"application/json\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .body(\"{\\\"domain\\\":\\\"example.com\\\"}\")\n  .asString();"
-          },
-          {
-            "lang": "C#",
-            "label": "C#",
-            "source": "var client = new RestClient(\"http://localhost:3000/domains\");\nvar request = new RestRequest(Method.POST);\nrequest.AddHeader(\"content-type\", \"application/json\");\nrequest.AddHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nrequest.AddParameter(\"application/json\", \"{\\\"domain\\\":\\\"example.com\\\"}\", ParameterType.RequestBody);\nIRestResponse response = client.Execute(request);"
-          },
-          {
-            "lang": "C",
-            "label": "C",
-            "source": "CURL *hnd = curl_easy_init();\n\ncurl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, \"POST\");\ncurl_easy_setopt(hnd, CURLOPT_URL, \"http://localhost:3000/domains\");\n\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, \"content-type: application/json\");\nheaders = curl_slist_append(headers, \"authorization: Bearer REPLACE_BEARER_TOKEN\");\ncurl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);\n\ncurl_easy_setopt(hnd, CURLOPT_POSTFIELDS, \"{\\\"domain\\\":\\\"example.com\\\"}\");\n\nCURLcode ret = curl_easy_perform(hnd);"
           }
         ]
       }
@@ -2267,41 +1741,6 @@
             "lang": "Shell",
             "label": "Curl",
             "source": "curl --request GET \\\n  --url http://localhost:3000/domains/%7Bdomain%7D/DNS \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "Node.js",
-            "source": "var http = require(\"http\");\n\nvar options = {\n  \"method\": \"GET\",\n  \"hostname\": \"localhost\",\n  \"port\": \"3000\",\n  \"path\": \"/domains/%7Bdomain%7D/DNS\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.end();"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "JavaScript",
-            "source": "var data = null;\n\nvar xhr = new XMLHttpRequest();\nxhr.withCredentials = true;\n\nxhr.addEventListener(\"readystatechange\", function () {\n  if (this.readyState === this.DONE) {\n    console.log(this.responseText);\n  }\n});\n\nxhr.open(\"GET\", \"http://localhost:3000/domains/%7Bdomain%7D/DNS\");\nxhr.setRequestHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\n\nxhr.send(data);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python3",
-            "source": "import http.client\n\nconn = http.client.HTTPConnection(\"localhost:3000\")\n\nheaders = { 'authorization': \"Bearer REPLACE_BEARER_TOKEN\" }\n\nconn.request(\"GET\", \"/domains/%7Bdomain%7D/DNS\", headers=headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
-          },
-          {
-            "lang": "PHP",
-            "label": "PHP",
-            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_PORT => \"3000\",\n  CURLOPT_URL => \"http://localhost:3000/domains/%7Bdomain%7D/DNS\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-          },
-          {
-            "lang": "Java",
-            "label": "Java",
-            "source": "HttpResponse<String> response = Unirest.get(\"http://localhost:3000/domains/%7Bdomain%7D/DNS\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
-          },
-          {
-            "lang": "C#",
-            "label": "C#",
-            "source": "var client = new RestClient(\"http://localhost:3000/domains/%7Bdomain%7D/DNS\");\nvar request = new RestRequest(Method.GET);\nrequest.AddHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nIRestResponse response = client.Execute(request);"
-          },
-          {
-            "lang": "C",
-            "label": "C",
-            "source": "CURL *hnd = curl_easy_init();\n\ncurl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, \"GET\");\ncurl_easy_setopt(hnd, CURLOPT_URL, \"http://localhost:3000/domains/%7Bdomain%7D/DNS\");\n\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, \"authorization: Bearer REPLACE_BEARER_TOKEN\");\ncurl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);\n\nCURLcode ret = curl_easy_perform(hnd);"
           }
         ]
       }
@@ -2340,41 +1779,6 @@
             "lang": "Shell",
             "label": "Curl",
             "source": "curl --request POST \\\n  --url http://localhost:3000/domains/%7Bdomain%7D/aliases \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --header 'content-type: application/json' \\\n  --data '{\"domain\":\"example.com\"}'"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "Node.js",
-            "source": "var http = require(\"http\");\n\nvar options = {\n  \"method\": \"POST\",\n  \"hostname\": \"localhost\",\n  \"port\": \"3000\",\n  \"path\": \"/domains/%7Bdomain%7D/aliases\",\n  \"headers\": {\n    \"content-type\": \"application/json\",\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.write(JSON.stringify({domain: 'example.com'}));\nreq.end();"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "JavaScript",
-            "source": "var data = JSON.stringify({\n  \"domain\": \"example.com\"\n});\n\nvar xhr = new XMLHttpRequest();\nxhr.withCredentials = true;\n\nxhr.addEventListener(\"readystatechange\", function () {\n  if (this.readyState === this.DONE) {\n    console.log(this.responseText);\n  }\n});\n\nxhr.open(\"POST\", \"http://localhost:3000/domains/%7Bdomain%7D/aliases\");\nxhr.setRequestHeader(\"content-type\", \"application/json\");\nxhr.setRequestHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\n\nxhr.send(data);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python3",
-            "source": "import http.client\n\nconn = http.client.HTTPConnection(\"localhost:3000\")\n\npayload = \"{\\\"domain\\\":\\\"example.com\\\"}\"\n\nheaders = {\n    'content-type': \"application/json\",\n    'authorization': \"Bearer REPLACE_BEARER_TOKEN\"\n    }\n\nconn.request(\"POST\", \"/domains/%7Bdomain%7D/aliases\", payload, headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
-          },
-          {
-            "lang": "PHP",
-            "label": "PHP",
-            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_PORT => \"3000\",\n  CURLOPT_URL => \"http://localhost:3000/domains/%7Bdomain%7D/aliases\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"POST\",\n  CURLOPT_POSTFIELDS => \"{\\\"domain\\\":\\\"example.com\\\"}\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\",\n    \"content-type: application/json\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-          },
-          {
-            "lang": "Java",
-            "label": "Java",
-            "source": "HttpResponse<String> response = Unirest.post(\"http://localhost:3000/domains/%7Bdomain%7D/aliases\")\n  .header(\"content-type\", \"application/json\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .body(\"{\\\"domain\\\":\\\"example.com\\\"}\")\n  .asString();"
-          },
-          {
-            "lang": "C#",
-            "label": "C#",
-            "source": "var client = new RestClient(\"http://localhost:3000/domains/%7Bdomain%7D/aliases\");\nvar request = new RestRequest(Method.POST);\nrequest.AddHeader(\"content-type\", \"application/json\");\nrequest.AddHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nrequest.AddParameter(\"application/json\", \"{\\\"domain\\\":\\\"example.com\\\"}\", ParameterType.RequestBody);\nIRestResponse response = client.Execute(request);"
-          },
-          {
-            "lang": "C",
-            "label": "C",
-            "source": "CURL *hnd = curl_easy_init();\n\ncurl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, \"POST\");\ncurl_easy_setopt(hnd, CURLOPT_URL, \"http://localhost:3000/domains/%7Bdomain%7D/aliases\");\n\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, \"content-type: application/json\");\nheaders = curl_slist_append(headers, \"authorization: Bearer REPLACE_BEARER_TOKEN\");\ncurl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);\n\ncurl_easy_setopt(hnd, CURLOPT_POSTFIELDS, \"{\\\"domain\\\":\\\"example.com\\\"}\");\n\nCURLcode ret = curl_easy_perform(hnd);"
           }
         ]
       }
@@ -2412,41 +1816,6 @@
             "lang": "Shell",
             "label": "Curl",
             "source": "curl --request DELETE \\\n  --url http://localhost:3000/domains/%7Bdomain%7D/aliases/%7Balias%7D \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "Node.js",
-            "source": "var http = require(\"http\");\n\nvar options = {\n  \"method\": \"DELETE\",\n  \"hostname\": \"localhost\",\n  \"port\": \"3000\",\n  \"path\": \"/domains/%7Bdomain%7D/aliases/%7Balias%7D\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.end();"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "JavaScript",
-            "source": "var data = null;\n\nvar xhr = new XMLHttpRequest();\nxhr.withCredentials = true;\n\nxhr.addEventListener(\"readystatechange\", function () {\n  if (this.readyState === this.DONE) {\n    console.log(this.responseText);\n  }\n});\n\nxhr.open(\"DELETE\", \"http://localhost:3000/domains/%7Bdomain%7D/aliases/%7Balias%7D\");\nxhr.setRequestHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\n\nxhr.send(data);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python3",
-            "source": "import http.client\n\nconn = http.client.HTTPConnection(\"localhost:3000\")\n\nheaders = { 'authorization': \"Bearer REPLACE_BEARER_TOKEN\" }\n\nconn.request(\"DELETE\", \"/domains/%7Bdomain%7D/aliases/%7Balias%7D\", headers=headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
-          },
-          {
-            "lang": "PHP",
-            "label": "PHP",
-            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_PORT => \"3000\",\n  CURLOPT_URL => \"http://localhost:3000/domains/%7Bdomain%7D/aliases/%7Balias%7D\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"DELETE\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-          },
-          {
-            "lang": "Java",
-            "label": "Java",
-            "source": "HttpResponse<String> response = Unirest.delete(\"http://localhost:3000/domains/%7Bdomain%7D/aliases/%7Balias%7D\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
-          },
-          {
-            "lang": "C#",
-            "label": "C#",
-            "source": "var client = new RestClient(\"http://localhost:3000/domains/%7Bdomain%7D/aliases/%7Balias%7D\");\nvar request = new RestRequest(Method.DELETE);\nrequest.AddHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nIRestResponse response = client.Execute(request);"
-          },
-          {
-            "lang": "C",
-            "label": "C",
-            "source": "CURL *hnd = curl_easy_init();\n\ncurl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, \"DELETE\");\ncurl_easy_setopt(hnd, CURLOPT_URL, \"http://localhost:3000/domains/%7Bdomain%7D/aliases/%7Balias%7D\");\n\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, \"authorization: Bearer REPLACE_BEARER_TOKEN\");\ncurl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);\n\nCURLcode ret = curl_easy_perform(hnd);"
           }
         ]
       }
@@ -2477,41 +1846,6 @@
             "lang": "Shell",
             "label": "Curl",
             "source": "curl --request DELETE \\\n  --url http://localhost:3000/accounts/%7BaccountId%7D \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "Node.js",
-            "source": "var http = require(\"http\");\n\nvar options = {\n  \"method\": \"DELETE\",\n  \"hostname\": \"localhost\",\n  \"port\": \"3000\",\n  \"path\": \"/accounts/%7BaccountId%7D\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.end();"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "JavaScript",
-            "source": "var data = null;\n\nvar xhr = new XMLHttpRequest();\nxhr.withCredentials = true;\n\nxhr.addEventListener(\"readystatechange\", function () {\n  if (this.readyState === this.DONE) {\n    console.log(this.responseText);\n  }\n});\n\nxhr.open(\"DELETE\", \"http://localhost:3000/accounts/%7BaccountId%7D\");\nxhr.setRequestHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\n\nxhr.send(data);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python3",
-            "source": "import http.client\n\nconn = http.client.HTTPConnection(\"localhost:3000\")\n\nheaders = { 'authorization': \"Bearer REPLACE_BEARER_TOKEN\" }\n\nconn.request(\"DELETE\", \"/accounts/%7BaccountId%7D\", headers=headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
-          },
-          {
-            "lang": "PHP",
-            "label": "PHP",
-            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_PORT => \"3000\",\n  CURLOPT_URL => \"http://localhost:3000/accounts/%7BaccountId%7D\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"DELETE\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-          },
-          {
-            "lang": "Java",
-            "label": "Java",
-            "source": "HttpResponse<String> response = Unirest.delete(\"http://localhost:3000/accounts/%7BaccountId%7D\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
-          },
-          {
-            "lang": "C#",
-            "label": "C#",
-            "source": "var client = new RestClient(\"http://localhost:3000/accounts/%7BaccountId%7D\");\nvar request = new RestRequest(Method.DELETE);\nrequest.AddHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nIRestResponse response = client.Execute(request);"
-          },
-          {
-            "lang": "C",
-            "label": "C",
-            "source": "CURL *hnd = curl_easy_init();\n\ncurl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, \"DELETE\");\ncurl_easy_setopt(hnd, CURLOPT_URL, \"http://localhost:3000/accounts/%7BaccountId%7D\");\n\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, \"authorization: Bearer REPLACE_BEARER_TOKEN\");\ncurl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);\n\nCURLcode ret = curl_easy_perform(hnd);"
           }
         ]
       },
@@ -2547,41 +1881,6 @@
             "lang": "Shell",
             "label": "Curl",
             "source": "curl --request GET \\\n  --url http://localhost:3000/accounts/%7BaccountId%7D \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "Node.js",
-            "source": "var http = require(\"http\");\n\nvar options = {\n  \"method\": \"GET\",\n  \"hostname\": \"localhost\",\n  \"port\": \"3000\",\n  \"path\": \"/accounts/%7BaccountId%7D\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.end();"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "JavaScript",
-            "source": "var data = null;\n\nvar xhr = new XMLHttpRequest();\nxhr.withCredentials = true;\n\nxhr.addEventListener(\"readystatechange\", function () {\n  if (this.readyState === this.DONE) {\n    console.log(this.responseText);\n  }\n});\n\nxhr.open(\"GET\", \"http://localhost:3000/accounts/%7BaccountId%7D\");\nxhr.setRequestHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\n\nxhr.send(data);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python3",
-            "source": "import http.client\n\nconn = http.client.HTTPConnection(\"localhost:3000\")\n\nheaders = { 'authorization': \"Bearer REPLACE_BEARER_TOKEN\" }\n\nconn.request(\"GET\", \"/accounts/%7BaccountId%7D\", headers=headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
-          },
-          {
-            "lang": "PHP",
-            "label": "PHP",
-            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_PORT => \"3000\",\n  CURLOPT_URL => \"http://localhost:3000/accounts/%7BaccountId%7D\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-          },
-          {
-            "lang": "Java",
-            "label": "Java",
-            "source": "HttpResponse<String> response = Unirest.get(\"http://localhost:3000/accounts/%7BaccountId%7D\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
-          },
-          {
-            "lang": "C#",
-            "label": "C#",
-            "source": "var client = new RestClient(\"http://localhost:3000/accounts/%7BaccountId%7D\");\nvar request = new RestRequest(Method.GET);\nrequest.AddHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nIRestResponse response = client.Execute(request);"
-          },
-          {
-            "lang": "C",
-            "label": "C",
-            "source": "CURL *hnd = curl_easy_init();\n\ncurl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, \"GET\");\ncurl_easy_setopt(hnd, CURLOPT_URL, \"http://localhost:3000/accounts/%7BaccountId%7D\");\n\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, \"authorization: Bearer REPLACE_BEARER_TOKEN\");\ncurl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);\n\nCURLcode ret = curl_easy_perform(hnd);"
           }
         ]
       },
@@ -2618,41 +1917,6 @@
             "lang": "Shell",
             "label": "Curl",
             "source": "curl --request PUT \\\n  --url http://localhost:3000/accounts/%7BaccountId%7D \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --header 'content-type: application/json' \\\n  --data '{\"name\":\"John Doe\",\"spamLevel\":50,\"limits\":{\"quota\":1073741824,\"send\":200,\"receive\":1000,\"forward\":100},\"disabledScopes\":[\"imap\",\"pop3\"],\"password\":\"verysecret\",\"disabled\":false}'"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "Node.js",
-            "source": "var http = require(\"http\");\n\nvar options = {\n  \"method\": \"PUT\",\n  \"hostname\": \"localhost\",\n  \"port\": \"3000\",\n  \"path\": \"/accounts/%7BaccountId%7D\",\n  \"headers\": {\n    \"content-type\": \"application/json\",\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.write(JSON.stringify({\n  name: 'John Doe',\n  spamLevel: 50,\n  limits: {quota: 1073741824, send: 200, receive: 1000, forward: 100},\n  disabledScopes: ['imap', 'pop3'],\n  password: 'verysecret',\n  disabled: false\n}));\nreq.end();"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "JavaScript",
-            "source": "var data = JSON.stringify({\n  \"name\": \"John Doe\",\n  \"spamLevel\": 50,\n  \"limits\": {\n    \"quota\": 1073741824,\n    \"send\": 200,\n    \"receive\": 1000,\n    \"forward\": 100\n  },\n  \"disabledScopes\": [\n    \"imap\",\n    \"pop3\"\n  ],\n  \"password\": \"verysecret\",\n  \"disabled\": false\n});\n\nvar xhr = new XMLHttpRequest();\nxhr.withCredentials = true;\n\nxhr.addEventListener(\"readystatechange\", function () {\n  if (this.readyState === this.DONE) {\n    console.log(this.responseText);\n  }\n});\n\nxhr.open(\"PUT\", \"http://localhost:3000/accounts/%7BaccountId%7D\");\nxhr.setRequestHeader(\"content-type\", \"application/json\");\nxhr.setRequestHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\n\nxhr.send(data);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python3",
-            "source": "import http.client\n\nconn = http.client.HTTPConnection(\"localhost:3000\")\n\npayload = \"{\\\"name\\\":\\\"John Doe\\\",\\\"spamLevel\\\":50,\\\"limits\\\":{\\\"quota\\\":1073741824,\\\"send\\\":200,\\\"receive\\\":1000,\\\"forward\\\":100},\\\"disabledScopes\\\":[\\\"imap\\\",\\\"pop3\\\"],\\\"password\\\":\\\"verysecret\\\",\\\"disabled\\\":false}\"\n\nheaders = {\n    'content-type': \"application/json\",\n    'authorization': \"Bearer REPLACE_BEARER_TOKEN\"\n    }\n\nconn.request(\"PUT\", \"/accounts/%7BaccountId%7D\", payload, headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
-          },
-          {
-            "lang": "PHP",
-            "label": "PHP",
-            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_PORT => \"3000\",\n  CURLOPT_URL => \"http://localhost:3000/accounts/%7BaccountId%7D\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"PUT\",\n  CURLOPT_POSTFIELDS => \"{\\\"name\\\":\\\"John Doe\\\",\\\"spamLevel\\\":50,\\\"limits\\\":{\\\"quota\\\":1073741824,\\\"send\\\":200,\\\"receive\\\":1000,\\\"forward\\\":100},\\\"disabledScopes\\\":[\\\"imap\\\",\\\"pop3\\\"],\\\"password\\\":\\\"verysecret\\\",\\\"disabled\\\":false}\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\",\n    \"content-type: application/json\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-          },
-          {
-            "lang": "Java",
-            "label": "Java",
-            "source": "HttpResponse<String> response = Unirest.put(\"http://localhost:3000/accounts/%7BaccountId%7D\")\n  .header(\"content-type\", \"application/json\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .body(\"{\\\"name\\\":\\\"John Doe\\\",\\\"spamLevel\\\":50,\\\"limits\\\":{\\\"quota\\\":1073741824,\\\"send\\\":200,\\\"receive\\\":1000,\\\"forward\\\":100},\\\"disabledScopes\\\":[\\\"imap\\\",\\\"pop3\\\"],\\\"password\\\":\\\"verysecret\\\",\\\"disabled\\\":false}\")\n  .asString();"
-          },
-          {
-            "lang": "C#",
-            "label": "C#",
-            "source": "var client = new RestClient(\"http://localhost:3000/accounts/%7BaccountId%7D\");\nvar request = new RestRequest(Method.PUT);\nrequest.AddHeader(\"content-type\", \"application/json\");\nrequest.AddHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nrequest.AddParameter(\"application/json\", \"{\\\"name\\\":\\\"John Doe\\\",\\\"spamLevel\\\":50,\\\"limits\\\":{\\\"quota\\\":1073741824,\\\"send\\\":200,\\\"receive\\\":1000,\\\"forward\\\":100},\\\"disabledScopes\\\":[\\\"imap\\\",\\\"pop3\\\"],\\\"password\\\":\\\"verysecret\\\",\\\"disabled\\\":false}\", ParameterType.RequestBody);\nIRestResponse response = client.Execute(request);"
-          },
-          {
-            "lang": "C",
-            "label": "C",
-            "source": "CURL *hnd = curl_easy_init();\n\ncurl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, \"PUT\");\ncurl_easy_setopt(hnd, CURLOPT_URL, \"http://localhost:3000/accounts/%7BaccountId%7D\");\n\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, \"content-type: application/json\");\nheaders = curl_slist_append(headers, \"authorization: Bearer REPLACE_BEARER_TOKEN\");\ncurl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);\n\ncurl_easy_setopt(hnd, CURLOPT_POSTFIELDS, \"{\\\"name\\\":\\\"John Doe\\\",\\\"spamLevel\\\":50,\\\"limits\\\":{\\\"quota\\\":1073741824,\\\"send\\\":200,\\\"receive\\\":1000,\\\"forward\\\":100},\\\"disabledScopes\\\":[\\\"imap\\\",\\\"pop3\\\"],\\\"password\\\":\\\"verysecret\\\",\\\"disabled\\\":false}\");\n\nCURLcode ret = curl_easy_perform(hnd);"
           }
         ]
       }
@@ -2684,41 +1948,6 @@
             "lang": "Shell",
             "label": "Curl",
             "source": "curl --request GET \\\n  --url http://localhost:3000/accounts \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "Node.js",
-            "source": "var http = require(\"http\");\n\nvar options = {\n  \"method\": \"GET\",\n  \"hostname\": \"localhost\",\n  \"port\": \"3000\",\n  \"path\": \"/accounts\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.end();"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "JavaScript",
-            "source": "var data = null;\n\nvar xhr = new XMLHttpRequest();\nxhr.withCredentials = true;\n\nxhr.addEventListener(\"readystatechange\", function () {\n  if (this.readyState === this.DONE) {\n    console.log(this.responseText);\n  }\n});\n\nxhr.open(\"GET\", \"http://localhost:3000/accounts\");\nxhr.setRequestHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\n\nxhr.send(data);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python3",
-            "source": "import http.client\n\nconn = http.client.HTTPConnection(\"localhost:3000\")\n\nheaders = { 'authorization': \"Bearer REPLACE_BEARER_TOKEN\" }\n\nconn.request(\"GET\", \"/accounts\", headers=headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
-          },
-          {
-            "lang": "PHP",
-            "label": "PHP",
-            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_PORT => \"3000\",\n  CURLOPT_URL => \"http://localhost:3000/accounts\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-          },
-          {
-            "lang": "Java",
-            "label": "Java",
-            "source": "HttpResponse<String> response = Unirest.get(\"http://localhost:3000/accounts\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
-          },
-          {
-            "lang": "C#",
-            "label": "C#",
-            "source": "var client = new RestClient(\"http://localhost:3000/accounts\");\nvar request = new RestRequest(Method.GET);\nrequest.AddHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nIRestResponse response = client.Execute(request);"
-          },
-          {
-            "lang": "C",
-            "label": "C",
-            "source": "CURL *hnd = curl_easy_init();\n\ncurl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, \"GET\");\ncurl_easy_setopt(hnd, CURLOPT_URL, \"http://localhost:3000/accounts\");\n\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, \"authorization: Bearer REPLACE_BEARER_TOKEN\");\ncurl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);\n\nCURLcode ret = curl_easy_perform(hnd);"
           }
         ]
       },
@@ -2746,41 +1975,6 @@
             "lang": "Shell",
             "label": "Curl",
             "source": "curl --request POST \\\n  --url http://localhost:3000/accounts \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --header 'content-type: application/json' \\\n  --data '{\"name\":\"John Doe\",\"spamLevel\":50,\"limits\":{\"quota\":1073741824,\"send\":200,\"receive\":1000,\"forward\":100},\"disabledScopes\":[\"imap\",\"pop3\"],\"address\":\"john@example.com\",\"password\":\"verysecret\"}'"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "Node.js",
-            "source": "var http = require(\"http\");\n\nvar options = {\n  \"method\": \"POST\",\n  \"hostname\": \"localhost\",\n  \"port\": \"3000\",\n  \"path\": \"/accounts\",\n  \"headers\": {\n    \"content-type\": \"application/json\",\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.write(JSON.stringify({\n  name: 'John Doe',\n  spamLevel: 50,\n  limits: {quota: 1073741824, send: 200, receive: 1000, forward: 100},\n  disabledScopes: ['imap', 'pop3'],\n  address: 'john@example.com',\n  password: 'verysecret'\n}));\nreq.end();"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "JavaScript",
-            "source": "var data = JSON.stringify({\n  \"name\": \"John Doe\",\n  \"spamLevel\": 50,\n  \"limits\": {\n    \"quota\": 1073741824,\n    \"send\": 200,\n    \"receive\": 1000,\n    \"forward\": 100\n  },\n  \"disabledScopes\": [\n    \"imap\",\n    \"pop3\"\n  ],\n  \"address\": \"john@example.com\",\n  \"password\": \"verysecret\"\n});\n\nvar xhr = new XMLHttpRequest();\nxhr.withCredentials = true;\n\nxhr.addEventListener(\"readystatechange\", function () {\n  if (this.readyState === this.DONE) {\n    console.log(this.responseText);\n  }\n});\n\nxhr.open(\"POST\", \"http://localhost:3000/accounts\");\nxhr.setRequestHeader(\"content-type\", \"application/json\");\nxhr.setRequestHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\n\nxhr.send(data);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python3",
-            "source": "import http.client\n\nconn = http.client.HTTPConnection(\"localhost:3000\")\n\npayload = \"{\\\"name\\\":\\\"John Doe\\\",\\\"spamLevel\\\":50,\\\"limits\\\":{\\\"quota\\\":1073741824,\\\"send\\\":200,\\\"receive\\\":1000,\\\"forward\\\":100},\\\"disabledScopes\\\":[\\\"imap\\\",\\\"pop3\\\"],\\\"address\\\":\\\"john@example.com\\\",\\\"password\\\":\\\"verysecret\\\"}\"\n\nheaders = {\n    'content-type': \"application/json\",\n    'authorization': \"Bearer REPLACE_BEARER_TOKEN\"\n    }\n\nconn.request(\"POST\", \"/accounts\", payload, headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
-          },
-          {
-            "lang": "PHP",
-            "label": "PHP",
-            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_PORT => \"3000\",\n  CURLOPT_URL => \"http://localhost:3000/accounts\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"POST\",\n  CURLOPT_POSTFIELDS => \"{\\\"name\\\":\\\"John Doe\\\",\\\"spamLevel\\\":50,\\\"limits\\\":{\\\"quota\\\":1073741824,\\\"send\\\":200,\\\"receive\\\":1000,\\\"forward\\\":100},\\\"disabledScopes\\\":[\\\"imap\\\",\\\"pop3\\\"],\\\"address\\\":\\\"john@example.com\\\",\\\"password\\\":\\\"verysecret\\\"}\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\",\n    \"content-type: application/json\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-          },
-          {
-            "lang": "Java",
-            "label": "Java",
-            "source": "HttpResponse<String> response = Unirest.post(\"http://localhost:3000/accounts\")\n  .header(\"content-type\", \"application/json\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .body(\"{\\\"name\\\":\\\"John Doe\\\",\\\"spamLevel\\\":50,\\\"limits\\\":{\\\"quota\\\":1073741824,\\\"send\\\":200,\\\"receive\\\":1000,\\\"forward\\\":100},\\\"disabledScopes\\\":[\\\"imap\\\",\\\"pop3\\\"],\\\"address\\\":\\\"john@example.com\\\",\\\"password\\\":\\\"verysecret\\\"}\")\n  .asString();"
-          },
-          {
-            "lang": "C#",
-            "label": "C#",
-            "source": "var client = new RestClient(\"http://localhost:3000/accounts\");\nvar request = new RestRequest(Method.POST);\nrequest.AddHeader(\"content-type\", \"application/json\");\nrequest.AddHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nrequest.AddParameter(\"application/json\", \"{\\\"name\\\":\\\"John Doe\\\",\\\"spamLevel\\\":50,\\\"limits\\\":{\\\"quota\\\":1073741824,\\\"send\\\":200,\\\"receive\\\":1000,\\\"forward\\\":100},\\\"disabledScopes\\\":[\\\"imap\\\",\\\"pop3\\\"],\\\"address\\\":\\\"john@example.com\\\",\\\"password\\\":\\\"verysecret\\\"}\", ParameterType.RequestBody);\nIRestResponse response = client.Execute(request);"
-          },
-          {
-            "lang": "C",
-            "label": "C",
-            "source": "CURL *hnd = curl_easy_init();\n\ncurl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, \"POST\");\ncurl_easy_setopt(hnd, CURLOPT_URL, \"http://localhost:3000/accounts\");\n\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, \"content-type: application/json\");\nheaders = curl_slist_append(headers, \"authorization: Bearer REPLACE_BEARER_TOKEN\");\ncurl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);\n\ncurl_easy_setopt(hnd, CURLOPT_POSTFIELDS, \"{\\\"name\\\":\\\"John Doe\\\",\\\"spamLevel\\\":50,\\\"limits\\\":{\\\"quota\\\":1073741824,\\\"send\\\":200,\\\"receive\\\":1000,\\\"forward\\\":100},\\\"disabledScopes\\\":[\\\"imap\\\",\\\"pop3\\\"],\\\"address\\\":\\\"john@example.com\\\",\\\"password\\\":\\\"verysecret\\\"}\");\n\nCURLcode ret = curl_easy_perform(hnd);"
           }
         ]
       }
@@ -2819,41 +2013,6 @@
             "lang": "Shell",
             "label": "Curl",
             "source": "curl --request POST \\\n  --url http://localhost:3000/accounts/%7BaccountId%7D/aliases \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --header 'content-type: application/json' \\\n  --data '{\"name\":\"John Doe\",\"address\":\"john@example.com\"}'"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "Node.js",
-            "source": "var http = require(\"http\");\n\nvar options = {\n  \"method\": \"POST\",\n  \"hostname\": \"localhost\",\n  \"port\": \"3000\",\n  \"path\": \"/accounts/%7BaccountId%7D/aliases\",\n  \"headers\": {\n    \"content-type\": \"application/json\",\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.write(JSON.stringify({name: 'John Doe', address: 'john@example.com'}));\nreq.end();"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "JavaScript",
-            "source": "var data = JSON.stringify({\n  \"name\": \"John Doe\",\n  \"address\": \"john@example.com\"\n});\n\nvar xhr = new XMLHttpRequest();\nxhr.withCredentials = true;\n\nxhr.addEventListener(\"readystatechange\", function () {\n  if (this.readyState === this.DONE) {\n    console.log(this.responseText);\n  }\n});\n\nxhr.open(\"POST\", \"http://localhost:3000/accounts/%7BaccountId%7D/aliases\");\nxhr.setRequestHeader(\"content-type\", \"application/json\");\nxhr.setRequestHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\n\nxhr.send(data);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python3",
-            "source": "import http.client\n\nconn = http.client.HTTPConnection(\"localhost:3000\")\n\npayload = \"{\\\"name\\\":\\\"John Doe\\\",\\\"address\\\":\\\"john@example.com\\\"}\"\n\nheaders = {\n    'content-type': \"application/json\",\n    'authorization': \"Bearer REPLACE_BEARER_TOKEN\"\n    }\n\nconn.request(\"POST\", \"/accounts/%7BaccountId%7D/aliases\", payload, headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
-          },
-          {
-            "lang": "PHP",
-            "label": "PHP",
-            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_PORT => \"3000\",\n  CURLOPT_URL => \"http://localhost:3000/accounts/%7BaccountId%7D/aliases\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"POST\",\n  CURLOPT_POSTFIELDS => \"{\\\"name\\\":\\\"John Doe\\\",\\\"address\\\":\\\"john@example.com\\\"}\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\",\n    \"content-type: application/json\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-          },
-          {
-            "lang": "Java",
-            "label": "Java",
-            "source": "HttpResponse<String> response = Unirest.post(\"http://localhost:3000/accounts/%7BaccountId%7D/aliases\")\n  .header(\"content-type\", \"application/json\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .body(\"{\\\"name\\\":\\\"John Doe\\\",\\\"address\\\":\\\"john@example.com\\\"}\")\n  .asString();"
-          },
-          {
-            "lang": "C#",
-            "label": "C#",
-            "source": "var client = new RestClient(\"http://localhost:3000/accounts/%7BaccountId%7D/aliases\");\nvar request = new RestRequest(Method.POST);\nrequest.AddHeader(\"content-type\", \"application/json\");\nrequest.AddHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nrequest.AddParameter(\"application/json\", \"{\\\"name\\\":\\\"John Doe\\\",\\\"address\\\":\\\"john@example.com\\\"}\", ParameterType.RequestBody);\nIRestResponse response = client.Execute(request);"
-          },
-          {
-            "lang": "C",
-            "label": "C",
-            "source": "CURL *hnd = curl_easy_init();\n\ncurl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, \"POST\");\ncurl_easy_setopt(hnd, CURLOPT_URL, \"http://localhost:3000/accounts/%7BaccountId%7D/aliases\");\n\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, \"content-type: application/json\");\nheaders = curl_slist_append(headers, \"authorization: Bearer REPLACE_BEARER_TOKEN\");\ncurl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);\n\ncurl_easy_setopt(hnd, CURLOPT_POSTFIELDS, \"{\\\"name\\\":\\\"John Doe\\\",\\\"address\\\":\\\"john@example.com\\\"}\");\n\nCURLcode ret = curl_easy_perform(hnd);"
           }
         ]
       }
@@ -2891,41 +2050,6 @@
             "lang": "Shell",
             "label": "Curl",
             "source": "curl --request DELETE \\\n  --url http://localhost:3000/accounts/%7BaccountId%7D/aliases/%7BaliasId%7D \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "Node.js",
-            "source": "var http = require(\"http\");\n\nvar options = {\n  \"method\": \"DELETE\",\n  \"hostname\": \"localhost\",\n  \"port\": \"3000\",\n  \"path\": \"/accounts/%7BaccountId%7D/aliases/%7BaliasId%7D\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.end();"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "JavaScript",
-            "source": "var data = null;\n\nvar xhr = new XMLHttpRequest();\nxhr.withCredentials = true;\n\nxhr.addEventListener(\"readystatechange\", function () {\n  if (this.readyState === this.DONE) {\n    console.log(this.responseText);\n  }\n});\n\nxhr.open(\"DELETE\", \"http://localhost:3000/accounts/%7BaccountId%7D/aliases/%7BaliasId%7D\");\nxhr.setRequestHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\n\nxhr.send(data);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python3",
-            "source": "import http.client\n\nconn = http.client.HTTPConnection(\"localhost:3000\")\n\nheaders = { 'authorization': \"Bearer REPLACE_BEARER_TOKEN\" }\n\nconn.request(\"DELETE\", \"/accounts/%7BaccountId%7D/aliases/%7BaliasId%7D\", headers=headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
-          },
-          {
-            "lang": "PHP",
-            "label": "PHP",
-            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_PORT => \"3000\",\n  CURLOPT_URL => \"http://localhost:3000/accounts/%7BaccountId%7D/aliases/%7BaliasId%7D\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"DELETE\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-          },
-          {
-            "lang": "Java",
-            "label": "Java",
-            "source": "HttpResponse<String> response = Unirest.delete(\"http://localhost:3000/accounts/%7BaccountId%7D/aliases/%7BaliasId%7D\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
-          },
-          {
-            "lang": "C#",
-            "label": "C#",
-            "source": "var client = new RestClient(\"http://localhost:3000/accounts/%7BaccountId%7D/aliases/%7BaliasId%7D\");\nvar request = new RestRequest(Method.DELETE);\nrequest.AddHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nIRestResponse response = client.Execute(request);"
-          },
-          {
-            "lang": "C",
-            "label": "C",
-            "source": "CURL *hnd = curl_easy_init();\n\ncurl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, \"DELETE\");\ncurl_easy_setopt(hnd, CURLOPT_URL, \"http://localhost:3000/accounts/%7BaccountId%7D/aliases/%7BaliasId%7D\");\n\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, \"authorization: Bearer REPLACE_BEARER_TOKEN\");\ncurl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);\n\nCURLcode ret = curl_easy_perform(hnd);"
           }
         ]
       }
@@ -2956,41 +2080,6 @@
             "lang": "Shell",
             "label": "Curl",
             "source": "curl --request DELETE \\\n  --url http://localhost:3000/domains/%7BdomainOrAlias%7D/dkim \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "Node.js",
-            "source": "var http = require(\"http\");\n\nvar options = {\n  \"method\": \"DELETE\",\n  \"hostname\": \"localhost\",\n  \"port\": \"3000\",\n  \"path\": \"/domains/%7BdomainOrAlias%7D/dkim\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.end();"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "JavaScript",
-            "source": "var data = null;\n\nvar xhr = new XMLHttpRequest();\nxhr.withCredentials = true;\n\nxhr.addEventListener(\"readystatechange\", function () {\n  if (this.readyState === this.DONE) {\n    console.log(this.responseText);\n  }\n});\n\nxhr.open(\"DELETE\", \"http://localhost:3000/domains/%7BdomainOrAlias%7D/dkim\");\nxhr.setRequestHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\n\nxhr.send(data);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python3",
-            "source": "import http.client\n\nconn = http.client.HTTPConnection(\"localhost:3000\")\n\nheaders = { 'authorization': \"Bearer REPLACE_BEARER_TOKEN\" }\n\nconn.request(\"DELETE\", \"/domains/%7BdomainOrAlias%7D/dkim\", headers=headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
-          },
-          {
-            "lang": "PHP",
-            "label": "PHP",
-            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_PORT => \"3000\",\n  CURLOPT_URL => \"http://localhost:3000/domains/%7BdomainOrAlias%7D/dkim\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"DELETE\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-          },
-          {
-            "lang": "Java",
-            "label": "Java",
-            "source": "HttpResponse<String> response = Unirest.delete(\"http://localhost:3000/domains/%7BdomainOrAlias%7D/dkim\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
-          },
-          {
-            "lang": "C#",
-            "label": "C#",
-            "source": "var client = new RestClient(\"http://localhost:3000/domains/%7BdomainOrAlias%7D/dkim\");\nvar request = new RestRequest(Method.DELETE);\nrequest.AddHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nIRestResponse response = client.Execute(request);"
-          },
-          {
-            "lang": "C",
-            "label": "C",
-            "source": "CURL *hnd = curl_easy_init();\n\ncurl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, \"DELETE\");\ncurl_easy_setopt(hnd, CURLOPT_URL, \"http://localhost:3000/domains/%7BdomainOrAlias%7D/dkim\");\n\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, \"authorization: Bearer REPLACE_BEARER_TOKEN\");\ncurl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);\n\nCURLcode ret = curl_easy_perform(hnd);"
           }
         ]
       },
@@ -3026,41 +2115,6 @@
             "lang": "Shell",
             "label": "Curl",
             "source": "curl --request GET \\\n  --url http://localhost:3000/domains/%7BdomainOrAlias%7D/dkim \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "Node.js",
-            "source": "var http = require(\"http\");\n\nvar options = {\n  \"method\": \"GET\",\n  \"hostname\": \"localhost\",\n  \"port\": \"3000\",\n  \"path\": \"/domains/%7BdomainOrAlias%7D/dkim\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.end();"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "JavaScript",
-            "source": "var data = null;\n\nvar xhr = new XMLHttpRequest();\nxhr.withCredentials = true;\n\nxhr.addEventListener(\"readystatechange\", function () {\n  if (this.readyState === this.DONE) {\n    console.log(this.responseText);\n  }\n});\n\nxhr.open(\"GET\", \"http://localhost:3000/domains/%7BdomainOrAlias%7D/dkim\");\nxhr.setRequestHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\n\nxhr.send(data);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python3",
-            "source": "import http.client\n\nconn = http.client.HTTPConnection(\"localhost:3000\")\n\nheaders = { 'authorization': \"Bearer REPLACE_BEARER_TOKEN\" }\n\nconn.request(\"GET\", \"/domains/%7BdomainOrAlias%7D/dkim\", headers=headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
-          },
-          {
-            "lang": "PHP",
-            "label": "PHP",
-            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_PORT => \"3000\",\n  CURLOPT_URL => \"http://localhost:3000/domains/%7BdomainOrAlias%7D/dkim\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-          },
-          {
-            "lang": "Java",
-            "label": "Java",
-            "source": "HttpResponse<String> response = Unirest.get(\"http://localhost:3000/domains/%7BdomainOrAlias%7D/dkim\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
-          },
-          {
-            "lang": "C#",
-            "label": "C#",
-            "source": "var client = new RestClient(\"http://localhost:3000/domains/%7BdomainOrAlias%7D/dkim\");\nvar request = new RestRequest(Method.GET);\nrequest.AddHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nIRestResponse response = client.Execute(request);"
-          },
-          {
-            "lang": "C",
-            "label": "C",
-            "source": "CURL *hnd = curl_easy_init();\n\ncurl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, \"GET\");\ncurl_easy_setopt(hnd, CURLOPT_URL, \"http://localhost:3000/domains/%7BdomainOrAlias%7D/dkim\");\n\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, \"authorization: Bearer REPLACE_BEARER_TOKEN\");\ncurl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);\n\nCURLcode ret = curl_easy_perform(hnd);"
           }
         ]
       },
@@ -3104,41 +2158,6 @@
             "lang": "Shell",
             "label": "Curl",
             "source": "curl --request PUT \\\n  --url http://localhost:3000/domains/%7BdomainOrAlias%7D/dkim \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --header 'content-type: application/json' \\\n  --data '{\"selector\":\"default\",\"privateKey\":\"-----BEGIN RSA PRIVATE KEY-----...\"}'"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "Node.js",
-            "source": "var http = require(\"http\");\n\nvar options = {\n  \"method\": \"PUT\",\n  \"hostname\": \"localhost\",\n  \"port\": \"3000\",\n  \"path\": \"/domains/%7BdomainOrAlias%7D/dkim\",\n  \"headers\": {\n    \"content-type\": \"application/json\",\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.write(JSON.stringify({selector: 'default', privateKey: '-----BEGIN RSA PRIVATE KEY-----...'}));\nreq.end();"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "JavaScript",
-            "source": "var data = JSON.stringify({\n  \"selector\": \"default\",\n  \"privateKey\": \"-----BEGIN RSA PRIVATE KEY-----...\"\n});\n\nvar xhr = new XMLHttpRequest();\nxhr.withCredentials = true;\n\nxhr.addEventListener(\"readystatechange\", function () {\n  if (this.readyState === this.DONE) {\n    console.log(this.responseText);\n  }\n});\n\nxhr.open(\"PUT\", \"http://localhost:3000/domains/%7BdomainOrAlias%7D/dkim\");\nxhr.setRequestHeader(\"content-type\", \"application/json\");\nxhr.setRequestHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\n\nxhr.send(data);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python3",
-            "source": "import http.client\n\nconn = http.client.HTTPConnection(\"localhost:3000\")\n\npayload = \"{\\\"selector\\\":\\\"default\\\",\\\"privateKey\\\":\\\"-----BEGIN RSA PRIVATE KEY-----...\\\"}\"\n\nheaders = {\n    'content-type': \"application/json\",\n    'authorization': \"Bearer REPLACE_BEARER_TOKEN\"\n    }\n\nconn.request(\"PUT\", \"/domains/%7BdomainOrAlias%7D/dkim\", payload, headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
-          },
-          {
-            "lang": "PHP",
-            "label": "PHP",
-            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_PORT => \"3000\",\n  CURLOPT_URL => \"http://localhost:3000/domains/%7BdomainOrAlias%7D/dkim\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"PUT\",\n  CURLOPT_POSTFIELDS => \"{\\\"selector\\\":\\\"default\\\",\\\"privateKey\\\":\\\"-----BEGIN RSA PRIVATE KEY-----...\\\"}\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\",\n    \"content-type: application/json\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-          },
-          {
-            "lang": "Java",
-            "label": "Java",
-            "source": "HttpResponse<String> response = Unirest.put(\"http://localhost:3000/domains/%7BdomainOrAlias%7D/dkim\")\n  .header(\"content-type\", \"application/json\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .body(\"{\\\"selector\\\":\\\"default\\\",\\\"privateKey\\\":\\\"-----BEGIN RSA PRIVATE KEY-----...\\\"}\")\n  .asString();"
-          },
-          {
-            "lang": "C#",
-            "label": "C#",
-            "source": "var client = new RestClient(\"http://localhost:3000/domains/%7BdomainOrAlias%7D/dkim\");\nvar request = new RestRequest(Method.PUT);\nrequest.AddHeader(\"content-type\", \"application/json\");\nrequest.AddHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nrequest.AddParameter(\"application/json\", \"{\\\"selector\\\":\\\"default\\\",\\\"privateKey\\\":\\\"-----BEGIN RSA PRIVATE KEY-----...\\\"}\", ParameterType.RequestBody);\nIRestResponse response = client.Execute(request);"
-          },
-          {
-            "lang": "C",
-            "label": "C",
-            "source": "CURL *hnd = curl_easy_init();\n\ncurl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, \"PUT\");\ncurl_easy_setopt(hnd, CURLOPT_URL, \"http://localhost:3000/domains/%7BdomainOrAlias%7D/dkim\");\n\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, \"content-type: application/json\");\nheaders = curl_slist_append(headers, \"authorization: Bearer REPLACE_BEARER_TOKEN\");\ncurl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);\n\ncurl_easy_setopt(hnd, CURLOPT_POSTFIELDS, \"{\\\"selector\\\":\\\"default\\\",\\\"privateKey\\\":\\\"-----BEGIN RSA PRIVATE KEY-----...\\\"}\");\n\nCURLcode ret = curl_easy_perform(hnd);"
           }
         ]
       }
@@ -3169,41 +2188,6 @@
             "lang": "Shell",
             "label": "Curl",
             "source": "curl --request DELETE \\\n  --url http://localhost:3000/forwarders/%7BforwarderId%7D \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "Node.js",
-            "source": "var http = require(\"http\");\n\nvar options = {\n  \"method\": \"DELETE\",\n  \"hostname\": \"localhost\",\n  \"port\": \"3000\",\n  \"path\": \"/forwarders/%7BforwarderId%7D\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.end();"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "JavaScript",
-            "source": "var data = null;\n\nvar xhr = new XMLHttpRequest();\nxhr.withCredentials = true;\n\nxhr.addEventListener(\"readystatechange\", function () {\n  if (this.readyState === this.DONE) {\n    console.log(this.responseText);\n  }\n});\n\nxhr.open(\"DELETE\", \"http://localhost:3000/forwarders/%7BforwarderId%7D\");\nxhr.setRequestHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\n\nxhr.send(data);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python3",
-            "source": "import http.client\n\nconn = http.client.HTTPConnection(\"localhost:3000\")\n\nheaders = { 'authorization': \"Bearer REPLACE_BEARER_TOKEN\" }\n\nconn.request(\"DELETE\", \"/forwarders/%7BforwarderId%7D\", headers=headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
-          },
-          {
-            "lang": "PHP",
-            "label": "PHP",
-            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_PORT => \"3000\",\n  CURLOPT_URL => \"http://localhost:3000/forwarders/%7BforwarderId%7D\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"DELETE\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-          },
-          {
-            "lang": "Java",
-            "label": "Java",
-            "source": "HttpResponse<String> response = Unirest.delete(\"http://localhost:3000/forwarders/%7BforwarderId%7D\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
-          },
-          {
-            "lang": "C#",
-            "label": "C#",
-            "source": "var client = new RestClient(\"http://localhost:3000/forwarders/%7BforwarderId%7D\");\nvar request = new RestRequest(Method.DELETE);\nrequest.AddHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nIRestResponse response = client.Execute(request);"
-          },
-          {
-            "lang": "C",
-            "label": "C",
-            "source": "CURL *hnd = curl_easy_init();\n\ncurl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, \"DELETE\");\ncurl_easy_setopt(hnd, CURLOPT_URL, \"http://localhost:3000/forwarders/%7BforwarderId%7D\");\n\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, \"authorization: Bearer REPLACE_BEARER_TOKEN\");\ncurl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);\n\nCURLcode ret = curl_easy_perform(hnd);"
           }
         ]
       },
@@ -3239,41 +2223,6 @@
             "lang": "Shell",
             "label": "Curl",
             "source": "curl --request GET \\\n  --url http://localhost:3000/forwarders/%7BforwarderId%7D \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "Node.js",
-            "source": "var http = require(\"http\");\n\nvar options = {\n  \"method\": \"GET\",\n  \"hostname\": \"localhost\",\n  \"port\": \"3000\",\n  \"path\": \"/forwarders/%7BforwarderId%7D\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.end();"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "JavaScript",
-            "source": "var data = null;\n\nvar xhr = new XMLHttpRequest();\nxhr.withCredentials = true;\n\nxhr.addEventListener(\"readystatechange\", function () {\n  if (this.readyState === this.DONE) {\n    console.log(this.responseText);\n  }\n});\n\nxhr.open(\"GET\", \"http://localhost:3000/forwarders/%7BforwarderId%7D\");\nxhr.setRequestHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\n\nxhr.send(data);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python3",
-            "source": "import http.client\n\nconn = http.client.HTTPConnection(\"localhost:3000\")\n\nheaders = { 'authorization': \"Bearer REPLACE_BEARER_TOKEN\" }\n\nconn.request(\"GET\", \"/forwarders/%7BforwarderId%7D\", headers=headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
-          },
-          {
-            "lang": "PHP",
-            "label": "PHP",
-            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_PORT => \"3000\",\n  CURLOPT_URL => \"http://localhost:3000/forwarders/%7BforwarderId%7D\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-          },
-          {
-            "lang": "Java",
-            "label": "Java",
-            "source": "HttpResponse<String> response = Unirest.get(\"http://localhost:3000/forwarders/%7BforwarderId%7D\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
-          },
-          {
-            "lang": "C#",
-            "label": "C#",
-            "source": "var client = new RestClient(\"http://localhost:3000/forwarders/%7BforwarderId%7D\");\nvar request = new RestRequest(Method.GET);\nrequest.AddHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nIRestResponse response = client.Execute(request);"
-          },
-          {
-            "lang": "C",
-            "label": "C",
-            "source": "CURL *hnd = curl_easy_init();\n\ncurl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, \"GET\");\ncurl_easy_setopt(hnd, CURLOPT_URL, \"http://localhost:3000/forwarders/%7BforwarderId%7D\");\n\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, \"authorization: Bearer REPLACE_BEARER_TOKEN\");\ncurl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);\n\nCURLcode ret = curl_easy_perform(hnd);"
           }
         ]
       },
@@ -3310,41 +2259,6 @@
             "lang": "Shell",
             "label": "Curl",
             "source": "curl --request PUT \\\n  --url http://localhost:3000/forwarders/%7BforwarderId%7D \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --header 'content-type: application/json' \\\n  --data '{\"name\":\"John Doe\",\"targets\":[\"johndoe@example.com\",\"smtp://mx.example.com:25\",\"https://example.com\"],\"limits\":{\"forward\":600},\"address\":\"john@example.com\"}'"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "Node.js",
-            "source": "var http = require(\"http\");\n\nvar options = {\n  \"method\": \"PUT\",\n  \"hostname\": \"localhost\",\n  \"port\": \"3000\",\n  \"path\": \"/forwarders/%7BforwarderId%7D\",\n  \"headers\": {\n    \"content-type\": \"application/json\",\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.write(JSON.stringify({\n  name: 'John Doe',\n  targets: ['johndoe@example.com', 'smtp://mx.example.com:25', 'https://example.com'],\n  limits: {forward: 600},\n  address: 'john@example.com'\n}));\nreq.end();"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "JavaScript",
-            "source": "var data = JSON.stringify({\n  \"name\": \"John Doe\",\n  \"targets\": [\n    \"johndoe@example.com\",\n    \"smtp://mx.example.com:25\",\n    \"https://example.com\"\n  ],\n  \"limits\": {\n    \"forward\": 600\n  },\n  \"address\": \"john@example.com\"\n});\n\nvar xhr = new XMLHttpRequest();\nxhr.withCredentials = true;\n\nxhr.addEventListener(\"readystatechange\", function () {\n  if (this.readyState === this.DONE) {\n    console.log(this.responseText);\n  }\n});\n\nxhr.open(\"PUT\", \"http://localhost:3000/forwarders/%7BforwarderId%7D\");\nxhr.setRequestHeader(\"content-type\", \"application/json\");\nxhr.setRequestHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\n\nxhr.send(data);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python3",
-            "source": "import http.client\n\nconn = http.client.HTTPConnection(\"localhost:3000\")\n\npayload = \"{\\\"name\\\":\\\"John Doe\\\",\\\"targets\\\":[\\\"johndoe@example.com\\\",\\\"smtp://mx.example.com:25\\\",\\\"https://example.com\\\"],\\\"limits\\\":{\\\"forward\\\":600},\\\"address\\\":\\\"john@example.com\\\"}\"\n\nheaders = {\n    'content-type': \"application/json\",\n    'authorization': \"Bearer REPLACE_BEARER_TOKEN\"\n    }\n\nconn.request(\"PUT\", \"/forwarders/%7BforwarderId%7D\", payload, headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
-          },
-          {
-            "lang": "PHP",
-            "label": "PHP",
-            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_PORT => \"3000\",\n  CURLOPT_URL => \"http://localhost:3000/forwarders/%7BforwarderId%7D\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"PUT\",\n  CURLOPT_POSTFIELDS => \"{\\\"name\\\":\\\"John Doe\\\",\\\"targets\\\":[\\\"johndoe@example.com\\\",\\\"smtp://mx.example.com:25\\\",\\\"https://example.com\\\"],\\\"limits\\\":{\\\"forward\\\":600},\\\"address\\\":\\\"john@example.com\\\"}\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\",\n    \"content-type: application/json\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-          },
-          {
-            "lang": "Java",
-            "label": "Java",
-            "source": "HttpResponse<String> response = Unirest.put(\"http://localhost:3000/forwarders/%7BforwarderId%7D\")\n  .header(\"content-type\", \"application/json\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .body(\"{\\\"name\\\":\\\"John Doe\\\",\\\"targets\\\":[\\\"johndoe@example.com\\\",\\\"smtp://mx.example.com:25\\\",\\\"https://example.com\\\"],\\\"limits\\\":{\\\"forward\\\":600},\\\"address\\\":\\\"john@example.com\\\"}\")\n  .asString();"
-          },
-          {
-            "lang": "C#",
-            "label": "C#",
-            "source": "var client = new RestClient(\"http://localhost:3000/forwarders/%7BforwarderId%7D\");\nvar request = new RestRequest(Method.PUT);\nrequest.AddHeader(\"content-type\", \"application/json\");\nrequest.AddHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nrequest.AddParameter(\"application/json\", \"{\\\"name\\\":\\\"John Doe\\\",\\\"targets\\\":[\\\"johndoe@example.com\\\",\\\"smtp://mx.example.com:25\\\",\\\"https://example.com\\\"],\\\"limits\\\":{\\\"forward\\\":600},\\\"address\\\":\\\"john@example.com\\\"}\", ParameterType.RequestBody);\nIRestResponse response = client.Execute(request);"
-          },
-          {
-            "lang": "C",
-            "label": "C",
-            "source": "CURL *hnd = curl_easy_init();\n\ncurl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, \"PUT\");\ncurl_easy_setopt(hnd, CURLOPT_URL, \"http://localhost:3000/forwarders/%7BforwarderId%7D\");\n\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, \"content-type: application/json\");\nheaders = curl_slist_append(headers, \"authorization: Bearer REPLACE_BEARER_TOKEN\");\ncurl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);\n\ncurl_easy_setopt(hnd, CURLOPT_POSTFIELDS, \"{\\\"name\\\":\\\"John Doe\\\",\\\"targets\\\":[\\\"johndoe@example.com\\\",\\\"smtp://mx.example.com:25\\\",\\\"https://example.com\\\"],\\\"limits\\\":{\\\"forward\\\":600},\\\"address\\\":\\\"john@example.com\\\"}\");\n\nCURLcode ret = curl_easy_perform(hnd);"
           }
         ]
       }
@@ -3376,41 +2290,6 @@
             "lang": "Shell",
             "label": "Curl",
             "source": "curl --request GET \\\n  --url http://localhost:3000/forwarders \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "Node.js",
-            "source": "var http = require(\"http\");\n\nvar options = {\n  \"method\": \"GET\",\n  \"hostname\": \"localhost\",\n  \"port\": \"3000\",\n  \"path\": \"/forwarders\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.end();"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "JavaScript",
-            "source": "var data = null;\n\nvar xhr = new XMLHttpRequest();\nxhr.withCredentials = true;\n\nxhr.addEventListener(\"readystatechange\", function () {\n  if (this.readyState === this.DONE) {\n    console.log(this.responseText);\n  }\n});\n\nxhr.open(\"GET\", \"http://localhost:3000/forwarders\");\nxhr.setRequestHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\n\nxhr.send(data);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python3",
-            "source": "import http.client\n\nconn = http.client.HTTPConnection(\"localhost:3000\")\n\nheaders = { 'authorization': \"Bearer REPLACE_BEARER_TOKEN\" }\n\nconn.request(\"GET\", \"/forwarders\", headers=headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
-          },
-          {
-            "lang": "PHP",
-            "label": "PHP",
-            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_PORT => \"3000\",\n  CURLOPT_URL => \"http://localhost:3000/forwarders\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-          },
-          {
-            "lang": "Java",
-            "label": "Java",
-            "source": "HttpResponse<String> response = Unirest.get(\"http://localhost:3000/forwarders\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
-          },
-          {
-            "lang": "C#",
-            "label": "C#",
-            "source": "var client = new RestClient(\"http://localhost:3000/forwarders\");\nvar request = new RestRequest(Method.GET);\nrequest.AddHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nIRestResponse response = client.Execute(request);"
-          },
-          {
-            "lang": "C",
-            "label": "C",
-            "source": "CURL *hnd = curl_easy_init();\n\ncurl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, \"GET\");\ncurl_easy_setopt(hnd, CURLOPT_URL, \"http://localhost:3000/forwarders\");\n\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, \"authorization: Bearer REPLACE_BEARER_TOKEN\");\ncurl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);\n\nCURLcode ret = curl_easy_perform(hnd);"
           }
         ]
       },
@@ -3438,41 +2317,6 @@
             "lang": "Shell",
             "label": "Curl",
             "source": "curl --request POST \\\n  --url http://localhost:3000/forwarders \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --header 'content-type: application/json' \\\n  --data '{\"name\":\"John Doe\",\"targets\":[\"johndoe@example.com\",\"smtp://mx.example.com:25\",\"https://example.com\"],\"limits\":{\"forward\":600},\"address\":\"john@example.com\"}'"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "Node.js",
-            "source": "var http = require(\"http\");\n\nvar options = {\n  \"method\": \"POST\",\n  \"hostname\": \"localhost\",\n  \"port\": \"3000\",\n  \"path\": \"/forwarders\",\n  \"headers\": {\n    \"content-type\": \"application/json\",\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.write(JSON.stringify({\n  name: 'John Doe',\n  targets: ['johndoe@example.com', 'smtp://mx.example.com:25', 'https://example.com'],\n  limits: {forward: 600},\n  address: 'john@example.com'\n}));\nreq.end();"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "JavaScript",
-            "source": "var data = JSON.stringify({\n  \"name\": \"John Doe\",\n  \"targets\": [\n    \"johndoe@example.com\",\n    \"smtp://mx.example.com:25\",\n    \"https://example.com\"\n  ],\n  \"limits\": {\n    \"forward\": 600\n  },\n  \"address\": \"john@example.com\"\n});\n\nvar xhr = new XMLHttpRequest();\nxhr.withCredentials = true;\n\nxhr.addEventListener(\"readystatechange\", function () {\n  if (this.readyState === this.DONE) {\n    console.log(this.responseText);\n  }\n});\n\nxhr.open(\"POST\", \"http://localhost:3000/forwarders\");\nxhr.setRequestHeader(\"content-type\", \"application/json\");\nxhr.setRequestHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\n\nxhr.send(data);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python3",
-            "source": "import http.client\n\nconn = http.client.HTTPConnection(\"localhost:3000\")\n\npayload = \"{\\\"name\\\":\\\"John Doe\\\",\\\"targets\\\":[\\\"johndoe@example.com\\\",\\\"smtp://mx.example.com:25\\\",\\\"https://example.com\\\"],\\\"limits\\\":{\\\"forward\\\":600},\\\"address\\\":\\\"john@example.com\\\"}\"\n\nheaders = {\n    'content-type': \"application/json\",\n    'authorization': \"Bearer REPLACE_BEARER_TOKEN\"\n    }\n\nconn.request(\"POST\", \"/forwarders\", payload, headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
-          },
-          {
-            "lang": "PHP",
-            "label": "PHP",
-            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_PORT => \"3000\",\n  CURLOPT_URL => \"http://localhost:3000/forwarders\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"POST\",\n  CURLOPT_POSTFIELDS => \"{\\\"name\\\":\\\"John Doe\\\",\\\"targets\\\":[\\\"johndoe@example.com\\\",\\\"smtp://mx.example.com:25\\\",\\\"https://example.com\\\"],\\\"limits\\\":{\\\"forward\\\":600},\\\"address\\\":\\\"john@example.com\\\"}\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\",\n    \"content-type: application/json\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-          },
-          {
-            "lang": "Java",
-            "label": "Java",
-            "source": "HttpResponse<String> response = Unirest.post(\"http://localhost:3000/forwarders\")\n  .header(\"content-type\", \"application/json\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .body(\"{\\\"name\\\":\\\"John Doe\\\",\\\"targets\\\":[\\\"johndoe@example.com\\\",\\\"smtp://mx.example.com:25\\\",\\\"https://example.com\\\"],\\\"limits\\\":{\\\"forward\\\":600},\\\"address\\\":\\\"john@example.com\\\"}\")\n  .asString();"
-          },
-          {
-            "lang": "C#",
-            "label": "C#",
-            "source": "var client = new RestClient(\"http://localhost:3000/forwarders\");\nvar request = new RestRequest(Method.POST);\nrequest.AddHeader(\"content-type\", \"application/json\");\nrequest.AddHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nrequest.AddParameter(\"application/json\", \"{\\\"name\\\":\\\"John Doe\\\",\\\"targets\\\":[\\\"johndoe@example.com\\\",\\\"smtp://mx.example.com:25\\\",\\\"https://example.com\\\"],\\\"limits\\\":{\\\"forward\\\":600},\\\"address\\\":\\\"john@example.com\\\"}\", ParameterType.RequestBody);\nIRestResponse response = client.Execute(request);"
-          },
-          {
-            "lang": "C",
-            "label": "C",
-            "source": "CURL *hnd = curl_easy_init();\n\ncurl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, \"POST\");\ncurl_easy_setopt(hnd, CURLOPT_URL, \"http://localhost:3000/forwarders\");\n\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, \"content-type: application/json\");\nheaders = curl_slist_append(headers, \"authorization: Bearer REPLACE_BEARER_TOKEN\");\ncurl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);\n\ncurl_easy_setopt(hnd, CURLOPT_POSTFIELDS, \"{\\\"name\\\":\\\"John Doe\\\",\\\"targets\\\":[\\\"johndoe@example.com\\\",\\\"smtp://mx.example.com:25\\\",\\\"https://example.com\\\"],\\\"limits\\\":{\\\"forward\\\":600},\\\"address\\\":\\\"john@example.com\\\"}\");\n\nCURLcode ret = curl_easy_perform(hnd);"
           }
         ]
       }
@@ -3510,41 +2354,6 @@
             "lang": "Shell",
             "label": "Curl",
             "source": "curl --request POST \\\n  --url http://localhost:3000/apikeys \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --header 'content-type: application/json' \\\n  --data '{\"name\":\"API key for my script\"}'"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "Node.js",
-            "source": "var http = require(\"http\");\n\nvar options = {\n  \"method\": \"POST\",\n  \"hostname\": \"localhost\",\n  \"port\": \"3000\",\n  \"path\": \"/apikeys\",\n  \"headers\": {\n    \"content-type\": \"application/json\",\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.write(JSON.stringify({name: 'API key for my script'}));\nreq.end();"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "JavaScript",
-            "source": "var data = JSON.stringify({\n  \"name\": \"API key for my script\"\n});\n\nvar xhr = new XMLHttpRequest();\nxhr.withCredentials = true;\n\nxhr.addEventListener(\"readystatechange\", function () {\n  if (this.readyState === this.DONE) {\n    console.log(this.responseText);\n  }\n});\n\nxhr.open(\"POST\", \"http://localhost:3000/apikeys\");\nxhr.setRequestHeader(\"content-type\", \"application/json\");\nxhr.setRequestHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\n\nxhr.send(data);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python3",
-            "source": "import http.client\n\nconn = http.client.HTTPConnection(\"localhost:3000\")\n\npayload = \"{\\\"name\\\":\\\"API key for my script\\\"}\"\n\nheaders = {\n    'content-type': \"application/json\",\n    'authorization': \"Bearer REPLACE_BEARER_TOKEN\"\n    }\n\nconn.request(\"POST\", \"/apikeys\", payload, headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
-          },
-          {
-            "lang": "PHP",
-            "label": "PHP",
-            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_PORT => \"3000\",\n  CURLOPT_URL => \"http://localhost:3000/apikeys\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"POST\",\n  CURLOPT_POSTFIELDS => \"{\\\"name\\\":\\\"API key for my script\\\"}\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\",\n    \"content-type: application/json\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-          },
-          {
-            "lang": "Java",
-            "label": "Java",
-            "source": "HttpResponse<String> response = Unirest.post(\"http://localhost:3000/apikeys\")\n  .header(\"content-type\", \"application/json\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .body(\"{\\\"name\\\":\\\"API key for my script\\\"}\")\n  .asString();"
-          },
-          {
-            "lang": "C#",
-            "label": "C#",
-            "source": "var client = new RestClient(\"http://localhost:3000/apikeys\");\nvar request = new RestRequest(Method.POST);\nrequest.AddHeader(\"content-type\", \"application/json\");\nrequest.AddHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nrequest.AddParameter(\"application/json\", \"{\\\"name\\\":\\\"API key for my script\\\"}\", ParameterType.RequestBody);\nIRestResponse response = client.Execute(request);"
-          },
-          {
-            "lang": "C",
-            "label": "C",
-            "source": "CURL *hnd = curl_easy_init();\n\ncurl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, \"POST\");\ncurl_easy_setopt(hnd, CURLOPT_URL, \"http://localhost:3000/apikeys\");\n\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, \"content-type: application/json\");\nheaders = curl_slist_append(headers, \"authorization: Bearer REPLACE_BEARER_TOKEN\");\ncurl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);\n\ncurl_easy_setopt(hnd, CURLOPT_POSTFIELDS, \"{\\\"name\\\":\\\"API key for my script\\\"}\");\n\nCURLcode ret = curl_easy_perform(hnd);"
           }
         ]
       },
@@ -3574,41 +2383,6 @@
             "lang": "Shell",
             "label": "Curl",
             "source": "curl --request GET \\\n  --url http://localhost:3000/apikeys \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "Node.js",
-            "source": "var http = require(\"http\");\n\nvar options = {\n  \"method\": \"GET\",\n  \"hostname\": \"localhost\",\n  \"port\": \"3000\",\n  \"path\": \"/apikeys\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.end();"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "JavaScript",
-            "source": "var data = null;\n\nvar xhr = new XMLHttpRequest();\nxhr.withCredentials = true;\n\nxhr.addEventListener(\"readystatechange\", function () {\n  if (this.readyState === this.DONE) {\n    console.log(this.responseText);\n  }\n});\n\nxhr.open(\"GET\", \"http://localhost:3000/apikeys\");\nxhr.setRequestHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\n\nxhr.send(data);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python3",
-            "source": "import http.client\n\nconn = http.client.HTTPConnection(\"localhost:3000\")\n\nheaders = { 'authorization': \"Bearer REPLACE_BEARER_TOKEN\" }\n\nconn.request(\"GET\", \"/apikeys\", headers=headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
-          },
-          {
-            "lang": "PHP",
-            "label": "PHP",
-            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_PORT => \"3000\",\n  CURLOPT_URL => \"http://localhost:3000/apikeys\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-          },
-          {
-            "lang": "Java",
-            "label": "Java",
-            "source": "HttpResponse<String> response = Unirest.get(\"http://localhost:3000/apikeys\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
-          },
-          {
-            "lang": "C#",
-            "label": "C#",
-            "source": "var client = new RestClient(\"http://localhost:3000/apikeys\");\nvar request = new RestRequest(Method.GET);\nrequest.AddHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nIRestResponse response = client.Execute(request);"
-          },
-          {
-            "lang": "C",
-            "label": "C",
-            "source": "CURL *hnd = curl_easy_init();\n\ncurl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, \"GET\");\ncurl_easy_setopt(hnd, CURLOPT_URL, \"http://localhost:3000/apikeys\");\n\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, \"authorization: Bearer REPLACE_BEARER_TOKEN\");\ncurl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);\n\nCURLcode ret = curl_easy_perform(hnd);"
           }
         ]
       }
@@ -3639,42 +2413,7 @@
           {
             "lang": "Shell",
             "label": "Curl",
-            "source": "curl --request DELETE \\\n  --url http://localhost:3000/apikeys/%7Bid%7D \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "Node.js",
-            "source": "var http = require(\"http\");\n\nvar options = {\n  \"method\": \"DELETE\",\n  \"hostname\": \"localhost\",\n  \"port\": \"3000\",\n  \"path\": \"/apikeys/%7Bid%7D\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.end();"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "JavaScript",
-            "source": "var data = null;\n\nvar xhr = new XMLHttpRequest();\nxhr.withCredentials = true;\n\nxhr.addEventListener(\"readystatechange\", function () {\n  if (this.readyState === this.DONE) {\n    console.log(this.responseText);\n  }\n});\n\nxhr.open(\"DELETE\", \"http://localhost:3000/apikeys/%7Bid%7D\");\nxhr.setRequestHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\n\nxhr.send(data);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python3",
-            "source": "import http.client\n\nconn = http.client.HTTPConnection(\"localhost:3000\")\n\nheaders = { 'authorization': \"Bearer REPLACE_BEARER_TOKEN\" }\n\nconn.request(\"DELETE\", \"/apikeys/%7Bid%7D\", headers=headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
-          },
-          {
-            "lang": "PHP",
-            "label": "PHP",
-            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_PORT => \"3000\",\n  CURLOPT_URL => \"http://localhost:3000/apikeys/%7Bid%7D\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"DELETE\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-          },
-          {
-            "lang": "Java",
-            "label": "Java",
-            "source": "HttpResponse<String> response = Unirest.delete(\"http://localhost:3000/apikeys/%7Bid%7D\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
-          },
-          {
-            "lang": "C#",
-            "label": "C#",
-            "source": "var client = new RestClient(\"http://localhost:3000/apikeys/%7Bid%7D\");\nvar request = new RestRequest(Method.DELETE);\nrequest.AddHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nIRestResponse response = client.Execute(request);"
-          },
-          {
-            "lang": "C",
-            "label": "C",
-            "source": "CURL *hnd = curl_easy_init();\n\ncurl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, \"DELETE\");\ncurl_easy_setopt(hnd, CURLOPT_URL, \"http://localhost:3000/apikeys/%7Bid%7D\");\n\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, \"authorization: Bearer REPLACE_BEARER_TOKEN\");\ncurl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);\n\nCURLcode ret = curl_easy_perform(hnd);"
+            "source": "curl --request DELETE \\\n  --url http://localhost:3000/apikeys/pnx97h6p64t4gau6vbub- \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
           }
         ]
       }
@@ -3712,41 +2451,6 @@
             "lang": "Shell",
             "label": "Curl",
             "source": "curl --request DELETE \\\n  --url http://localhost:3000/accounts/%7BaccountId%7D/filters/%7BfilterId%7D \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "Node.js",
-            "source": "var http = require(\"http\");\n\nvar options = {\n  \"method\": \"DELETE\",\n  \"hostname\": \"localhost\",\n  \"port\": \"3000\",\n  \"path\": \"/accounts/%7BaccountId%7D/filters/%7BfilterId%7D\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.end();"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "JavaScript",
-            "source": "var data = null;\n\nvar xhr = new XMLHttpRequest();\nxhr.withCredentials = true;\n\nxhr.addEventListener(\"readystatechange\", function () {\n  if (this.readyState === this.DONE) {\n    console.log(this.responseText);\n  }\n});\n\nxhr.open(\"DELETE\", \"http://localhost:3000/accounts/%7BaccountId%7D/filters/%7BfilterId%7D\");\nxhr.setRequestHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\n\nxhr.send(data);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python3",
-            "source": "import http.client\n\nconn = http.client.HTTPConnection(\"localhost:3000\")\n\nheaders = { 'authorization': \"Bearer REPLACE_BEARER_TOKEN\" }\n\nconn.request(\"DELETE\", \"/accounts/%7BaccountId%7D/filters/%7BfilterId%7D\", headers=headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
-          },
-          {
-            "lang": "PHP",
-            "label": "PHP",
-            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_PORT => \"3000\",\n  CURLOPT_URL => \"http://localhost:3000/accounts/%7BaccountId%7D/filters/%7BfilterId%7D\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"DELETE\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-          },
-          {
-            "lang": "Java",
-            "label": "Java",
-            "source": "HttpResponse<String> response = Unirest.delete(\"http://localhost:3000/accounts/%7BaccountId%7D/filters/%7BfilterId%7D\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
-          },
-          {
-            "lang": "C#",
-            "label": "C#",
-            "source": "var client = new RestClient(\"http://localhost:3000/accounts/%7BaccountId%7D/filters/%7BfilterId%7D\");\nvar request = new RestRequest(Method.DELETE);\nrequest.AddHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nIRestResponse response = client.Execute(request);"
-          },
-          {
-            "lang": "C",
-            "label": "C",
-            "source": "CURL *hnd = curl_easy_init();\n\ncurl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, \"DELETE\");\ncurl_easy_setopt(hnd, CURLOPT_URL, \"http://localhost:3000/accounts/%7BaccountId%7D/filters/%7BfilterId%7D\");\n\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, \"authorization: Bearer REPLACE_BEARER_TOKEN\");\ncurl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);\n\nCURLcode ret = curl_easy_perform(hnd);"
           }
         ]
       },
@@ -3789,41 +2493,6 @@
             "lang": "Shell",
             "label": "Curl",
             "source": "curl --request GET \\\n  --url http://localhost:3000/accounts/%7BaccountId%7D/filters/%7BfilterId%7D \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "Node.js",
-            "source": "var http = require(\"http\");\n\nvar options = {\n  \"method\": \"GET\",\n  \"hostname\": \"localhost\",\n  \"port\": \"3000\",\n  \"path\": \"/accounts/%7BaccountId%7D/filters/%7BfilterId%7D\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.end();"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "JavaScript",
-            "source": "var data = null;\n\nvar xhr = new XMLHttpRequest();\nxhr.withCredentials = true;\n\nxhr.addEventListener(\"readystatechange\", function () {\n  if (this.readyState === this.DONE) {\n    console.log(this.responseText);\n  }\n});\n\nxhr.open(\"GET\", \"http://localhost:3000/accounts/%7BaccountId%7D/filters/%7BfilterId%7D\");\nxhr.setRequestHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\n\nxhr.send(data);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python3",
-            "source": "import http.client\n\nconn = http.client.HTTPConnection(\"localhost:3000\")\n\nheaders = { 'authorization': \"Bearer REPLACE_BEARER_TOKEN\" }\n\nconn.request(\"GET\", \"/accounts/%7BaccountId%7D/filters/%7BfilterId%7D\", headers=headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
-          },
-          {
-            "lang": "PHP",
-            "label": "PHP",
-            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_PORT => \"3000\",\n  CURLOPT_URL => \"http://localhost:3000/accounts/%7BaccountId%7D/filters/%7BfilterId%7D\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-          },
-          {
-            "lang": "Java",
-            "label": "Java",
-            "source": "HttpResponse<String> response = Unirest.get(\"http://localhost:3000/accounts/%7BaccountId%7D/filters/%7BfilterId%7D\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
-          },
-          {
-            "lang": "C#",
-            "label": "C#",
-            "source": "var client = new RestClient(\"http://localhost:3000/accounts/%7BaccountId%7D/filters/%7BfilterId%7D\");\nvar request = new RestRequest(Method.GET);\nrequest.AddHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nIRestResponse response = client.Execute(request);"
-          },
-          {
-            "lang": "C",
-            "label": "C",
-            "source": "CURL *hnd = curl_easy_init();\n\ncurl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, \"GET\");\ncurl_easy_setopt(hnd, CURLOPT_URL, \"http://localhost:3000/accounts/%7BaccountId%7D/filters/%7BfilterId%7D\");\n\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, \"authorization: Bearer REPLACE_BEARER_TOKEN\");\ncurl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);\n\nCURLcode ret = curl_easy_perform(hnd);"
           }
         ]
       },
@@ -3867,41 +2536,6 @@
             "lang": "Shell",
             "label": "Curl",
             "source": "curl --request PUT \\\n  --url http://localhost:3000/accounts/%7BaccountId%7D/filters/%7BfilterId%7D \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --header 'content-type: application/json' \\\n  --data '{\"name\":\"Mark as seen from John\",\"disabled\":false,\"query\":{\"from\":\"John\",\"to\":\"John\",\"subject\":\"You have 1 new notification\",\"listId\":\"John'\\''s list\",\"text\":\"Dedicated servers\",\"ha\":false,\"size\":1000},\"action\":{\"seen\":true,\"flag\":true,\"delete\":true,\"spam\":true,\"mailbox\":\"5a1c0ee490a34c67e266932c\",\"targets\":[\"johndoe@example.com\",\"smtp://mx.example.com:25\",\"https://example.com\"]}}'"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "Node.js",
-            "source": "var http = require(\"http\");\n\nvar options = {\n  \"method\": \"PUT\",\n  \"hostname\": \"localhost\",\n  \"port\": \"3000\",\n  \"path\": \"/accounts/%7BaccountId%7D/filters/%7BfilterId%7D\",\n  \"headers\": {\n    \"content-type\": \"application/json\",\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.write(JSON.stringify({\n  name: 'Mark as seen from John',\n  disabled: false,\n  query: {\n    from: 'John',\n    to: 'John',\n    subject: 'You have 1 new notification',\n    listId: 'John\\'s list',\n    text: 'Dedicated servers',\n    ha: false,\n    size: 1000\n  },\n  action: {\n    seen: true,\n    flag: true,\n    delete: true,\n    spam: true,\n    mailbox: '5a1c0ee490a34c67e266932c',\n    targets: ['johndoe@example.com', 'smtp://mx.example.com:25', 'https://example.com']\n  }\n}));\nreq.end();"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "JavaScript",
-            "source": "var data = JSON.stringify({\n  \"name\": \"Mark as seen from John\",\n  \"disabled\": false,\n  \"query\": {\n    \"from\": \"John\",\n    \"to\": \"John\",\n    \"subject\": \"You have 1 new notification\",\n    \"listId\": \"John's list\",\n    \"text\": \"Dedicated servers\",\n    \"ha\": false,\n    \"size\": 1000\n  },\n  \"action\": {\n    \"seen\": true,\n    \"flag\": true,\n    \"delete\": true,\n    \"spam\": true,\n    \"mailbox\": \"5a1c0ee490a34c67e266932c\",\n    \"targets\": [\n      \"johndoe@example.com\",\n      \"smtp://mx.example.com:25\",\n      \"https://example.com\"\n    ]\n  }\n});\n\nvar xhr = new XMLHttpRequest();\nxhr.withCredentials = true;\n\nxhr.addEventListener(\"readystatechange\", function () {\n  if (this.readyState === this.DONE) {\n    console.log(this.responseText);\n  }\n});\n\nxhr.open(\"PUT\", \"http://localhost:3000/accounts/%7BaccountId%7D/filters/%7BfilterId%7D\");\nxhr.setRequestHeader(\"content-type\", \"application/json\");\nxhr.setRequestHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\n\nxhr.send(data);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python3",
-            "source": "import http.client\n\nconn = http.client.HTTPConnection(\"localhost:3000\")\n\npayload = \"{\\\"name\\\":\\\"Mark as seen from John\\\",\\\"disabled\\\":false,\\\"query\\\":{\\\"from\\\":\\\"John\\\",\\\"to\\\":\\\"John\\\",\\\"subject\\\":\\\"You have 1 new notification\\\",\\\"listId\\\":\\\"John's list\\\",\\\"text\\\":\\\"Dedicated servers\\\",\\\"ha\\\":false,\\\"size\\\":1000},\\\"action\\\":{\\\"seen\\\":true,\\\"flag\\\":true,\\\"delete\\\":true,\\\"spam\\\":true,\\\"mailbox\\\":\\\"5a1c0ee490a34c67e266932c\\\",\\\"targets\\\":[\\\"johndoe@example.com\\\",\\\"smtp://mx.example.com:25\\\",\\\"https://example.com\\\"]}}\"\n\nheaders = {\n    'content-type': \"application/json\",\n    'authorization': \"Bearer REPLACE_BEARER_TOKEN\"\n    }\n\nconn.request(\"PUT\", \"/accounts/%7BaccountId%7D/filters/%7BfilterId%7D\", payload, headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
-          },
-          {
-            "lang": "PHP",
-            "label": "PHP",
-            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_PORT => \"3000\",\n  CURLOPT_URL => \"http://localhost:3000/accounts/%7BaccountId%7D/filters/%7BfilterId%7D\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"PUT\",\n  CURLOPT_POSTFIELDS => \"{\\\"name\\\":\\\"Mark as seen from John\\\",\\\"disabled\\\":false,\\\"query\\\":{\\\"from\\\":\\\"John\\\",\\\"to\\\":\\\"John\\\",\\\"subject\\\":\\\"You have 1 new notification\\\",\\\"listId\\\":\\\"John's list\\\",\\\"text\\\":\\\"Dedicated servers\\\",\\\"ha\\\":false,\\\"size\\\":1000},\\\"action\\\":{\\\"seen\\\":true,\\\"flag\\\":true,\\\"delete\\\":true,\\\"spam\\\":true,\\\"mailbox\\\":\\\"5a1c0ee490a34c67e266932c\\\",\\\"targets\\\":[\\\"johndoe@example.com\\\",\\\"smtp://mx.example.com:25\\\",\\\"https://example.com\\\"]}}\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\",\n    \"content-type: application/json\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-          },
-          {
-            "lang": "Java",
-            "label": "Java",
-            "source": "HttpResponse<String> response = Unirest.put(\"http://localhost:3000/accounts/%7BaccountId%7D/filters/%7BfilterId%7D\")\n  .header(\"content-type\", \"application/json\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .body(\"{\\\"name\\\":\\\"Mark as seen from John\\\",\\\"disabled\\\":false,\\\"query\\\":{\\\"from\\\":\\\"John\\\",\\\"to\\\":\\\"John\\\",\\\"subject\\\":\\\"You have 1 new notification\\\",\\\"listId\\\":\\\"John's list\\\",\\\"text\\\":\\\"Dedicated servers\\\",\\\"ha\\\":false,\\\"size\\\":1000},\\\"action\\\":{\\\"seen\\\":true,\\\"flag\\\":true,\\\"delete\\\":true,\\\"spam\\\":true,\\\"mailbox\\\":\\\"5a1c0ee490a34c67e266932c\\\",\\\"targets\\\":[\\\"johndoe@example.com\\\",\\\"smtp://mx.example.com:25\\\",\\\"https://example.com\\\"]}}\")\n  .asString();"
-          },
-          {
-            "lang": "C#",
-            "label": "C#",
-            "source": "var client = new RestClient(\"http://localhost:3000/accounts/%7BaccountId%7D/filters/%7BfilterId%7D\");\nvar request = new RestRequest(Method.PUT);\nrequest.AddHeader(\"content-type\", \"application/json\");\nrequest.AddHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nrequest.AddParameter(\"application/json\", \"{\\\"name\\\":\\\"Mark as seen from John\\\",\\\"disabled\\\":false,\\\"query\\\":{\\\"from\\\":\\\"John\\\",\\\"to\\\":\\\"John\\\",\\\"subject\\\":\\\"You have 1 new notification\\\",\\\"listId\\\":\\\"John's list\\\",\\\"text\\\":\\\"Dedicated servers\\\",\\\"ha\\\":false,\\\"size\\\":1000},\\\"action\\\":{\\\"seen\\\":true,\\\"flag\\\":true,\\\"delete\\\":true,\\\"spam\\\":true,\\\"mailbox\\\":\\\"5a1c0ee490a34c67e266932c\\\",\\\"targets\\\":[\\\"johndoe@example.com\\\",\\\"smtp://mx.example.com:25\\\",\\\"https://example.com\\\"]}}\", ParameterType.RequestBody);\nIRestResponse response = client.Execute(request);"
-          },
-          {
-            "lang": "C",
-            "label": "C",
-            "source": "CURL *hnd = curl_easy_init();\n\ncurl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, \"PUT\");\ncurl_easy_setopt(hnd, CURLOPT_URL, \"http://localhost:3000/accounts/%7BaccountId%7D/filters/%7BfilterId%7D\");\n\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, \"content-type: application/json\");\nheaders = curl_slist_append(headers, \"authorization: Bearer REPLACE_BEARER_TOKEN\");\ncurl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);\n\ncurl_easy_setopt(hnd, CURLOPT_POSTFIELDS, \"{\\\"name\\\":\\\"Mark as seen from John\\\",\\\"disabled\\\":false,\\\"query\\\":{\\\"from\\\":\\\"John\\\",\\\"to\\\":\\\"John\\\",\\\"subject\\\":\\\"You have 1 new notification\\\",\\\"listId\\\":\\\"John's list\\\",\\\"text\\\":\\\"Dedicated servers\\\",\\\"ha\\\":false,\\\"size\\\":1000},\\\"action\\\":{\\\"seen\\\":true,\\\"flag\\\":true,\\\"delete\\\":true,\\\"spam\\\":true,\\\"mailbox\\\":\\\"5a1c0ee490a34c67e266932c\\\",\\\"targets\\\":[\\\"johndoe@example.com\\\",\\\"smtp://mx.example.com:25\\\",\\\"https://example.com\\\"]}}\");\n\nCURLcode ret = curl_easy_perform(hnd);"
           }
         ]
       }
@@ -3942,41 +2576,6 @@
             "lang": "Shell",
             "label": "Curl",
             "source": "curl --request GET \\\n  --url http://localhost:3000/accounts/%7BaccountId%7D/filters \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN'"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "Node.js",
-            "source": "var http = require(\"http\");\n\nvar options = {\n  \"method\": \"GET\",\n  \"hostname\": \"localhost\",\n  \"port\": \"3000\",\n  \"path\": \"/accounts/%7BaccountId%7D/filters\",\n  \"headers\": {\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.end();"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "JavaScript",
-            "source": "var data = null;\n\nvar xhr = new XMLHttpRequest();\nxhr.withCredentials = true;\n\nxhr.addEventListener(\"readystatechange\", function () {\n  if (this.readyState === this.DONE) {\n    console.log(this.responseText);\n  }\n});\n\nxhr.open(\"GET\", \"http://localhost:3000/accounts/%7BaccountId%7D/filters\");\nxhr.setRequestHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\n\nxhr.send(data);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python3",
-            "source": "import http.client\n\nconn = http.client.HTTPConnection(\"localhost:3000\")\n\nheaders = { 'authorization': \"Bearer REPLACE_BEARER_TOKEN\" }\n\nconn.request(\"GET\", \"/accounts/%7BaccountId%7D/filters\", headers=headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
-          },
-          {
-            "lang": "PHP",
-            "label": "PHP",
-            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_PORT => \"3000\",\n  CURLOPT_URL => \"http://localhost:3000/accounts/%7BaccountId%7D/filters\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"GET\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-          },
-          {
-            "lang": "Java",
-            "label": "Java",
-            "source": "HttpResponse<String> response = Unirest.get(\"http://localhost:3000/accounts/%7BaccountId%7D/filters\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .asString();"
-          },
-          {
-            "lang": "C#",
-            "label": "C#",
-            "source": "var client = new RestClient(\"http://localhost:3000/accounts/%7BaccountId%7D/filters\");\nvar request = new RestRequest(Method.GET);\nrequest.AddHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nIRestResponse response = client.Execute(request);"
-          },
-          {
-            "lang": "C",
-            "label": "C",
-            "source": "CURL *hnd = curl_easy_init();\n\ncurl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, \"GET\");\ncurl_easy_setopt(hnd, CURLOPT_URL, \"http://localhost:3000/accounts/%7BaccountId%7D/filters\");\n\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, \"authorization: Bearer REPLACE_BEARER_TOKEN\");\ncurl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);\n\nCURLcode ret = curl_easy_perform(hnd);"
           }
         ]
       },
@@ -4013,41 +2612,6 @@
             "lang": "Shell",
             "label": "Curl",
             "source": "curl --request POST \\\n  --url http://localhost:3000/accounts/%7BaccountId%7D/filters \\\n  --header 'authorization: Bearer REPLACE_BEARER_TOKEN' \\\n  --header 'content-type: application/json' \\\n  --data '{\"name\":\"Mark as seen from John\",\"disabled\":false,\"query\":{\"from\":\"John\",\"to\":\"John\",\"subject\":\"You have 1 new notification\",\"listId\":\"John'\\''s list\",\"text\":\"Dedicated servers\",\"ha\":false,\"size\":1000},\"action\":{\"seen\":true,\"flag\":true,\"delete\":true,\"spam\":true,\"mailbox\":\"5a1c0ee490a34c67e266932c\",\"targets\":[\"johndoe@example.com\",\"smtp://mx.example.com:25\",\"https://example.com\"]}}'"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "Node.js",
-            "source": "var http = require(\"http\");\n\nvar options = {\n  \"method\": \"POST\",\n  \"hostname\": \"localhost\",\n  \"port\": \"3000\",\n  \"path\": \"/accounts/%7BaccountId%7D/filters\",\n  \"headers\": {\n    \"content-type\": \"application/json\",\n    \"authorization\": \"Bearer REPLACE_BEARER_TOKEN\"\n  }\n};\n\nvar req = http.request(options, function (res) {\n  var chunks = [];\n\n  res.on(\"data\", function (chunk) {\n    chunks.push(chunk);\n  });\n\n  res.on(\"end\", function () {\n    var body = Buffer.concat(chunks);\n    console.log(body.toString());\n  });\n});\n\nreq.write(JSON.stringify({\n  name: 'Mark as seen from John',\n  disabled: false,\n  query: {\n    from: 'John',\n    to: 'John',\n    subject: 'You have 1 new notification',\n    listId: 'John\\'s list',\n    text: 'Dedicated servers',\n    ha: false,\n    size: 1000\n  },\n  action: {\n    seen: true,\n    flag: true,\n    delete: true,\n    spam: true,\n    mailbox: '5a1c0ee490a34c67e266932c',\n    targets: ['johndoe@example.com', 'smtp://mx.example.com:25', 'https://example.com']\n  }\n}));\nreq.end();"
-          },
-          {
-            "lang": "JavaScript",
-            "label": "JavaScript",
-            "source": "var data = JSON.stringify({\n  \"name\": \"Mark as seen from John\",\n  \"disabled\": false,\n  \"query\": {\n    \"from\": \"John\",\n    \"to\": \"John\",\n    \"subject\": \"You have 1 new notification\",\n    \"listId\": \"John's list\",\n    \"text\": \"Dedicated servers\",\n    \"ha\": false,\n    \"size\": 1000\n  },\n  \"action\": {\n    \"seen\": true,\n    \"flag\": true,\n    \"delete\": true,\n    \"spam\": true,\n    \"mailbox\": \"5a1c0ee490a34c67e266932c\",\n    \"targets\": [\n      \"johndoe@example.com\",\n      \"smtp://mx.example.com:25\",\n      \"https://example.com\"\n    ]\n  }\n});\n\nvar xhr = new XMLHttpRequest();\nxhr.withCredentials = true;\n\nxhr.addEventListener(\"readystatechange\", function () {\n  if (this.readyState === this.DONE) {\n    console.log(this.responseText);\n  }\n});\n\nxhr.open(\"POST\", \"http://localhost:3000/accounts/%7BaccountId%7D/filters\");\nxhr.setRequestHeader(\"content-type\", \"application/json\");\nxhr.setRequestHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\n\nxhr.send(data);"
-          },
-          {
-            "lang": "Python",
-            "label": "Python3",
-            "source": "import http.client\n\nconn = http.client.HTTPConnection(\"localhost:3000\")\n\npayload = \"{\\\"name\\\":\\\"Mark as seen from John\\\",\\\"disabled\\\":false,\\\"query\\\":{\\\"from\\\":\\\"John\\\",\\\"to\\\":\\\"John\\\",\\\"subject\\\":\\\"You have 1 new notification\\\",\\\"listId\\\":\\\"John's list\\\",\\\"text\\\":\\\"Dedicated servers\\\",\\\"ha\\\":false,\\\"size\\\":1000},\\\"action\\\":{\\\"seen\\\":true,\\\"flag\\\":true,\\\"delete\\\":true,\\\"spam\\\":true,\\\"mailbox\\\":\\\"5a1c0ee490a34c67e266932c\\\",\\\"targets\\\":[\\\"johndoe@example.com\\\",\\\"smtp://mx.example.com:25\\\",\\\"https://example.com\\\"]}}\"\n\nheaders = {\n    'content-type': \"application/json\",\n    'authorization': \"Bearer REPLACE_BEARER_TOKEN\"\n    }\n\nconn.request(\"POST\", \"/accounts/%7BaccountId%7D/filters\", payload, headers)\n\nres = conn.getresponse()\ndata = res.read()\n\nprint(data.decode(\"utf-8\"))"
-          },
-          {
-            "lang": "PHP",
-            "label": "PHP",
-            "source": "<?php\n\n$curl = curl_init();\n\ncurl_setopt_array($curl, array(\n  CURLOPT_PORT => \"3000\",\n  CURLOPT_URL => \"http://localhost:3000/accounts/%7BaccountId%7D/filters\",\n  CURLOPT_RETURNTRANSFER => true,\n  CURLOPT_ENCODING => \"\",\n  CURLOPT_MAXREDIRS => 10,\n  CURLOPT_TIMEOUT => 30,\n  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,\n  CURLOPT_CUSTOMREQUEST => \"POST\",\n  CURLOPT_POSTFIELDS => \"{\\\"name\\\":\\\"Mark as seen from John\\\",\\\"disabled\\\":false,\\\"query\\\":{\\\"from\\\":\\\"John\\\",\\\"to\\\":\\\"John\\\",\\\"subject\\\":\\\"You have 1 new notification\\\",\\\"listId\\\":\\\"John's list\\\",\\\"text\\\":\\\"Dedicated servers\\\",\\\"ha\\\":false,\\\"size\\\":1000},\\\"action\\\":{\\\"seen\\\":true,\\\"flag\\\":true,\\\"delete\\\":true,\\\"spam\\\":true,\\\"mailbox\\\":\\\"5a1c0ee490a34c67e266932c\\\",\\\"targets\\\":[\\\"johndoe@example.com\\\",\\\"smtp://mx.example.com:25\\\",\\\"https://example.com\\\"]}}\",\n  CURLOPT_HTTPHEADER => array(\n    \"authorization: Bearer REPLACE_BEARER_TOKEN\",\n    \"content-type: application/json\"\n  ),\n));\n\n$response = curl_exec($curl);\n$err = curl_error($curl);\n\ncurl_close($curl);\n\nif ($err) {\n  echo \"cURL Error #:\" . $err;\n} else {\n  echo $response;\n}"
-          },
-          {
-            "lang": "Java",
-            "label": "Java",
-            "source": "HttpResponse<String> response = Unirest.post(\"http://localhost:3000/accounts/%7BaccountId%7D/filters\")\n  .header(\"content-type\", \"application/json\")\n  .header(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\")\n  .body(\"{\\\"name\\\":\\\"Mark as seen from John\\\",\\\"disabled\\\":false,\\\"query\\\":{\\\"from\\\":\\\"John\\\",\\\"to\\\":\\\"John\\\",\\\"subject\\\":\\\"You have 1 new notification\\\",\\\"listId\\\":\\\"John's list\\\",\\\"text\\\":\\\"Dedicated servers\\\",\\\"ha\\\":false,\\\"size\\\":1000},\\\"action\\\":{\\\"seen\\\":true,\\\"flag\\\":true,\\\"delete\\\":true,\\\"spam\\\":true,\\\"mailbox\\\":\\\"5a1c0ee490a34c67e266932c\\\",\\\"targets\\\":[\\\"johndoe@example.com\\\",\\\"smtp://mx.example.com:25\\\",\\\"https://example.com\\\"]}}\")\n  .asString();"
-          },
-          {
-            "lang": "C#",
-            "label": "C#",
-            "source": "var client = new RestClient(\"http://localhost:3000/accounts/%7BaccountId%7D/filters\");\nvar request = new RestRequest(Method.POST);\nrequest.AddHeader(\"content-type\", \"application/json\");\nrequest.AddHeader(\"authorization\", \"Bearer REPLACE_BEARER_TOKEN\");\nrequest.AddParameter(\"application/json\", \"{\\\"name\\\":\\\"Mark as seen from John\\\",\\\"disabled\\\":false,\\\"query\\\":{\\\"from\\\":\\\"John\\\",\\\"to\\\":\\\"John\\\",\\\"subject\\\":\\\"You have 1 new notification\\\",\\\"listId\\\":\\\"John's list\\\",\\\"text\\\":\\\"Dedicated servers\\\",\\\"ha\\\":false,\\\"size\\\":1000},\\\"action\\\":{\\\"seen\\\":true,\\\"flag\\\":true,\\\"delete\\\":true,\\\"spam\\\":true,\\\"mailbox\\\":\\\"5a1c0ee490a34c67e266932c\\\",\\\"targets\\\":[\\\"johndoe@example.com\\\",\\\"smtp://mx.example.com:25\\\",\\\"https://example.com\\\"]}}\", ParameterType.RequestBody);\nIRestResponse response = client.Execute(request);"
-          },
-          {
-            "lang": "C",
-            "label": "C",
-            "source": "CURL *hnd = curl_easy_init();\n\ncurl_easy_setopt(hnd, CURLOPT_CUSTOMREQUEST, \"POST\");\ncurl_easy_setopt(hnd, CURLOPT_URL, \"http://localhost:3000/accounts/%7BaccountId%7D/filters\");\n\nstruct curl_slist *headers = NULL;\nheaders = curl_slist_append(headers, \"content-type: application/json\");\nheaders = curl_slist_append(headers, \"authorization: Bearer REPLACE_BEARER_TOKEN\");\ncurl_easy_setopt(hnd, CURLOPT_HTTPHEADER, headers);\n\ncurl_easy_setopt(hnd, CURLOPT_POSTFIELDS, \"{\\\"name\\\":\\\"Mark as seen from John\\\",\\\"disabled\\\":false,\\\"query\\\":{\\\"from\\\":\\\"John\\\",\\\"to\\\":\\\"John\\\",\\\"subject\\\":\\\"You have 1 new notification\\\",\\\"listId\\\":\\\"John's list\\\",\\\"text\\\":\\\"Dedicated servers\\\",\\\"ha\\\":false,\\\"size\\\":1000},\\\"action\\\":{\\\"seen\\\":true,\\\"flag\\\":true,\\\"delete\\\":true,\\\"spam\\\":true,\\\"mailbox\\\":\\\"5a1c0ee490a34c67e266932c\\\",\\\"targets\\\":[\\\"johndoe@example.com\\\",\\\"smtp://mx.example.com:25\\\",\\\"https://example.com\\\"]}}\");\n\nCURLcode ret = curl_easy_perform(hnd);"
           }
         ]
       }

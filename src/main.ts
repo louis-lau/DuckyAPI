@@ -1,6 +1,6 @@
 import { BadRequestException, ValidationError, ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
+import { SwaggerModule } from '@nestjs/swagger'
 import fs from 'fs'
 import Helmet from 'helmet'
 import { resolve } from 'path'
@@ -9,6 +9,7 @@ import { promisify } from 'util'
 import { AppModule } from './app.module'
 import { UnauthorizedExceptionFilter } from './common/filters/unauthorized-exception.filter'
 import { ConfigService } from './config/config.service'
+import { openapiOptions } from './openapi-options'
 
 const writeFile = promisify(fs.writeFile)
 declare const module: any
@@ -46,23 +47,7 @@ async function bootstrap(): Promise<void> {
   )
   app.use(Helmet())
 
-  const options = new DocumentBuilder()
-    .setTitle('DuckyAPI')
-    .setDescription('A customer facing api for WildDuck')
-    .setVersion('1.0')
-    .addBearerAuth()
-    .addTag('Authentication')
-    .addTag('Api Keys')
-    .addTag('Domains')
-    .addTag('Dkim')
-    .addTag('Email Accounts')
-    .addTag('Filters')
-    .addTag('Forwarders')
-    .addTag('Profile')
-    .addTag('Users')
-    .addTag('Packages')
-    .build()
-  const document = SwaggerModule.createDocument(app, options)
+  const document = SwaggerModule.createDocument(app, openapiOptions)
   SwaggerModule.setup(`${config.BASE_URL}/swagger`, app, document, {
     swaggerOptions: {
       defaultModelsExpandDepth: 0,

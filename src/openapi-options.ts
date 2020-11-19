@@ -1,0 +1,18 @@
+import { DocumentBuilder } from '@nestjs/swagger'
+
+export const openapiOptions = new DocumentBuilder()
+  .setTitle('DuckyAPI')
+  .setDescription('A customer facing api for WildDuck')
+  .setVersion('1.0')
+  .addBearerAuth()
+  .addTag('Authentication')
+  .addTag('Api Keys')
+  .addTag('Domains')
+  .addTag('Dkim')
+  .addTag('Email Accounts')
+  .addTag('Filters')
+  .addTag('Forwarders')
+  .addTag('Profile')
+  .addTag('Users')
+  .addTag('Packages')
+  .build()

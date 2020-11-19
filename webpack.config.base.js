@@ -5,6 +5,7 @@ module.exports = {
   entry: {
     main: './src/main.ts',
     cli: './src/cli.ts',
+    'generate-openapi': './scripts/generate-openapi.ts',
   },
   target: 'node',
   resolve: {
