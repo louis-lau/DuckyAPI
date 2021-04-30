@@ -281,7 +281,7 @@ export class DomainsService {
               })
             }
 
-            if (this.config.SPF_REGEX && new RegExp(this.config.SPF_REGEX).test(spfTxtRecords[0])) {
+            if (this.config.SPF_REGEX && !new RegExp(this.config.SPF_REGEX).test(spfTxtRecords[0])) {
               dnsCheck.errors.push({
                 type: 'spf',
                 error: 'SpfInvalid',
