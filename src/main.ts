@@ -15,8 +15,18 @@ const writeFile = promisify(fs.writeFile)
 declare const module: any
 
 async function bootstrap(): Promise<void> {
-  const app = await NestFactory.create(AppModule)
   const config: ConfigService = app.get('ConfigService')
+  let nestConfig = {}
+
+  if (config.TLS_KEY_PATH && config.TLS_CERT_PATH) {
+    const fs = require('fs');
+    nestConfig.httpsOptions = {
+        key: fs.readFileSync(config.TLS_KEY_PATH),
+        cert: fs.readFileSync(config.TLS_CERT_PATH)
+    };
+  }
+
+  const app = await NestFactory.create(AppModule, nestConfig);
 
   if (config.SERVE_DUCKYPANEL) {
     // Write baseurl to file for DuckyPanel to find
