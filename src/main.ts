@@ -16,7 +16,12 @@ declare const module: any
 
 async function bootstrap(): Promise<void> {
   const config: ConfigService = app.get('ConfigService')
-  let nestConfig = {}
+  let nestConfig: {
+    httpsOptions: {
+        key: string,
+        cert: string
+    }
+  }
 
   if (config.TLS_KEY_PATH && config.TLS_CERT_PATH) {
     const fs = require('fs');
