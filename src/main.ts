@@ -66,6 +66,7 @@ async function bootstrap(): Promise<void> {
   await app.init()
 
   if (config.TLS_KEY_PATH && config.TLS_CERT_PATH) {
+    const https = require('https')
     const fs = require('fs')
     await https.createServer({
         key: fs.readFileSync(config.TLS_KEY_PATH),
@@ -73,6 +74,7 @@ async function bootstrap(): Promise<void> {
     }, server).listen(config.PORT)
   }
   else {
+    const http = require('http')
     await http.createServer(server).listen(config.PORT)
   }
 
