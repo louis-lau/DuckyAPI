@@ -17,7 +17,7 @@ const writeFile = promisify(fs.writeFile)
 declare const module: any
 
 async function bootstrap(): Promise<void> {
-  const server = express()
+  const server = express.default()
   const app = await NestFactory.create(
     AppModule,
     new ExpressAdapter(server)
