@@ -5,6 +5,8 @@ import fs from 'fs'
 import Helmet from 'helmet'
 import { resolve } from 'path'
 import { promisify } from 'util'
+import { ExpressAdapter } from '@nestjs/platform-express'
+import * as express from 'express';
 
 import { AppModule } from './app.module'
 import { UnauthorizedExceptionFilter } from './common/filters/unauthorized-exception.filter'
@@ -15,7 +17,12 @@ const writeFile = promisify(fs.writeFile)
 declare const module: any
 
 async function bootstrap(): Promise<void> {
-  const app = await NestFactory.create(AppModule)
+  const server = express.default()
+  const app = await NestFactory.create(
+    AppModule,
+    new ExpressAdapter(server)
+  )
+
   const config: ConfigService = app.get('ConfigService')
 
   if (config.SERVE_DUCKYPANEL) {
@@ -55,8 +62,21 @@ async function bootstrap(): Promise<void> {
       displayOperationId: true,
     },
   })
+  
+  await app.init()
 
-  await app.listen(config.PORT)
+  if (config.TLS_KEY_PATH && config.TLS_CERT_PATH) {
+    const https = require('https')
+    const fs = require('fs')
+    await https.createServer({
+        key: fs.readFileSync(config.TLS_KEY_PATH),
+        cert: fs.readFileSync(config.TLS_CERT_PATH)
+    }, server).listen(config.PORT)
+  }
+  else {
+    const http = require('http')
+    await http.createServer(server).listen(config.PORT)
+  }
 
   if (module.hot) {
     module.hot.accept()

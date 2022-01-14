@@ -148,4 +148,14 @@ export class DuckyApiConfig {
   @IsNumber()
   @Min(0)
   DELAY: number
+  
+  @IsOptional()
+  @IsNotEmpty()
+  @IsString()
+  TLS_KEY_PATH: string
+
+  @IsOptional()
+  @IsNotEmpty()
+  @IsString()
+  TLS_CERT_PATH: string
 }
