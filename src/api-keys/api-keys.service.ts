@@ -49,7 +49,7 @@ export class ApiKeysService {
   }
 
   public async getKey(userId: string, keyId: string): Promise<ApiKey | undefined> {
-    return this.apiKeyRepository.findOne({
+    return this.apiKeyRepository.findOneBy({
       _id: keyId,
       userId: new ObjectId(userId),
     })

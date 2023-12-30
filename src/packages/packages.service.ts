@@ -20,7 +20,7 @@ export class PackagesService {
   }
 
   public async getPackageById(id: string): Promise<Package> {
-    return this.packageRepository.findOne(id)
+    return this.packageRepository.findOneBy(id)
   }
 
   public async savePackage(packagep: Package): Promise<Package> {

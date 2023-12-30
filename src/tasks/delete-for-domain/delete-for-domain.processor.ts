@@ -18,7 +18,7 @@ export class DeleteForDomainProcessor {
     private readonly domainsService: DomainsService,
   ) {}
 
-  private readonly logger = new Logger(DeleteForDomainProcessor.name, true)
+  private readonly logger = new Logger(DeleteForDomainProcessor.name)
 
   @Process({ name: 'deleteAccounts' })
   private async processDeleteAccounts(job: Job<DeleteForDomainData>): Promise<void> {

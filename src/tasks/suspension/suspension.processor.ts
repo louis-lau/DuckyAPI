@@ -15,7 +15,7 @@ export class SuspensionProcessor {
     private readonly forwardersService: ForwardersService,
   ) {}
 
-  private readonly logger = new Logger(SuspensionProcessor.name, true)
+  private readonly logger = new Logger(SuspensionProcessor.name)
 
   @Process({ name: 'suspendAccounts' })
   private async processSuspendAccounts(job: Job<SuspensionData>): Promise<void> {

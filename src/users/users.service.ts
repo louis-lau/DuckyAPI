@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Queue } from 'bull'
-import { ObjectID, ObjectId } from 'mongodb'
+import { ObjectId } from 'mongodb'
 import { nanoid as NanoId } from 'nanoid'
 import { Domain, DomainAlias } from 'src/domains/domain.entity'
 import { DomainsService } from 'src/domains/domains.service'
@@ -38,7 +38,7 @@ export class UsersService {
     @InjectQueue('deleteForDomain')
     readonly deleteForDomainQueue: Queue<DeleteForDomainData>,
   ) {}
-  private readonly logger = new Logger(UsersService.name, true)
+  private readonly logger = new Logger(UsersService.name)
 
   public async getUsers(): Promise<User[]> {
     return this.userRepository.find()
@@ -46,7 +46,7 @@ export class UsersService {
 
   public async findByUsername(username: string): Promise<User | undefined> {
     username = username.toLowerCase()
-    return this.userRepository.findOne({
+    return this.userRepository.findOneBy({
       username: username,
     })
   }
@@ -68,11 +68,11 @@ export class UsersService {
   }
 
   public async findById(id: string): Promise<User | undefined> {
-    return this.userRepository.findOne(id)
+    return this.userRepository.findOneBy(id)
   }
 
   public async findByIdNoPassword(id: string): Promise<User | undefined> {
-    const user = await this.userRepository.findOne(id)
+    const user = await this.userRepository.findOneBy(id)
     if (!user) {
       return undefined
     }
@@ -314,7 +314,7 @@ export class UsersService {
   ): Promise<void> {
     this.userRepository.update(
       {
-        packageId: new ObjectID(packageId),
+        packageId: new ObjectId(packageId),
         [limit]: oldLimit,
       },
       {

@@ -1,4 +1,5 @@
-import { HttpService, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common'
+import { Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common'
+import { HttpService } from '@nestjs/axios'
 import { AxiosResponse } from 'axios'
 import { ConfigService } from 'src/config/config.service'
 import { DomainsService } from 'src/domains/domains.service'
@@ -9,7 +10,7 @@ import { AddDkimDto } from './dto/add-dkim.dto'
 
 @Injectable()
 export class DkimService {
-  private readonly logger = new Logger(DkimService.name, true)
+  private readonly logger = new Logger(DkimService.name)
 
   public constructor(
     private readonly httpService: HttpService,

@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { IsNotEmpty, IsString } from 'class-validator'
-import { ObjectID } from 'mongodb'
+import { ObjectId } from 'mongodb'
 import { Column, Entity, ObjectIdColumn } from 'typeorm'
 
 @Entity('api-keys')
@@ -14,7 +14,7 @@ export class ApiKey {
   public _id?: string
 
   @Column()
-  public userId?: ObjectID
+  public userId?: ObjectId
 
   @ApiProperty({
     example: 'API key for my script',

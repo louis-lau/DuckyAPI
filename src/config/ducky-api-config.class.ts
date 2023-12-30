@@ -1,4 +1,4 @@
-import { Transform, Type } from 'class-transformer'
+import { Transform, TransformFnParams, Type } from 'class-transformer'
 import {
   ArrayMinSize,
   IsArray,
@@ -58,7 +58,7 @@ export class DuckyApiConfig {
   @IsBoolean()
   SERVE_DUCKYPANEL = false
 
-  @Transform((value: string) => {
+  @Transform((value: any) => {
     // Remove leading and trailing slash
     if (value.endsWith('/')) {
       value = value.slice(0, -1)

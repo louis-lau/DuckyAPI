@@ -1,11 +1,11 @@
 import {
   BadRequestException,
-  HttpService,
   Injectable,
   InternalServerErrorException,
   Logger,
   NotFoundException,
 } from '@nestjs/common'
+import { HttpService } from '@nestjs/axios'
 import { AxiosResponse } from 'axios'
 import { nanoid as NanoId } from 'nanoid'
 import { ConfigService } from 'src/config/config.service'
@@ -21,7 +21,7 @@ import { UpdateAccountDto } from './dto/update-account.dto'
 
 @Injectable()
 export class AccountsService {
-  private readonly logger = new Logger(AccountsService.name, true)
+  private readonly logger = new Logger(AccountsService.name)
 
   public constructor(
     private readonly httpService: HttpService,
