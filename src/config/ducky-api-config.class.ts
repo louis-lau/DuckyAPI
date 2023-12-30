@@ -58,7 +58,7 @@ export class DuckyApiConfig {
   @IsBoolean()
   SERVE_DUCKYPANEL = false
 
-  @Transform((value: any) => {
+  @Transform(({value}) => {
     // Remove leading and trailing slash
     if (value.endsWith('/')) {
       value = value.slice(0, -1)
