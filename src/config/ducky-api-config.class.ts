@@ -50,11 +50,11 @@ export class DuckyApiConfig {
   @Matches(new RegExp('^(development|production|test|provision)$'))
   NODE_ENV: 'development' | 'production' | 'test' | 'provision' = 'development'
 
-  //@Transform(jsonParse, { toClassOnly: true })
+  @Transform(jsonParse, { toClassOnly: true })
   @IsNumber()
   PORT = 3000
 
-  //@Transform(jsonParse, { toClassOnly: true })
+  @Transform(jsonParse, { toClassOnly: true })
   @IsBoolean()
   SERVE_DUCKYPANEL = false
 
