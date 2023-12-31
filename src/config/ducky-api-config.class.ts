@@ -20,7 +20,7 @@ import {
 } from 'class-validator'
 import { DnsCheckMxRecord } from 'src/domains/class/dns.class'
 
-const jsonParse = (value: any): any => {
+const jsonParse = ({ value }): any => {
   try {
     return JSON.parse(value)
   } catch (error) {
@@ -50,15 +50,15 @@ export class DuckyApiConfig {
   @Matches(new RegExp('^(development|production|test|provision)$'))
   NODE_ENV: 'development' | 'production' | 'test' | 'provision' = 'development'
 
-  @Transform(jsonParse, { toClassOnly: true })
+  //@Transform(jsonParse, { toClassOnly: true })
   @IsNumber()
   PORT = 3000
 
-  @Transform(jsonParse, { toClassOnly: true })
+  //@Transform(jsonParse, { toClassOnly: true })
   @IsBoolean()
   SERVE_DUCKYPANEL = false
 
-  @Transform(({value}) => {
+  @Transform(({ value }) => {
     // Remove leading and trailing slash
     if (value.endsWith('/')) {
       value = value.slice(0, -1)
