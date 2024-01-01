@@ -18,7 +18,7 @@ import { Package } from 'src/packages/package.entity'
 import { PackagesService } from 'src/packages/packages.service'
 import { DeleteForDomainData } from 'src/tasks/delete-for-domain/delete-for-domain.interfaces'
 import { SuspensionData } from 'src/tasks/suspension/suspension.interfaces'
-import { MongoRepository } from 'typeorm'
+import { MongoRepository, UpdateResult } from 'typeorm'
 
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
@@ -137,7 +137,7 @@ export class UsersService {
     }
   }
 
-  public async pullDomain(userId: string, domain: string): Promise<User> {
+  public async pullDomain(userId: string, domain: string): Promise<UpdateResult> {
     const user = await this.findByIdNoPassword(userId)
     const userEntity = new User()
     Object.assign(userEntity, user)
@@ -146,7 +146,7 @@ export class UsersService {
     userEntity.domains = userEntity.domains.filter((domainObject) => domainObject.domain !== domain)
 
     try {
-      return this.userRepository.save(userEntity)
+      return this.userRepository.update({ _id: userEntity._id }, { domains: userEntity.domains })
     } catch (error) {
       // TODO: add custom exception handler for unknown errors that basically does the following:
       const errorId = NanoId()
@@ -155,7 +155,7 @@ export class UsersService {
     }
   }
 
-  public async pushAlias(userId: string, domain: string, alias: DomainAlias): Promise<User | undefined> {
+  public async pushAlias(userId: string, domain: string, alias: DomainAlias): Promise<UpdateResult | undefined> {
     const user = await this.findByIdNoPassword(userId)
     const userEntity = new User()
     Object.assign(userEntity, user)
@@ -171,7 +171,7 @@ export class UsersService {
     })
 
     try {
-      return await this.userRepository.save(userEntity)
+      return await this.userRepository.update({ _id: userEntity._id }, { domains: userEntity.domains })
     } catch (error) {
       const errorId = NanoId()
       this.logger.error(`${errorId}: ${error.message}`)
