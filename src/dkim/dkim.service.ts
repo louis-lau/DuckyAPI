@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common'
 import { HttpService } from '@nestjs/axios'
-import { AxiosResponse } from 'axios'
+import { AxiosError, AxiosResponse } from 'axios'
 import { ConfigService } from 'src/config/config.service'
 import { DomainsService } from 'src/domains/domains.service'
 import { User } from 'src/users/user.entity'
@@ -23,19 +23,18 @@ export class DkimService {
     try {
       ApiResponse = await this.httpService.get(`/dkim/resolve/${domain}`).toPromise()
     } catch (error) {
+      if (error instanceof AxiosError && (error.response.data.error || !error.response.data.success)) {
+        switch (error.response.data.code) {
+          case 'DkimNotFound':
+            throw new NotFoundException(`No DKIM key found for domain: ${domain}`, 'DkimNotFoundError')
+
+          default:
+            this.logger.error(error.response.data)
+            throw new InternalServerErrorException('Unknown error')
+        }
+      }
       this.logger.error(error.message)
       throw new InternalServerErrorException('Backend service not reachable', 'WildduckApiError')
-    }
-
-    if (ApiResponse.data.error || !ApiResponse.data.success) {
-      switch (ApiResponse.data.code) {
-        case 'DkimNotFound':
-          throw new NotFoundException(`No DKIM key found for domain: ${domain}`, 'DkimNotFoundError')
-
-        default:
-          this.logger.error(ApiResponse.data)
-          throw new InternalServerErrorException('Unknown error')
-      }
     }
 
     return ApiResponse.data.id
