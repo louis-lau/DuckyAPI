@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Queue } from 'bull'
-import { ObjectID, ObjectId } from 'mongodb'
+import { ObjectId } from 'mongodb'
 import { nanoid as NanoId } from 'nanoid'
 import { Domain, DomainAlias } from 'src/domains/domain.entity'
 import { DomainsService } from 'src/domains/domains.service'
@@ -18,7 +18,7 @@ import { Package } from 'src/packages/package.entity'
 import { PackagesService } from 'src/packages/packages.service'
 import { DeleteForDomainData } from 'src/tasks/delete-for-domain/delete-for-domain.interfaces'
 import { SuspensionData } from 'src/tasks/suspension/suspension.interfaces'
-import { MongoRepository } from 'typeorm'
+import { MongoRepository, UpdateResult } from 'typeorm'
 
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
@@ -38,7 +38,7 @@ export class UsersService {
     @InjectQueue('deleteForDomain')
     readonly deleteForDomainQueue: Queue<DeleteForDomainData>,
   ) {}
-  private readonly logger = new Logger(UsersService.name, true)
+  private readonly logger = new Logger(UsersService.name)
 
   public async getUsers(): Promise<User[]> {
     return this.userRepository.find()
@@ -46,7 +46,7 @@ export class UsersService {
 
   public async findByUsername(username: string): Promise<User | undefined> {
     username = username.toLowerCase()
-    return this.userRepository.findOne({
+    return this.userRepository.findOneBy({
       username: username,
     })
   }
@@ -68,11 +68,11 @@ export class UsersService {
   }
 
   public async findById(id: string): Promise<User | undefined> {
-    return this.userRepository.findOne(id)
+    return this.userRepository.findOneBy(new ObjectId(id))
   }
 
   public async findByIdNoPassword(id: string): Promise<User | undefined> {
-    const user = await this.userRepository.findOne(id)
+    const user = await this.userRepository.findOneBy(new ObjectId(id))
     if (!user) {
       return undefined
     }
@@ -137,7 +137,7 @@ export class UsersService {
     }
   }
 
-  public async pullDomain(userId: string, domain: string): Promise<User> {
+  public async pullDomain(userId: string, domain: string): Promise<UpdateResult> {
     const user = await this.findByIdNoPassword(userId)
     const userEntity = new User()
     Object.assign(userEntity, user)
@@ -146,7 +146,7 @@ export class UsersService {
     userEntity.domains = userEntity.domains.filter((domainObject) => domainObject.domain !== domain)
 
     try {
-      return this.userRepository.save(userEntity)
+      return this.userRepository.update({ _id: userEntity._id }, { domains: userEntity.domains })
     } catch (error) {
       // TODO: add custom exception handler for unknown errors that basically does the following:
       const errorId = NanoId()
@@ -155,7 +155,7 @@ export class UsersService {
     }
   }
 
-  public async pushAlias(userId: string, domain: string, alias: DomainAlias): Promise<User | undefined> {
+  public async pushAlias(userId: string, domain: string, alias: DomainAlias): Promise<UpdateResult | undefined> {
     const user = await this.findByIdNoPassword(userId)
     const userEntity = new User()
     Object.assign(userEntity, user)
@@ -171,7 +171,7 @@ export class UsersService {
     })
 
     try {
-      return await this.userRepository.save(userEntity)
+      return await this.userRepository.update({ _id: userEntity._id }, { domains: userEntity.domains })
     } catch (error) {
       const errorId = NanoId()
       this.logger.error(`${errorId}: ${error.message}`)
@@ -314,7 +314,7 @@ export class UsersService {
   ): Promise<void> {
     this.userRepository.update(
       {
-        packageId: new ObjectID(packageId),
+        packageId: new ObjectId(packageId),
         [limit]: oldLimit,
       },
       {

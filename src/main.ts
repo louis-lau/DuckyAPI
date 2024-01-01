@@ -16,7 +16,7 @@ declare const module: any
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule)
-  const config: ConfigService = app.get('ConfigService')
+  const config: ConfigService = app.get(ConfigService)
 
   if (config.SERVE_DUCKYPANEL) {
     // Write baseurl to file for DuckyPanel to find

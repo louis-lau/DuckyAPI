@@ -2,13 +2,13 @@ import { InjectQueue } from '@nestjs/bull'
 import {
   BadRequestException,
   forwardRef,
-  HttpService,
   Inject,
   Injectable,
   InternalServerErrorException,
   Logger,
   NotFoundException,
 } from '@nestjs/common'
+import { HttpService } from '@nestjs/axios'
 import { AxiosResponse } from 'axios'
 import { Queue } from 'bull'
 import { MxRecord, promises as dns } from 'dns'
@@ -24,7 +24,7 @@ import { Domain } from './domain.entity'
 
 @Injectable()
 export class DomainsService {
-  private readonly logger = new Logger(DomainsService.name, true)
+  private readonly logger = new Logger(DomainsService.name)
 
   public constructor(
     private readonly usersService: UsersService,

@@ -1,11 +1,11 @@
 import {
   BadRequestException,
-  HttpService,
   Injectable,
   InternalServerErrorException,
   Logger,
   NotFoundException,
 } from '@nestjs/common'
+import { HttpService } from '@nestjs/axios'
 import { AxiosResponse } from 'axios'
 import { AccountsService } from 'src/accounts/accounts.service'
 import { ConfigService } from 'src/config/config.service'
@@ -17,7 +17,7 @@ import { CreateUpdateFilterDto } from './dto/create-update-filter.dto'
 
 @Injectable()
 export class FiltersService {
-  private readonly logger = new Logger(FiltersService.name, true)
+  private readonly logger = new Logger(FiltersService.name)
 
   public constructor(
     private readonly httpService: HttpService,

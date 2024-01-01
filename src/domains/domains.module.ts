@@ -1,5 +1,6 @@
 import { BullModule } from '@nestjs/bull'
-import { forwardRef, HttpModule, Module } from '@nestjs/common'
+import { forwardRef, Module } from '@nestjs/common'
+import { HttpModule } from '@nestjs/axios'
 import { AccountsModule } from 'src/accounts/accounts.module'
 import { ConfigModule } from 'src/config/config.module'
 import { ConfigService } from 'src/config/config.service'

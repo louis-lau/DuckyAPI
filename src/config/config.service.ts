@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common'
-import { classToClass, plainToClass } from 'class-transformer'
+import { instanceToInstance, plainToClass } from 'class-transformer'
 import { validateOrReject } from 'class-validator'
 import dotenv from 'dotenv'
 import fs from 'fs'
@@ -16,7 +16,7 @@ export class ConfigService extends DuckyApiConfig {
     this.validateConfig(config)
   }
 
-  private readonly logger = new Logger(ConfigService.name, true)
+  private readonly logger = new Logger(ConfigService.name)
 
   /**
    * Ensures all needed variables are set, and assigns them to this class
@@ -24,7 +24,7 @@ export class ConfigService extends DuckyApiConfig {
   private async validateConfig(envConfig: EnvConfig): Promise<void> {
     // Run the transformer twice, as the transform decorator seems to run after the type decorator
     let duckyApiConfig = plainToClass(DuckyApiConfig, envConfig)
-    duckyApiConfig = classToClass(duckyApiConfig)
+    duckyApiConfig = instanceToInstance(duckyApiConfig)
 
     try {
       await validateOrReject(duckyApiConfig, { validationError: { target: false, value: false } })

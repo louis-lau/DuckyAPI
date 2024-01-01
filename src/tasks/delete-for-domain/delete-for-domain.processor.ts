@@ -9,6 +9,7 @@ import { Forwarder } from 'src/forwarders/class/forwarder.class'
 import { ForwardersService } from 'src/forwarders/forwarders.service'
 
 import { DeleteForDomainData } from './delete-for-domain.interfaces'
+import { ObjectId } from 'mongodb'
 
 @Processor('deleteForDomain')
 export class DeleteForDomainProcessor {
@@ -18,10 +19,13 @@ export class DeleteForDomainProcessor {
     private readonly domainsService: DomainsService,
   ) {}
 
-  private readonly logger = new Logger(DeleteForDomainProcessor.name, true)
+  private readonly logger = new Logger(DeleteForDomainProcessor.name)
 
   @Process({ name: 'deleteAccounts' })
   private async processDeleteAccounts(job: Job<DeleteForDomainData>): Promise<void> {
+    // Job data contains _id as string, not as ObjectId for unknown reason
+    job.data.user._id = new ObjectId(job.data.user._id)
+
     let accounts: AccountListItem[] = []
     try {
       accounts = await this.accountsService.getAccounts(job.data.user, job.data.domain)
@@ -55,6 +59,9 @@ export class DeleteForDomainProcessor {
 
   @Process({ name: 'deleteForwarders' })
   private async processDeleteForwarders(job: Job<DeleteForDomainData>): Promise<void> {
+    // Job data contains _id as string, not as ObjectId for unknown reason
+    job.data.user._id = new ObjectId(job.data.user._id)
+
     let forwarders: Forwarder[] = []
     try {
       forwarders = await this.forwardersService.getForwarders(job.data.user, job.data.domain)
@@ -88,6 +95,9 @@ export class DeleteForDomainProcessor {
 
   @Process({ name: 'deleteAccountAliases' })
   private async processDeleteAccountAliases(job: Job<DeleteForDomainData>): Promise<void> {
+    // Job data contains _id as string, not as ObjectId for unknown reason
+    job.data.user._id = new ObjectId(job.data.user._id)
+
     const accountAliases = await this.accountsService.getAliases(job.data.user, job.data.domain)
     if (!accountAliases || accountAliases.length === 0) {
       return
@@ -114,6 +124,9 @@ export class DeleteForDomainProcessor {
 
   @Process({ name: 'deleteAliases' })
   private async processDeleteAliases(job: Job<DeleteForDomainData>): Promise<void> {
+    // Job data contains _id as string, not as ObjectId for unknown reason
+    job.data.user._id = new ObjectId(job.data.user._id)
+
     const aliases = job.data.user.domains.find((domain) => domain.domain === job.data.domain).aliases
     if (!aliases || aliases.length === 0) {
       return

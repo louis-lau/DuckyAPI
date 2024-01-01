@@ -1,4 +1,4 @@
-import { Transform, Type } from 'class-transformer'
+import { Transform, TransformFnParams, Type } from 'class-transformer'
 import {
   ArrayMinSize,
   IsArray,
@@ -20,7 +20,7 @@ import {
 } from 'class-validator'
 import { DnsCheckMxRecord } from 'src/domains/class/dns.class'
 
-const jsonParse = (value: any): any => {
+const jsonParse = ({ value }): any => {
   try {
     return JSON.parse(value)
   } catch (error) {
@@ -58,7 +58,7 @@ export class DuckyApiConfig {
   @IsBoolean()
   SERVE_DUCKYPANEL = false
 
-  @Transform((value: string) => {
+  @Transform(({ value }) => {
     // Remove leading and trailing slash
     if (value.endsWith('/')) {
       value = value.slice(0, -1)

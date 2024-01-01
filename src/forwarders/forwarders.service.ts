@@ -1,11 +1,11 @@
 import {
   BadRequestException,
-  HttpService,
   Injectable,
   InternalServerErrorException,
   Logger,
   NotFoundException,
 } from '@nestjs/common'
+import { HttpService } from '@nestjs/axios'
 import { AxiosResponse } from 'axios'
 import { ConfigService } from 'src/config/config.service'
 import { DomainsService } from 'src/domains/domains.service'
@@ -18,7 +18,7 @@ import { UpdateForwarderDto } from './dto/update-forwarder.dto'
 
 @Injectable()
 export class ForwardersService {
-  private readonly logger = new Logger(ForwardersService.name, true)
+  private readonly logger = new Logger(ForwardersService.name)
 
   public constructor(
     private readonly httpService: HttpService,
