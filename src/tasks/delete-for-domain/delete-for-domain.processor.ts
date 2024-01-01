@@ -141,9 +141,7 @@ export class DeleteForDomainProcessor {
   @OnQueueActive()
   private onActive(job: Job<DeleteForDomainData>): void {
     this.logger.log(
-      `Processing job ${job.id} (${job.name}) for user ${job.data.user._id.toHexString()} and domain ${
-        job.data.domain
-      }`,
+      `Processing job ${job.id} (${job.name}) for user ${job.data.user._id} and domain ${job.data.domain}`,
     )
   }
 
