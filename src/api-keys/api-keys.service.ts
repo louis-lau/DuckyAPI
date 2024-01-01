@@ -25,7 +25,7 @@ export class ApiKeysService {
     const keyId = NanoId()
     const expireDate = new Date()
     expireDate.setFullYear(expireDate.getFullYear() + 100)
-    this.addKey({
+    await this.addKey({
       _id: keyId,
       issuedAt: new Date(),
       name: name,
@@ -45,7 +45,7 @@ export class ApiKeysService {
   }
 
   public async addKey(apiKey: ApiKey): Promise<void> {
-    this.apiKeyRepository.insert(apiKey)
+    await this.apiKeyRepository.insert(apiKey)
   }
 
   public async getKey(userId: string, keyId: string): Promise<ApiKey | undefined> {
