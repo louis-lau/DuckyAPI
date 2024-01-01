@@ -68,11 +68,11 @@ export class UsersService {
   }
 
   public async findById(id: string): Promise<User | undefined> {
-    return this.userRepository.findOneBy(id)
+    return this.userRepository.findOneBy(new ObjectId(id))
   }
 
   public async findByIdNoPassword(id: string): Promise<User | undefined> {
-    const user = await this.userRepository.findOneBy(id)
+    const user = await this.userRepository.findOneBy(new ObjectId(id))
     if (!user) {
       return undefined
     }
